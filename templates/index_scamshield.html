@@ -1,0 +1,3230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScamShield AI - Interactive Cyber Security Hub</title>
+
+    <!-- Google Fonts: Outfit for Headings, Inter for Body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap 5 CDN & Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Custom Premium Stylesheet -->
+    <style>
+        :root {
+            --bg-color: #080c14;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary-glow: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --safe-color: #00e676;
+            --warn-color: #ffb300;
+            --danger-color: #ff1744;
+            --text-main: #f3f4f6;
+            --text-secondary: #9ca3af;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background: linear-gradient(135deg, rgba(8, 12, 20, 0.88), rgba(15, 23, 42, 0.92)), url('/static/images/cyber_matrix_bg.png') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .display-font {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Animated Pulsing Shield & Hero Wallpaper */
+        .hero-section {
+            padding: 55px 20px;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(180deg, rgba(8, 12, 20, 0.65), rgba(15, 23, 42, 0.88)), url('/static/images/hero_cyber_shield_bg.png') no-repeat center center;
+            background-size: cover;
+            border-radius: 24px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            box-shadow: 0 15px 40px rgba(0, 242, 254, 0.12);
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .shield-container {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .shield-icon {
+            font-size: 4rem;
+            background: var(--primary-glow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.5));
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .shield-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 242, 254, 0.2);
+            border-radius: 50%;
+            z-index: -1;
+            animation: pulse 2.5s infinite;
+        }
+
+        /* Glassmorphism Card Design */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 242, 254, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 242, 254, 0.1);
+        }
+
+        .card-header-styled {
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 25px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .card-body-styled {
+            padding: 25px;
+        }
+
+        /* Status Pill */
+        .status-badge {
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--safe-color);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--safe-color);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--safe-color);
+            animation: blink 1.5s infinite;
+        }
+
+        /* Form Inputs Styling */
+        .form-control-cyber {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: #fff !important;
+            padding: 12px 16px;
+            transition: all 0.3s;
+        }
+
+        .form-control-cyber:focus {
+            background-color: rgba(255, 255, 255, 0.06);
+            border-color: #00f2fe;
+            box-shadow: 0 0 12px rgba(0, 242, 254, 0.25);
+            outline: none;
+        }
+
+        .form-control-cyber::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Glowing Action Buttons */
+        .btn-cyber {
+            background: var(--primary-glow);
+            border: none;
+            color: #000;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 12px 24px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-cyber:hover {
+            color: #000;
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
+            cursor: pointer;
+        }
+
+        /* Drag & Drop File Upload Zone */
+        .upload-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.01);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: #00f2fe;
+            background: rgba(0, 242, 254, 0.03);
+        }
+
+        #imagePreview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Circular Gauge for Risk Score */
+        .gauge-wrap {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .risk-gauge-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .risk-gauge {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .risk-gauge circle {
+            fill: none;
+            stroke-width: 8;
+        }
+
+        .risk-gauge circle.bg {
+            stroke: rgba(255, 255, 255, 0.08);
+        }
+
+        .risk-gauge circle.meter {
+            stroke: var(--safe-color);
+            stroke-linecap: round;
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 251.2;
+            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1), stroke 1s ease;
+        }
+
+        .risk-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Result Display Styles */
+        .result-box-cyber {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 5px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .result-box-cyber.safe {
+            border-left-color: var(--safe-color);
+            background: rgba(0, 230, 118, 0.03);
+        }
+
+        .result-box-cyber.warning {
+            border-left-color: var(--warn-color);
+            background: rgba(255, 179, 0, 0.03);
+        }
+
+        .result-box-cyber.danger {
+            border-left-color: var(--danger-color);
+            background: rgba(255, 23, 68, 0.03);
+        }
+
+        /* Chatbot Interface Styling */
+        .chatbot-container {
+            height: 580px;
+            display: flex;
+            flex-column: column;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-history {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            animation: slideUp 0.3s ease;
+        }
+
+        .chat-bubble.bot {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-bubble.user {
+            align-self: flex-end;
+            background: var(--primary-glow);
+            color: #000;
+            font-weight: 500;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.15);
+        }
+
+        /* Loader Animations */
+        .cyber-loader {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0, 242, 254, 0.1);
+            border-radius: 50%;
+            border-top-color: #00f2fe;
+            animation: spin 1s ease infinite;
+        }
+
+        /* Animations Definition */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.4);
+                opacity: 0;
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroller styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 242, 254, 0.4);
+        }
+
+        /* Custom styles for Radar & Subscription */
+        .btn-cyber-outline {
+            background: transparent;
+            border: 1px solid rgba(0, 242, 254, 0.4);
+            color: #00f2fe;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 8px 16px;
+            transition: all 0.3s;
+        }
+        .btn-cyber-outline:hover {
+            background: rgba(0, 242, 254, 0.1);
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+            color: #fff;
+            cursor: pointer;
+        }
+        .radar-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 15px auto;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.05) 0%, rgba(8, 12, 20, 0.9) 80%);
+            border: 2px solid rgba(0, 242, 254, 0.15);
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .radar-sweep {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(from 0deg, transparent 75%, rgba(0, 242, 254, 0.3) 100%);
+            border-radius: 50%;
+            transform-origin: center;
+            animation: sweep-rotation 3s linear infinite;
+            animation-play-state: paused;
+        }
+        .radar-sweep.active {
+            animation-play-state: running;
+        }
+        .radar-ping {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff1744;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #ff1744;
+            display: none;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            animation: ping-blink 0.8s infinite alternate;
+        }
+        @keyframes sweep-rotation {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes ping-blink {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+        .badge-premium-pro {
+            background: linear-gradient(135deg, #7000ff 0%, #00f2fe 100%);
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: none;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Animated Cyber Node Particle Background Canvas Overlay -->
+    <canvas id="bgParticleCanvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; opacity: 0.35;"></canvas>
+
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg border-bottom border-secondary border-opacity-10 py-3" style="background: rgba(8, 12, 20, 0.5); backdrop-filter: blur(12px);">
+        <div class="container">
+            <span class="navbar-brand fw-bold" style="background: var(--primary-glow); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Outfit', sans-serif;">
+                <i class="bi bi-shield-shaded me-2"></i>SCAMSHIELD CORE
+            </span>
+            <div class="ms-auto" id="premiumStatusArea">
+                <button class="btn btn-sm btn-cyber" data-bs-toggle="modal" data-bs-target="#premiumModal" id="btnGoPremiumNav">
+                    <i class="bi bi-gem me-1"></i>Go Premium
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="hero-section">
+        <div class="shield-container">
+            <i class="bi bi-shield-lock-fill shield-icon"></i>
+            <div class="shield-pulse"></div>
+        </div>
+        <h1 class="display-5 fw-bold mb-2">ScamShield <span
+                style="background: var(--primary-glow); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI</span>
+        </h1>
+        <p class="text-secondary lead mx-auto" style="max-width: 600px;">Protecting your digital world in real-time.
+            Scan URLs, detect screenshot threats, analyze phishing text, and chat with safety experts.</p>
+
+        <div class="mt-3">
+            <span class="status-badge">
+                <span class="status-dot"></span>
+                <span>ScamShield Engine Core: Online</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="container">
+
+        <!-- Main Navigation Pills for Cyber Hub & UEBA Insider Threat -->
+        <div class="d-flex justify-content-center mb-4">
+            <div class="nav nav-pills custom-cyber-pills p-1" style="background: rgba(17, 24, 39, 0.8); border: 1px solid var(--border-color); border-radius: 50px;">
+                <button class="nav-link active px-4 py-2 rounded-pill fw-bold text-white" id="tab-external-btn" onclick="switchMainTab('external')">
+                    <i class="bi bi-shield-x me-2 text-info"></i>External Threat Hub
+                </button>
+                <button class="nav-link px-4 py-2 rounded-pill fw-bold text-white ms-2" id="tab-ueba-btn" onclick="switchMainTab('ueba')">
+                    <i class="bi bi-person-bounding-box me-2 text-warning"></i>Insider Threat UEBA
+                </button>
+            </div>
+        </div>
+
+        <!-- External Cyber Threat View -->
+        <div id="externalThreatView">
+            <div class="row">
+
+            <!-- Left Side: Analysers -->
+            <div class="col-lg-7">
+
+                <!-- Text / Message Scanner -->
+                <div class="glass-card">
+                    <div class="card-header-styled d-flex align-items-center justify-content-between">
+                        <h5 class="m-0 fw-bold"><i class="bi bi-chat-left-quote text-info me-2"></i> Message & Job Post
+                            Scanner</h5>
+                        <span class="badge bg-secondary opacity-75">AI Analyzed</span>
+                    </div>
+                    <div class="card-body-styled">
+                        <textarea id="textInput" class="form-control form-control-cyber mb-3" rows="4"
+                            placeholder="Paste suspicious SMS, WhatsApp message, email draft, or job advertisement text here..."></textarea>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-cyber" id="textBtn" onclick="analyzeText()">
+                                <i class="bi bi-search"></i>
+                                <span>Scan Message</span>
+                            </button>
+                            <div class="cyber-loader" id="textLoader"></div>
+                        </div>
+
+                        <!-- Result Section -->
+                        <div id="textResult" class="result-box-cyber">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phishing Website Trust Checker -->
+                <div class="glass-card">
+                    <div class="card-header-styled">
+                        <h5 class="m-0 fw-bold"><i class="bi bi-globe2 text-info me-2"></i> Phishing Website / Link
+                            Trust Checker</h5>
+                    </div>
+                    <div class="card-body-styled">
+                        <div class="input-group gap-2">
+                            <input type="text" id="urlInput" class="form-control form-control-cyber"
+                                placeholder="Enter link, e.g., https://secure-bank-login.xyz">
+                            <button class="btn btn-cyber" id="urlBtn" onclick="analyzeUrl()">
+                                <i class="bi bi-shield-check"></i>
+                                <span>Check URL</span>
+                            </button>
+                        </div>
+                        <div class="d-flex justify-content-end mt-2">
+                            <div class="cyber-loader" id="urlLoader"></div>
+                        </div>
+
+                        <!-- Result Section -->
+                        <div id="urlResult" class="result-box-cyber">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Screenshot Scam Scanner -->
+                <div class="glass-card">
+                    <div class="card-header-styled">
+                        <h5 class="m-0 fw-bold"><i class="bi bi-camera text-info me-2"></i> Screenshot Scam & OCR
+                            Detector</h5>
+                    </div>
+                    <div class="card-body-styled">
+
+                        <!-- Drag-and-drop Zone -->
+                        <div class="upload-zone mb-3" id="uploadZone"
+                            onclick="document.getElementById('imageInput').click()">
+                            <input type="file" id="imageInput" accept="image/*" style="display: none;"
+                                onchange="handleImageFileSelect(event)">
+                            <div id="uploadPrompt">
+                                <i class="bi bi-cloud-arrow-up fs-2 text-info mb-2 d-block"></i>
+                                <span class="fw-semibold text-light">Drag & drop a screenshot</span> or <span
+                                    class="text-info">browse device</span>
+                                <p class="text-secondary small mt-1">Supports PNG, JPG, JPEG (WhatsApp chats, SMS,
+                                    emails)</p>
+                            </div>
+                            <div id="previewWrapper" class="d-none">
+                                <img id="imagePreview" src="" alt="Scan Preview">
+                                <p class="text-info small mt-2 mb-0"><i class="bi bi-check-circle"></i> Screenshot
+                                    loaded successfully</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-cyber" id="imageBtn" onclick="analyzeImage()">
+                                <i class="bi bi-eye"></i>
+                                <span>Read & Analyze Screenshot</span>
+                            </button>
+                            <div class="cyber-loader" id="imageLoader"></div>
+                        </div>
+
+                        <!-- Result Section -->
+                        <div id="imageResult" class="result-box-cyber">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 📱 NEW: QR Code Phishing (Quishing) Scanner Card -->
+                <div class="glass-card mt-4">
+                    <div class="card-header-styled d-flex align-items-center justify-content-between">
+                        <h5 class="m-0 fw-bold"><i class="bi bi-qr-code-scan text-info me-2"></i> QR Code Phishing (Quishing) Scanner</h5>
+                        <span class="badge bg-warning bg-opacity-20 text-warning extra-small">Upload Image or Paste QR URL</span>
+                    </div>
+                    <div class="card-body-styled">
+                        <!-- Drag-and-drop Image File Upload Zone for QR Codes -->
+                        <div class="upload-zone mb-3" id="qrUploadZone" onclick="document.getElementById('qrFileInput').click()">
+                            <input type="file" id="qrFileInput" accept="image/*" style="display: none;" onchange="handleQrImageFileSelect(event)">
+                            <div id="qrUploadPrompt">
+                                <i class="bi bi-qr-code-scan fs-1 text-info mb-2 d-block"></i>
+                                <span class="fw-semibold text-light">Click to Upload QR Code Image</span> or <span class="text-info">Drag & Drop QR Image</span>
+                                <p class="text-secondary small mt-1">Supports PNG, JPG, JPEG (Scan posters, restaurant QR menus, email attachments)</p>
+                            </div>
+                            <div id="qrPreviewWrapper" class="d-none text-center">
+                                <img id="qrImagePreview" src="" alt="QR Preview" style="max-height: 150px;" class="rounded border border-secondary mb-2">
+                                <p class="text-info extra-small mb-0"><i class="bi bi-check-circle-fill me-1"></i>QR Image Loaded & Payload Extracted</p>
+                            </div>
+                        </div>
+
+                        <!-- Sample QR Code Quick Testers -->
+                        <div class="mb-2">
+                            <label class="extra-small text-secondary mb-1">Quick Sample QR Testers</label>
+                            <div class="d-flex flex-wrap gap-1 mb-2">
+                                <button class="btn btn-sm btn-outline-danger extra-small py-1" onclick="document.getElementById('qrPayloadInput').value = 'https://secure-login-verify-account-update.xyz/auth'; scanQrCode();">
+                                    🚨 Phishing QR (.xyz)
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning extra-small py-1 text-dark" onclick="document.getElementById('qrPayloadInput').value = 'WIFI:S:Free_Airport_WiFi;P:fake_pass_123;T:WPA;;'; scanQrCode();">
+                                    ⚠️ Fake Airport WiFi QR
+                                </button>
+                                <button class="btn btn-sm btn-outline-success extra-small py-1" onclick="document.getElementById('qrPayloadInput').value = 'https://www.chase.com/personal/banking'; scanQrCode();">
+                                    ✅ Verified Bank QR
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-2 gap-2">
+                            <input type="text" id="qrPayloadInput" class="form-control form-control-cyber" value="https://secure-login-verify-account-update.xyz/auth" placeholder="Extracted QR payload URL/Data or paste link...">
+                            <button class="btn btn-cyber" onclick="scanQrCode()">
+                                <i class="bi bi-shield-check me-1"></i>
+                                <span>Scan Payload</span>
+                            </button>
+                        </div>
+                        <div id="qrResult" class="result-box-cyber">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🌐 NEW: Scammer IP & Node Hop Tracking System Card -->
+                <div class="glass-card mt-4">
+                    <div class="card-header-styled d-flex align-items-center justify-content-between">
+                        <h5 class="m-0 fw-bold"><i class="bi bi-diagram-3-fill text-danger me-2"></i> Scammer IP Node & Network Hop Tracker</h5>
+                        <span class="badge" style="background: rgba(255, 23, 68, 0.15); color: #ff5252; border: 1px solid rgba(255, 23, 68, 0.35); font-size: 0.75rem; padding: 4px 10px;">
+                            <i class="bi bi-activity me-1"></i>Live Node Routing Trace
+                        </span>
+                    </div>
+                    <div class="card-body-styled">
+                        <div class="input-group mb-2 gap-2">
+                            <input type="text" id="scammerTrackInput" class="form-control form-control-cyber" value="185.220.101.5" placeholder="Enter suspect Scammer IP / Domain / URL..." onkeydown="if(event.key==='Enter') trackScammerNode()">
+                            <button class="btn btn-cyber" id="btnTrackScammer" onclick="trackScammerNode()">
+                                <i class="bi bi-crosshair"></i>
+                                <span>Trace Scammer Node</span>
+                            </button>
+                        </div>
+
+                        <!-- 1-Click Quick Sample Testers -->
+                        <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+                            <span class="text-secondary extra-small fw-semibold">Quick Demos:</span>
+                            <button class="btn btn-sm btn-outline-info extra-small py-0 px-2" type="button" onclick="setAndTrackScammer('10.123.174.20:5000')"><i class="bi bi-laptop me-1"></i>Local LAN (10.123.174.20:5000)</button>
+                            <button class="btn btn-sm btn-outline-danger extra-small py-0 px-2" type="button" onclick="setAndTrackScammer('185.220.101.5')"><i class="bi bi-shield-slash me-1"></i>TOR Exit (185.220.101.5)</button>
+                            <button class="btn btn-sm btn-outline-warning extra-small py-0 px-2 text-warning" type="button" onclick="setAndTrackScammer('https://secure-login-verify-account.xyz')"><i class="bi bi-exclamation-triangle me-1"></i>Phishing (.xyz)</button>
+                            <button class="btn btn-sm btn-outline-success extra-small py-0 px-2" type="button" onclick="setAndTrackScammer('google.com')"><i class="bi bi-check2-circle me-1"></i>Safe (google.com)</button>
+                        </div>
+
+                        <!-- Scammer Hop Network Canvas Visualizer -->
+                        <div class="position-relative mb-2">
+                            <canvas id="scammerTrackingCanvas" height="230" class="w-100 rounded border border-secondary border-opacity-20" style="background: #060911; display: block;"></canvas>
+                        </div>
+
+                        <div id="scammerTrackResult" class="extra-small text-secondary">
+                            <!-- Populated dynamically by trackScammerNode() -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Threat Origin Radar Tracker Card -->
+                <div class="glass-card mt-4" id="radarCard" style="display: none;">
+                    <div class="card-header-styled d-flex align-items-center justify-content-between">
+                        <h5 class="m-0 fw-bold"><i class="bi bi-radar text-info me-2"></i> Scammer Origin Geolocation Radar</h5>
+                        <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-30" style="font-size: 0.8rem;" id="radarStatusBadge">Honeypot Active</span>
+                    </div>
+                    <div class="card-body-styled text-center">
+                        <div class="radar-container mb-3">
+                            <div class="radar-sweep" id="radarSweep"></div>
+                            <div class="radar-ping" id="radarPing"></div>
+                        </div>
+                        
+                        <!-- Radar console status log -->
+                        <div class="p-3 rounded bg-dark bg-opacity-50 border border-secondary border-opacity-10 text-start font-monospace small text-light" style="max-height: 150px; overflow-y: auto; font-family: monospace;" id="radarConsole">
+                            <div class="text-secondary">[Radar Console]: Awaiting Threat origin coordinates...</div>
+                        </div>
+                        
+                        <!-- Resolved Location Details -->
+                        <div id="radarResults" class="mt-3 text-start" style="display: none;">
+                            <div class="row text-light">
+                                <div class="col-md-6 mb-2">
+                                    <div class="text-secondary extra-small fw-bold" style="font-size: 0.75rem;">RESOLVED COUNTRY</div>
+                                    <span class="fw-bold" id="radarCountry">-</span>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="text-secondary extra-small fw-bold" style="font-size: 0.75rem;">CITY / PROXY HUB</div>
+                                    <span class="fw-bold" id="radarCity">-</span>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="text-secondary extra-small fw-bold" style="font-size: 0.75rem;">GEO COORDINATES</div>
+                                    <span class="fw-bold text-info" id="radarGeo">-</span>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="text-secondary extra-small fw-bold" style="font-size: 0.75rem;">RESOLVED IP ADDR</div>
+                                    <span class="fw-bold text-warning" id="radarIp">-</span>
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-secondary extra-small fw-bold" style="font-size: 0.75rem;">ISP / ROUTING NETWORK</div>
+                                    <span class="fw-bold text-light" id="radarIsp">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Side: Cyber Safety Chatbot Companion -->
+            <div class="col-lg-5">
+                <div class="glass-card sticky-top" style="top: 20px;">
+                    <div class="card-header-styled d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="bg-info bg-opacity-10 p-2 rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 40px; height: 40px;">
+                                <i class="bi bi-robot text-info fs-5"></i>
+                            </div>
+                            <div>
+                                <h5 class="m-0 fw-bold">Safety Companion</h5>
+                                <small class="text-secondary">ScamShield Cyber Agent</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-1">
+                            <button class="btn btn-sm btn-outline-secondary opacity-75" id="speakToggleBtn" onclick="toggleSpeechOutput()" title="Toggle Voice Responses (Voice Out)"><i class="bi bi-volume-up-fill text-info"></i></button>
+                            <button class="btn btn-sm btn-outline-secondary opacity-50" onclick="clearChat()"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="card-body-styled chatbot-container">
+                        <!-- Message History -->
+                        <div id="chatHistory" class="chat-history">
+                            <div class="chat-bubble bot">
+                                <strong>Hello! I am your Cyber Safety Agent.</strong>
+                                <p class="m-0 mt-1">Are you suspicious of a transaction, OTP request, phone call, or
+                                    delivery package message? Tell me what happened, and I will guide you safely.</p>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input Box -->
+                        <div class="input-group gap-2">
+                            <button class="btn btn-cyber-outline px-3" id="micBtn" onclick="toggleVoiceInput()" title="Voice Input (Speech-to-Text)">
+                                <i class="bi bi-mic-fill"></i>
+                            </button>
+                            <input type="text" id="chatInput" class="form-control form-control-cyber"
+                                placeholder="Ask questions, e.g., 'A delivery driver is demanding OTP...'"
+                                onkeypress="handleChatEnter(event)">
+                            <button class="btn btn-cyber px-4" onclick="sendChatMessage()">
+                                <i class="bi bi-send"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        </div> <!-- End of External Threat View -->
+
+        <!-- Insider Threat UEBA Dashboard View -->
+        <div id="uebaThreatView" style="display: none;">
+            <!-- UEBA System Header & Quick Stats -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="glass-card p-3 text-center">
+                        <div class="text-secondary small fw-bold text-uppercase">MONITORED ENTITIES</div>
+                        <h2 class="fw-bold my-1 text-info" id="uebaStatUsers">5 Users</h2>
+                        <span class="badge bg-info bg-opacity-20 text-info small">Behavioral Profiles Active</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="glass-card p-3 text-center">
+                        <div class="text-secondary small fw-bold text-uppercase">TOTAL ALERTS</div>
+                        <h2 class="fw-bold my-1 text-warning" id="uebaStatAlerts">0</h2>
+                        <span class="badge bg-warning bg-opacity-20 text-warning small" id="uebaStatCritical">0 Critical</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="glass-card p-3 text-center">
+                        <div class="text-secondary small fw-bold text-uppercase">FALSE POSITIVE RATE</div>
+                        <h2 class="fw-bold my-1 text-success" id="uebaStatFpRate">0.0%</h2>
+                        <span class="badge bg-success bg-opacity-20 text-success small" id="uebaStatFpCount">Low FP Design Active</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="glass-card p-3 text-center">
+                        <div class="text-secondary small fw-bold text-uppercase">ANOMALY ENGINE</div>
+                        <h2 class="fw-bold my-1 text-primary" style="font-size: 1.1rem; line-height: 1.8rem;"><i class="bi bi-cpu-fill me-1"></i>Z-Score + Peer ML</h2>
+                        <span class="badge bg-primary bg-opacity-20 text-primary small">Dynamic Baselining</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simulation Scenarios Control Center -->
+            <div class="glass-card mb-4">
+                <div class="card-header-styled d-flex justify-content-between align-items-center">
+                    <h5 class="m-0 fw-bold"><i class="bi bi-play-circle-fill text-warning me-2"></i> Simulated Organizational Log Generators & Scenarios</h5>
+                    <span class="badge bg-dark border border-secondary text-secondary">Real-Time Ingestion Control</span>
+                </div>
+                <div class="card-body-styled">
+                    <p class="text-secondary small mb-3">Simulate workplace log activity (logins, file access, data transfer volumes) to observe how per-user behavioral baselining differentiates benign activity from insider threat exfiltration.</p>
+                    
+                    <!-- Quick Preset Scenario Buttons -->
+                    <div class="d-flex flex-wrap gap-2 mb-4 pb-3 border-bottom border-secondary border-opacity-15">
+                        <button class="btn btn-sm btn-cyber-outline" onclick="runUebaScenario('normal_traffic')">
+                            <i class="bi bi-check-circle-fill text-success me-1"></i>Simulate Normal Workday
+                        </button>
+                        <button class="btn btn-sm btn-cyber-outline" style="border-color: rgba(255, 23, 68, 0.5); color: #ff1744;" onclick="runUebaScenario('exfiltration_insider')">
+                            <i class="bi bi-database-fill-down text-danger me-1"></i>Inject Threat: Salary & DB Exfiltration (Rahul)
+                        </button>
+                        <button class="btn btn-sm btn-cyber-outline" style="border-color: rgba(255, 179, 0, 0.5); color: #ffb300;" onclick="runUebaScenario('honeypot')">
+                            <i class="bi bi-radioactive text-warning me-1"></i>Inject Threat: Honeypot Trap Triggered
+                        </button>
+                        <button class="btn btn-sm btn-cyber-outline" style="border-color: rgba(112, 0, 255, 0.5); color: #b388ff;" onclick="runUebaScenario('slow_stealth')">
+                            <i class="bi bi-moon-stars-fill text-purple me-1"></i>Inject Threat: Off-Hours Stealth Egress
+                        </button>
+                        <button class="btn btn-sm btn-secondary ms-auto" id="rebaselineBtn" onclick="rebaselineUeba()">
+                            <i class="bi bi-arrow-repeat me-1"></i>Recalculate Baselines
+                        </button>
+                    </div>
+
+                    <!-- Interactive Live Telemetry Injection Form -->
+                    <div class="p-3 rounded border border-secondary border-opacity-20" style="background: rgba(15, 23, 42, 0.5);">
+                        <h6 class="fw-bold text-info mb-3 small uppercase"><i class="bi bi-sliders me-2"></i>Custom Real-Time Telemetry Event Injector</h6>
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label extra-small text-secondary fw-bold">TARGET ENTITY PROFILE</label>
+                                <select class="form-select form-select-cyber form-select-sm" id="simUserSelect" onchange="updateSimFormDefaults()">
+                                    <option value="u_rahul">Rahul Verma (Marketing - Resigning/Watchlist)</option>
+                                    <option value="u_ananya">Ananya Sharma (Finance - Accountant)</option>
+                                    <option value="u_vikram">Vikram Patel (DevOps - Cloud Architect)</option>
+                                    <option value="u_neha">Neha Gupta (HR - Talent Acquisition)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label extra-small text-secondary fw-bold">TIMESTAMP (HOUR)</label>
+                                <select class="form-select form-select-cyber form-select-sm" id="simHourSelect">
+                                    <option value="14">14:00 (Standard Window)</option>
+                                    <option value="2">02:00 AM (Critical Off-Hours)</option>
+                                    <option value="23">23:00 PM (Late Night Access)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label extra-small text-secondary fw-bold">TRANSFER (MB)</label>
+                                <input type="number" class="form-control form-control-cyber form-control-sm" id="simMbInput" value="2450">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label extra-small text-secondary fw-bold">TARGET FILE ASSET</label>
+                                <select class="form-select form-select-cyber form-select-sm" id="simFileSelect">
+                                    <option value="executive_salaries_2026.xlsx">executive_salaries_2026.xlsx (Level 5)</option>
+                                    <option value="canary_honeypot_passwords.xlsx">canary_honeypot_passwords.xlsx (TRAP FILE)</option>
+                                    <option value="engineering_codebase.tar.gz">engineering_codebase.tar.gz (Level 4)</option>
+                                    <option value="general_ledger_2026.xlsx">general_ledger_2026.xlsx (Level 4)</option>
+                                    <option value="marketing_flyer.pdf">marketing_flyer.pdf (Level 1)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label extra-small text-secondary fw-bold">EGRESS VECTOR</label>
+                                <select class="form-select form-select-cyber form-select-sm" id="simDestSelect">
+                                    <option value="External USB Drive">External USB Drive</option>
+                                    <option value="Personal Google Drive">Personal Google Drive</option>
+                                    <option value="Internal Corporate Share">Internal Corporate Share</option>
+                                    <option value="Dev Server Build">Dev Server Build</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-3 d-flex justify-content-between align-items-center">
+                            <span class="extra-small text-secondary" id="userProfileHint"><i class="bi bi-info-circle me-1"></i> Rahul Verma: Resigning / Watchlist Active</span>
+                            <button class="btn btn-sm btn-cyber" onclick="injectCustomTelemetryEvent()">
+                                <i class="bi bi-send-fill me-1"></i>Inject Telemetry Event
+                            </button>
+                        </div>
+                        <!-- Immediate Simulation Result Card -->
+                        <div id="simResultBox" class="mt-3 p-3 rounded border border-secondary border-opacity-20" style="display: none; background: rgba(8, 12, 20, 0.7);">
+                            <!-- Populated by JS -->
+                        </div>
+                    <!-- 🚀 Advanced Enterprise UEBA & Defense Suite -->
+                    <div class="mt-4 p-3 rounded border border-secondary border-opacity-20" style="background: rgba(15, 23, 42, 0.6);">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold text-light m-0"><i class="bi bi-rocket-takeoff-fill text-info me-2"></i>Advanced Enterprise Analytical & Defense Suite</h6>
+                            <span class="badge bg-purple bg-opacity-20 text-purple border border-purple border-opacity-30 extra-small"><i class="bi bi-shield-lock me-1"></i>Enterprise Grade UEBA v2.0</span>
+                        </div>
+                        
+                        <ul class="nav nav-pills nav-justified mb-3 gap-2" id="advUebaTabs" role="tablist">
+                            <li class="nav-item">
+                                <button class="nav-link active extra-small py-2 text-info" id="tab-nlp" data-bs-toggle="pill" data-bs-target="#panel-nlp" type="button"><i class="bi bi-chat-text-fill me-1"></i>1. NLP Sentiment</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link extra-small py-2 text-warning" id="tab-graph" data-bs-toggle="pill" data-bs-target="#panel-graph" type="button"><i class="bi bi-diagram-3-fill me-1"></i>2. Graph GNN</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link extra-small py-2 text-success" id="tab-bio" data-bs-toggle="pill" data-bs-target="#panel-bio" type="button"><i class="bi bi-keyboard-fill me-1"></i>3. Biometrics</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link extra-small py-2 text-primary" id="tab-entropy" data-bs-toggle="pill" data-bs-target="#panel-entropy" type="button"><i class="bi bi-file-earmark-binary-fill me-1"></i>4. Entropy & DNS</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link extra-small py-2 text-danger" id="tab-jit" data-bs-toggle="pill" data-bs-target="#panel-jit" type="button"><i class="bi bi-lightning-charge-fill me-1"></i>5. JIT Containment</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link extra-small py-2 text-light" id="tab-privacy" data-bs-toggle="pill" data-bs-target="#panel-privacy" type="button"><i class="bi bi-eye-slash-fill me-1"></i>6. Zero-Trust Privacy</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link extra-small py-2 text-info" id="tab-iptrack" data-bs-toggle="pill" data-bs-target="#panel-iptrack" type="button"><i class="bi bi-geo-alt-fill me-1"></i>7. IP Geo Track</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="advUebaTabContent">
+                            <!-- 1. NLP Sentiment Velocity -->
+                            <div class="tab-pane fade show active p-3 rounded" id="panel-nlp" style="background: rgba(8, 12, 20, 0.7);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong class="text-info small"><i class="bi bi-cpu me-1"></i>LLM Collaboration Sentiment Velocity Analyzer</strong>
+                                    <span class="extra-small font-monospace text-secondary">Sentiment Velocity = &Delta;S / &Delta;t</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="extra-small text-secondary mb-1">Preset Collaboration Scenarios</label>
+                                    <select class="form-select form-select-cyber form-select-sm mb-2" id="nlpScenarioSelect" onchange="document.getElementById('nlpSnippetInput').value = this.value; analyzeNlpSentiment();">
+                                        <option value="Management is corrupt, I am interviewing next week and downloading codebase files before leaving.">🚨 Flight Risk & Data Exfiltration Notice ("Management corrupt, downloading files...")</option>
+                                        <option value="This project is terrible, worst place to work, screw this management.">⚠️ Hostile Workplace Frustration ("Worst place to work...")</option>
+                                        <option value="Completed the Q3 marketing report and updated user documentation for team.">✅ Benign Operational Interaction ("Completed Q3 report...")</option>
+                                    </select>
+                                </div>
+                                <div class="row g-2 align-items-center mb-2">
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control form-control-cyber form-control-sm" id="nlpSnippetInput" value="Management is corrupt, I am interviewing next week and downloading codebase files before leaving." oninput="analyzeNlpSentiment()">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-sm btn-info w-100 py-1 extra-small fw-bold" onclick="analyzeNlpSentiment()">
+                                            <i class="bi bi-calculator me-1"></i>Analyze Velocity
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="nlpResultBox" class="extra-small text-secondary">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- 2. GNN Graph Traversal -->
+                            <div class="tab-pane fade p-3 rounded" id="panel-graph" style="background: rgba(8, 12, 20, 0.7);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong class="text-warning small"><i class="bi bi-diagram-3 me-1"></i>Entity Relationship Network Graph (GNN Traversal Visualizer)</strong>
+                                    <span class="badge bg-warning bg-opacity-20 text-warning extra-small"><i class="bi bi-diagram-2 me-1"></i>Live Topology Graph</span>
+                                </div>
+                                
+                                <!-- Canvas Network Graph Visualizer -->
+                                <div class="position-relative mb-2">
+                                    <canvas id="gnnGraphCanvas" width="700" height="230" class="w-100 rounded border border-secondary border-opacity-20" style="background: #080c14;"></canvas>
+                                </div>
+
+                                <div class="row g-2 mb-2">
+                                    <div class="col-md-4">
+                                        <label class="extra-small text-secondary">User Entity</label>
+                                        <select class="form-select form-select-cyber form-select-sm" id="graphUserSelect" onchange="evaluateGraphTraversal()">
+                                            <option value="u_rahul">Rahul Verma (Marketing)</option>
+                                            <option value="u_ananya">Ananya Sharma (Finance)</option>
+                                            <option value="u_vikram">Vikram Patel (DevOps)</option>
+                                            <option value="u_neha">Neha Gupta (HR)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="extra-small text-secondary">Jump Host</label>
+                                        <select class="form-select form-select-cyber form-select-sm" id="graphHostSelect" onchange="evaluateGraphTraversal()">
+                                            <option value="host_marketing_01">host_marketing_01 (Marketing Workstation)</option>
+                                            <option value="host_finance_01">host_finance_01 (Finance Workstation)</option>
+                                            <option value="host_devops_jump">host_devops_jump (DevOps Jump Host)</option>
+                                            <option value="host_hr_01">host_hr_01 (HR Workstation)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="extra-small text-secondary">Target Resource</label>
+                                        <select class="form-select form-select-cyber form-select-sm" id="graphTargetSelect" onchange="evaluateGraphTraversal()">
+                                            <option value="db_payroll_core">db_payroll_core (Critical Payroll DB)</option>
+                                            <option value="share_engineering_git">share_engineering_git (Git Code Repository)</option>
+                                            <option value="share_finance_ledger">share_finance_ledger (Finance Ledger Share)</option>
+                                            <option value="share_marketing_public">share_marketing_public (Public Folder)</option>
+                                            <option value="canary_honeypot_passwords.xlsx">canary_honeypot_passwords.xlsx (Canary Trap)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <button class="btn btn-sm btn-warning py-1 px-3 extra-small text-dark fw-bold" onclick="evaluateGraphTraversal()">
+                                        <i class="bi bi-diagram-2-fill me-1"></i>Simulate & Evaluate Path
+                                    </button>
+                                </div>
+                                <div id="graphResultBox" class="mt-2 extra-small text-secondary">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- 3. Behavioral Biometrics -->
+                            <div class="tab-pane fade p-3 rounded" id="panel-bio" style="background: rgba(8, 12, 20, 0.7);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong class="text-success small"><i class="bi bi-fingerprint me-1"></i>Behavioral Biometrics (Keystroke & Mouse Dynamics)</strong>
+                                    <span class="badge bg-danger bg-opacity-20 text-danger extra-small">Threshold: &gt; 3.5&sigma; MFA Challenge</span>
+                                </div>
+                                <div class="row g-3 mb-2">
+                                    <div class="col-md-4">
+                                        <label class="extra-small text-secondary">Flight Time (ms)</label>
+                                        <input type="number" class="form-control form-control-cyber form-control-sm" id="bioFlightInput" value="185">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="extra-small text-secondary">Dwell Time (ms)</label>
+                                        <input type="number" class="form-control form-control-cyber form-control-sm" id="bioDwellInput" value="130">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="extra-small text-secondary">Mouse Jitter (&sigma;)</label>
+                                        <input type="number" class="form-control form-control-cyber form-control-sm" id="bioJitterInput" value="28">
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <button class="btn btn-sm btn-success py-1 px-3 extra-small fw-bold" onclick="verifyBiometrics()">
+                                        <i class="bi bi-shield-check me-1"></i>Verify Biometric Rhythms
+                                    </button>
+                                </div>
+                                <div id="bioResultBox" class="mt-2 extra-small text-secondary">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- 4. Entropy & DNS Tunneling -->
+                            <div class="tab-pane fade p-3 rounded" id="panel-entropy" style="background: rgba(8, 12, 20, 0.7);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong class="text-primary small"><i class="bi bi-file-earmark-lock me-1"></i>Shannon Entropy & DNS Tunneling Inspector</strong>
+                                    <span class="extra-small font-monospace text-secondary">H(X) = -&sum; P(x) log<sub>2</sub> P(x)</span>
+                                </div>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-md-6">
+                                        <label class="extra-small text-secondary">Egress Payload Data / Hex</label>
+                                        <input type="text" class="form-control form-control-cyber form-control-sm" id="entropyPayloadInput" value="7zXZ\x00\x00\x04\xe6\xd5\x5b\x02\x00\x21\x01\x16\x00">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="extra-small text-secondary">Outbound DNS Domain Query</label>
+                                        <input type="text" class="form-control form-control-cyber form-control-sm" id="dnsQueryInput" value="chunk1.exfil.attacker-c2-domain.com">
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <button class="btn btn-sm btn-primary py-1 px-3 extra-small fw-bold" onclick="inspectEntropyAndDns()">
+                                        <i class="bi bi-search me-1"></i>Inspect Payload & DNS
+                                    </button>
+                                </div>
+                                <div id="entropyResultBox" class="mt-2 extra-small text-secondary">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- 5. JIT Micro-Containment -->
+                            <div class="tab-pane fade p-3 rounded" id="panel-jit" style="background: rgba(8, 12, 20, 0.7);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong class="text-danger small"><i class="bi bi-lightning-charge me-1"></i>Just-In-Time (JIT) Dynamic Deprivileging (Micro-Containment)</strong>
+                                    <span class="badge bg-danger bg-opacity-20 text-danger extra-small">Automated State Machine</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="extra-small text-secondary fw-bold">EVALUATE THREAT RISK SCORE TIER (0 - 100): <span id="jitScoreVal" class="text-warning">88</span></label>
+                                    <input type="range" class="form-range" id="jitScoreSlider" min="0" max="100" value="88" oninput="document.getElementById('jitScoreVal').innerText = this.value; updateJitContainment();">
+                                </div>
+                                <div id="jitResultBox" class="extra-small">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- 6. Zero-Trust Privacy -->
+                            <div class="tab-pane fade p-3 rounded" id="panel-privacy" style="background: rgba(8, 12, 20, 0.7);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong class="text-light small"><i class="bi bi-lock me-1"></i>Zero-Trust Analyst Privacy & Dual-Authorization Unmasking</strong>
+                                    <div class="form-check form-switch m-0">
+                                        <input class="form-check-input" type="checkbox" id="zeroTrustPrivacyToggle" checked onchange="toggleZeroTrustPrivacy(this.checked)">
+                                        <label class="form-check-label extra-small text-warning" for="zeroTrustPrivacyToggle">Mask Identity Tags (SOC Bias Reduction)</label>
+                                    </div>
+                                </div>
+                                <div class="p-2 rounded border border-secondary border-opacity-20 bg-dark mb-2">
+                                    <div class="extra-small text-secondary mb-1"><i class="bi bi-info-circle text-info me-1"></i>In compliance with GDPR and labor privacy, SOC analysts view alert streams with anonymized hashes (e.g., <code class="text-warning">Entity_7F8A92</code>). Real names are revealed only via dual SOC Lead + HR authorization tokens for scores &ge; 85.</div>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control form-control-cyber form-control-sm" id="unmaskAlertIdInput" placeholder="ALERT ID (e.g. ALT-1A2B3C)">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" class="form-control form-control-cyber form-control-sm" id="tokenLead1Input" value="SOC_LEAD_01">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" class="form-control form-control-cyber form-control-sm" id="tokenLead2Input" value="HR_DIR_02">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-sm btn-outline-warning w-100 py-1 extra-small" onclick="requestDualAuthUnmask()">
+                                            <i class="bi bi-key-fill me-1"></i>Unmask
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="privacyResultBox" class="mt-2 extra-small text-secondary">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- 7. IP Geolocation & Impossible Travel Node Tracker -->
+                            <div class="tab-pane fade p-3 rounded" id="panel-iptrack" style="background: rgba(8, 12, 20, 0.7);">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong class="text-info small"><i class="bi bi-globe-americas me-1"></i>Global IP Geolocation & Live Device GPS Tracker</strong>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-success py-1 px-2 extra-small me-1" onclick="acquireDeviceGpsLocation()">
+                                            <i class="bi bi-crosshair me-1"></i>📍 Acquire Live Device GPS
+                                        </button>
+                                        <span class="badge bg-danger bg-opacity-20 text-danger extra-small"><i class="bi bi-airplane-engines me-1"></i>Limit: &gt; 500 mph</span>
+                                    </div>
+                                </div>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-md-3">
+                                        <label class="extra-small text-secondary">Origin IP / GPS</label>
+                                        <input type="text" class="form-control form-control-cyber form-control-sm" id="ip1Input" value="108.12.44.1">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="extra-small text-secondary">Origin City (Global Database)</label>
+                                        <select class="form-select form-select-cyber form-select-sm" id="city1Select">
+                                            <option value="New York">New York 🇺🇸</option>
+                                            <option value="San Francisco">San Francisco 🇺🇸</option>
+                                            <option value="Chicago">Chicago 🇺🇸</option>
+                                            <option value="Toronto">Toronto 🇨🇦</option>
+                                            <option value="London">London 🇬🇧</option>
+                                            <option value="Paris">Paris 🇫🇷</option>
+                                            <option value="Berlin">Berlin 🇩🇪</option>
+                                            <option value="Amsterdam">Amsterdam 🇳🇱</option>
+                                            <option value="Tokyo">Tokyo 🇯🇵</option>
+                                            <option value="Singapore">Singapore 🇸🇬</option>
+                                            <option value="Hong Kong">Hong Kong 🇭🇰</option>
+                                            <option value="Sydney">Sydney 🇦🇺</option>
+                                            <option value="Mumbai">Mumbai 🇮🇳</option>
+                                            <option value="Delhi">Delhi 🇮🇳</option>
+                                            <option value="Seoul">Seoul 🇰🇷</option>
+                                            <option value="Shanghai">Shanghai 🇨🇳</option>
+                                            <option value="Dubai">Dubai 🇦🇪</option>
+                                            <option value="Sao Paulo">Sao Paulo 🇧🇷</option>
+                                            <option value="Johannesburg">Johannesburg 🇿🇦</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="extra-small text-secondary">Secondary Egress IP / GPS</label>
+                                        <input type="text" class="form-control form-control-cyber form-control-sm" id="ip2Input" value="82.165.197.1">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="extra-small text-secondary">Secondary Egress City</label>
+                                        <select class="form-select form-select-cyber form-select-sm" id="city2Select">
+                                            <option value="London" selected>London 🇬🇧</option>
+                                            <option value="New York">New York 🇺🇸</option>
+                                            <option value="San Francisco">San Francisco 🇺🇸</option>
+                                            <option value="Paris">Paris 🇫🇷</option>
+                                            <option value="Berlin">Berlin 🇩🇪</option>
+                                            <option value="Tokyo">Tokyo 🇯🇵</option>
+                                            <option value="Singapore">Singapore 🇸🇬</option>
+                                            <option value="Sydney">Sydney 🇦🇺</option>
+                                            <option value="Mumbai">Mumbai 🇮🇳</option>
+                                            <option value="Delhi">Delhi 🇮🇳</option>
+                                            <option value="Dubai">Dubai 🇦🇪</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Custom Lat/Lon Option -->
+                                <div class="form-check form-switch mb-2">
+                                    <input class="form-check-input" type="checkbox" id="useCustomCoordsToggle" onchange="document.getElementById('customCoordsRow').style.display = this.checked ? 'flex' : 'none'">
+                                    <label class="form-check-label extra-small text-warning" for="useCustomCoordsToggle">Use Custom GPS Coordinates (Latitude / Longitude)</label>
+                                </div>
+
+                                <div class="row g-2 mb-2" id="customCoordsRow" style="display: none;">
+                                    <div class="col-md-3">
+                                        <input type="number" step="any" class="form-control form-control-cyber form-control-sm" id="customLat1Input" placeholder="Origin Lat (e.g. 40.71)">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="number" step="any" class="form-control form-control-cyber form-control-sm" id="customLon1Input" placeholder="Origin Lon (e.g. -74.00)">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="number" step="any" class="form-control form-control-cyber form-control-sm" id="customLat2Input" placeholder="Dest Lat (e.g. 51.50)">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="number" step="any" class="form-control form-control-cyber form-control-sm" id="customLon2Input" placeholder="Dest Lon (e.g. -0.12)">
+                                    </div>
+                                </div>
+
+                                <div class="row g-2 align-items-center mb-2">
+                                    <div class="col-md-8">
+                                        <label class="extra-small text-secondary">Elapsed Time Between Logins (Minutes)</label>
+                                        <input type="number" class="form-control form-control-cyber form-control-sm" id="timeDeltaInput" value="10">
+                                    </div>
+                                    <div class="col-md-4 text-end mt-3">
+                                        <button class="btn btn-sm btn-info w-100 py-1 extra-small fw-bold" onclick="evaluateIpGeolocationTrack()">
+                                            <i class="bi bi-geo me-1"></i>Track Velocity & Node
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="ipTrackResultBox" class="extra-small text-secondary">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main UEBA Grid: Left Alert Feed, Right Baseline Profiler -->
+            <div class="row g-4 mt-1">
+                <!-- Left: Anomaly Detection Alert Feed -->
+                <div class="col-lg-7">
+                    <div class="glass-card">
+                        <div class="card-header-styled d-flex justify-content-between align-items-center">
+                            <h5 class="m-0 fw-bold"><i class="bi bi-bell-fill text-danger me-2"></i> Behavioral Anomaly Alerts</h5>
+                            <span class="badge bg-danger bg-opacity-20 text-danger border border-danger border-opacity-30">Low False-Positive Engine</span>
+                        </div>
+                        <div class="card-body-styled">
+                            <div id="uebaAlertsList" class="d-flex flex-column gap-3">
+                                <div class="text-center py-5 text-secondary">
+                                    <i class="bi bi-shield-check fs-1 d-block mb-2 text-success"></i>
+                                    <p>No active threat anomalies detected. Ingest simulated logs above to trigger baseline evaluation.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Per-User Baseline Profiler & FP Mitigation Philosophy -->
+                <div class="col-lg-5">
+                    <div class="glass-card mb-4">
+                        <div class="card-header-styled d-flex justify-content-between align-items-center">
+                            <h5 class="m-0 fw-bold"><i class="bi bi-person-lines-fill text-info me-2"></i> Per-Entity Behavioral Profiles</h5>
+                            <button class="btn btn-sm btn-cyber-outline py-1 px-2 text-info extra-small" data-bs-toggle="modal" data-bs-target="#addEntityModal">
+                                <i class="bi bi-person-plus-fill me-1"></i>+ Add Monitored Entity
+                            </button>
+                        </div>
+                        <div class="card-body-styled">
+                            <div id="uebaUsersList" class="d-flex flex-column gap-3">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card">
+                        <div class="card-header-styled">
+                            <h5 class="m-0 fw-bold"><i class="bi bi-sliders text-success me-2"></i> Low False-Positive Design</h5>
+                        </div>
+                        <div class="card-body-styled">
+                            <ul class="list-unstyled small d-flex flex-column gap-2 m-0 text-secondary">
+                                <li class="d-flex align-items-start gap-2">
+                                    <i class="bi bi-check2-square text-success mt-1"></i>
+                                    <span><strong>Statistical Baseline (Z-Score/IQR):</strong> Data transfer & file access metrics normalized per employee.</span>
+                                </li>
+                                <li class="d-flex align-items-start gap-2">
+                                    <i class="bi bi-check2-square text-success mt-1"></i>
+                                    <span><strong>Peer Department Context:</strong> Cross-referenced against departmental averages to prevent false alerts.</span>
+                                </li>
+                                <li class="d-flex align-items-start gap-2">
+                                    <i class="bi bi-check2-square text-success mt-1"></i>
+                                    <span><strong>Analyst Feedback Loop:</strong> Flagging alerts as 'False Positive' auto-tunes sensitivity multipliers and expands std bounds.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End of Main Container -->
+
+    <!-- UI/UX Interaction Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set up Drag and Drop features
+        const uploadZone = document.getElementById('uploadZone');
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+            }, false);
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length > 0) {
+                document.getElementById('imageInput').files = files;
+                showImagePreview(files[0]);
+            }
+        });
+
+        function handleImageFileSelect(event) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                showImagePreview(files[0]);
+            }
+        }
+
+        function showImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('uploadPrompt').classList.add('d-none');
+                document.getElementById('previewWrapper').classList.remove('d-none');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Helper to format results beautifully
+        function renderCustomResult(elementId, data) {
+            const resultBox = document.getElementById(elementId);
+            resultBox.style.display = 'block';
+
+            if (data.error) {
+                resultBox.className = 'result-box-cyber danger';
+                resultBox.innerHTML = `
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="bi bi-exclamation-triangle-fill text-danger fs-4"></i>
+                        <div>
+                            <h6 class="fw-bold text-danger mb-1">Scan Failure</h6>
+                            <p class="mb-1 text-light">${data.error}</p>
+                            <small class="text-secondary d-block">Make sure your API keys in .env are active, properly saved, and you have restarted the backend server.</small>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const score = data.risk_score || 0;
+            const verdict = data.verdict || "Unkown Status";
+
+            // Set styles based on risk score
+            let themeClass = 'safe';
+            let iconClass = 'bi-shield-check text-success';
+            let progressColor = '#00e676';
+
+            if (score > 65) {
+                themeClass = 'danger';
+                iconClass = 'bi-shield-slash-fill text-danger';
+                progressColor = '#ff1744';
+            } else if (score > 25) {
+                themeClass = 'warning';
+                iconClass = 'bi-exclamation-shield-fill text-warning';
+                progressColor = '#ffb300';
+            }
+
+            resultBox.className = `result-box-cyber ${themeClass}`;
+
+            let reasonsHtml = '';
+            if (data.reasons && data.reasons.length > 0) {
+                reasonsHtml = `
+                    <div class="mt-3">
+                        <div class="text-secondary small fw-semibold mb-2">Key Indicators Detected:</div>
+                        <ul class="list-unstyled d-flex flex-column gap-2 m-0">
+                            ${data.reasons.map(r => `
+                                <li class="d-flex align-items-start gap-2 text-light small">
+                                    <i class="bi bi-dot text-info fs-5 lh-1"></i>
+                                    <span>${r}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            let ocrTextHtml = '';
+            if (data.extracted_text) {
+                ocrTextHtml = `
+                    <div class="mt-2 p-2 rounded bg-dark bg-opacity-50 border border-secondary border-opacity-10">
+                        <div class="text-secondary extra-small fw-semibold">Transcribed Text:</div>
+                        <em class="text-secondary small">"${data.extracted_text}"</em>
+                    </div>
+                `;
+            }
+
+            resultBox.innerHTML = `
+                <div class="d-flex justify-content-between align-items-start border-bottom border-secondary border-opacity-10 pb-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="bi ${iconClass} fs-2"></i>
+                        <div>
+                            <h5 class="fw-bold m-0 text-light">${verdict}</h5>
+                            <small class="text-secondary">ScamShield Verdict</small>
+                        </div>
+                    </div>
+                    
+                    <div class="risk-gauge-container">
+                        <svg class="risk-gauge" viewBox="0 0 100 100">
+                            <circle class="bg" cx="50" cy="50" r="40"></circle>
+                            <circle class="meter" id="${elementId}_meter" cx="50" cy="50" r="40"></circle>
+                        </svg>
+                        <div class="risk-value">${score}%</div>
+                    </div>
+                </div>
+                ${ocrTextHtml}
+                ${reasonsHtml}
+                
+                <!-- Action Controls for Download and Tracking Radar -->
+                <div class="d-flex gap-2 mt-3 pt-3 border-top border-secondary border-opacity-10 flex-wrap">
+                    <button class="btn btn-sm btn-cyber" onclick="downloadReport('${elementId}', '${verdict}', ${score}, ${JSON.stringify(data.reasons || [])}, '${data.extracted_text || ''}')" title="Download Printable Verification Report">
+                        <i class="bi bi-download"></i> Download Report (PDF/Text)
+                    </button>
+                    <button class="btn btn-sm btn-cyber-outline" onclick="shareThreatScan('${elementId}')" title="Share Threat Scan url link">
+                        <i class="bi bi-share-fill"></i> Share Scan
+                    </button>
+                    ${score > 25 ? `
+                    <button class="btn btn-sm btn-cyber-outline" onclick="triggerScammerRadar('${verdict}')" title="Deploy Honeypot Tracker IP Map">
+                        <i class="bi bi-radar"></i> Trace Scam Origin
+                    </button>
+                    ` : ''}
+                </div>
+            `;
+
+            // Draw circular progress after elements render
+            setTimeout(() => {
+                const meter = document.getElementById(`${elementId}_meter`);
+                if (meter) {
+                    const radius = 40;
+                    const circumference = 2 * Math.PI * radius; // ~251.2
+                    const offset = circumference - (score / 100) * circumference;
+                    meter.style.strokeDasharray = circumference;
+                    meter.style.strokeDashoffset = offset;
+                    meter.style.stroke = progressColor;
+                }
+            }, 50);
+        }
+
+        // Show/hide loader utility
+        function toggleLoading(sectionId, isLoading) {
+            const loader = document.getElementById(`${sectionId}Loader`);
+            const btn = document.getElementById(`${sectionId}Btn`);
+            if (isLoading) {
+                loader.style.display = 'block';
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+            } else {
+                loader.style.display = 'none';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        }
+
+        // 1 & 5. Analyze text content
+        async function analyzeText() {
+            const textVal = document.getElementById('textInput').value;
+            if (!textVal.trim()) return alert("Please enter some text to scan.");
+
+            toggleLoading('text', true);
+            document.getElementById('textResult').style.display = 'none';
+
+            try {
+                const res = await fetch('/analyze-text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: textVal })
+                });
+                const data = await res.json();
+                renderCustomResult('textResult', data);
+            } catch (err) {
+                renderCustomResult('textResult', { error: err.message });
+            } finally {
+                toggleLoading('text', false);
+            }
+        }
+
+        // 2. URL Trust Checker
+        async function analyzeUrl() {
+            const urlVal = document.getElementById('urlInput').value;
+            if (!urlVal.trim()) return alert("Please enter a link to check.");
+
+            toggleLoading('url', true);
+            document.getElementById('urlResult').style.display = 'none';
+
+            try {
+                const res = await fetch('/analyze-url', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: urlVal })
+                });
+                const data = await res.json();
+                renderCustomResult('urlResult', data);
+            } catch (err) {
+                renderCustomResult('urlResult', { error: err.message });
+            } finally {
+                toggleLoading('url', false);
+            }
+        }
+
+        // 4. Screenshot Scam Detector
+        async function analyzeImage() {
+            const fileInput = document.getElementById('imageInput');
+            if (fileInput.files.length === 0) return alert('Please select or drag a screenshot image first.');
+
+            toggleLoading('image', true);
+            document.getElementById('imageResult').style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const res = await fetch('/analyze-image', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                renderCustomResult('imageResult', data);
+            } catch (err) {
+                renderCustomResult('imageResult', { error: err.message });
+            } finally {
+                toggleLoading('image', false);
+            }
+        }
+
+        // 7. AI Chatbot
+        async function sendChatMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const userText = chatInput.value.trim();
+            if (!userText) return;
+
+            const chatHistory = document.getElementById('chatHistory');
+
+            // Add user message bubble
+            chatHistory.innerHTML += `
+                <div class="chat-bubble user">
+                    ${userText}
+                </div>
+            `;
+            chatInput.value = '';
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            // Add loading bot bubble
+            const loadingBubbleId = 'bot_loading_' + Date.now();
+            chatHistory.innerHTML += `
+                <div class="chat-bubble bot" id="${loadingBubbleId}">
+                    <span class="spinner-grow spinner-grow-sm text-info" role="status"></span> Analyzing safety implications...
+                </div>
+            `;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            try {
+                const res = await fetch('/chatbot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userText })
+                });
+                const data = await res.json();
+
+                const loadingBubble = document.getElementById(loadingBubbleId);
+                if (loadingBubble) loadingBubble.remove();
+
+                if (data.error) {
+                    chatHistory.innerHTML += `
+                        <div class="chat-bubble bot border border-danger text-danger">
+                            <strong>Agent Error:</strong> ${data.error}<br>
+                            <small class="opacity-75">Check your Gemini connection and configuration.</small>
+                        </div>
+                    `;
+                } else {
+                    chatHistory.innerHTML += `
+                        <div class="chat-bubble bot">
+                            <strong>Cyber Security Agent:</strong>
+                            <p class="m-0 mt-1">${data.reply}</p>
+                        </div>
+                    `;
+                    speakChatMessage(data.reply);
+                }
+            } catch (err) {
+                const loadingBubble = document.getElementById(loadingBubbleId);
+                if (loadingBubble) loadingBubble.remove();
+
+                chatHistory.innerHTML += `
+                    <div class="chat-bubble bot border border-danger text-danger">
+                        <strong>Network Error:</strong> ${err.message}
+                    </div>
+                `;
+            }
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function handleChatEnter(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        function clearChat() {
+            const chatHistory = document.getElementById('chatHistory');
+            chatHistory.innerHTML = `
+                <div class="chat-bubble bot">
+                    <strong>Hello! I am your Cyber Safety Agent.</strong> 
+                    <p class="m-0 mt-1">Are you suspicious of a transaction, OTP request, phone call, or delivery package message? Tell me what happened, and I will guide you safely.</p>
+                </div>
+            `;
+        }
+
+        // Global user subscription state
+        let userPlan = 'Free Tier';
+
+        function checkPremiumAccess(actionName) {
+            if (userPlan === 'Free Tier') {
+                const subModal = new bootstrap.Modal(document.getElementById('premiumModal'));
+                subModal.show();
+                return false;
+            }
+            return true;
+        }
+
+        // Feature 1: Download Security Certificate Report
+        function downloadReport(elementId, verdict, score, reasons, extractedText) {
+            let reportContent = `======================================================
+                  SCAMSHIELD AI CERTIFICATE
+======================================================
+Generated on : ${new Date().toLocaleString()}
+Engine Core  : ScamShield AI Core (Active)
+Scan Target  : ${elementId.replace('Result', '').toUpperCase()} Input
+------------------------------------------------------
+VERDICT      : ${verdict.toUpperCase()}
+RISK SCORE   : ${score}% / 100%
+------------------------------------------------------
+DETAILED INDICATORS DETECTED:
+${reasons && reasons.length > 0 ? reasons.map((r, idx) => `  ${idx + 1}. [FLAG] ${r}`).join('\n') : '  - No immediate indicators flagged.'}
+${extractedText ? `\nTRANSCRIBED OCR CONTENT:\n  "${extractedText}"` : ''}
+------------------------------------------------------
+This document constitutes a simulated threat scan certificate.
+Protect your sensitive data. Never share passwords or OTPs.
+======================================================`;
+
+            // Download file blob
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ScamShield_Report_${elementId.replace('Result', '')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Feature 2: Deploy Scammer Origin Honeypot Radar
+        function triggerScammerRadar(verdict) {
+            // Check for premium tier access first
+            if (!checkPremiumAccess('Scammer Honeypot Trace')) return;
+
+            const radarCard = document.getElementById('radarCard');
+            const sweep = document.getElementById('radarSweep');
+            const ping = document.getElementById('radarPing');
+            const consoleBox = document.getElementById('radarConsole');
+            const resultsBox = document.getElementById('radarResults');
+            const badge = document.getElementById('radarStatusBadge');
+
+            radarCard.style.display = 'block';
+            resultsBox.style.display = 'none';
+            ping.style.display = 'none';
+            sweep.classList.add('active');
+            badge.innerText = 'Scanning...';
+            badge.className = 'badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-30';
+
+            // Reset log
+            consoleBox.innerHTML = '<div class="text-secondary">[Radar Console]: Initializing digital honeypot trap...</div>';
+            radarCard.scrollIntoView({ behavior: 'smooth' });
+
+            const logs = [
+                { time: 600, text: '[Radar Console]: Deploying virtual proxy routing honey-tokens...' },
+                { time: 1400, text: '[Radar Console]: Analyzing network handshake headers...' },
+                { time: 2200, text: '[Radar Console]: Trace route request sent to server ISP hubs...' },
+                { time: 2800, text: '[Radar Console]: Scammer connection intercepted!' }
+            ];
+
+            logs.forEach(log => {
+                setTimeout(() => {
+                    consoleBox.innerHTML += `<div class="text-info">${log.text}</div>`;
+                    consoleBox.scrollTop = consoleBox.scrollHeight;
+                }, log.time);
+            });
+
+            setTimeout(async () => {
+                try {
+                    const res = await fetch('/track-scammer', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ verdict: verdict })
+                    });
+                    const data = await res.json();
+
+                    if (data.status === 'success') {
+                        const loc = data.location;
+                        consoleBox.innerHTML += `<div class="text-success">[SUCCESS]: Scammer located in ${loc.city}, ${loc.country}!</div>`;
+                        consoleBox.scrollTop = consoleBox.scrollHeight;
+
+                        // Display details
+                        document.getElementById('radarCountry').innerText = loc.country;
+                        document.getElementById('radarCity').innerText = loc.city;
+                        document.getElementById('radarGeo').innerText = `${loc.lat.toFixed(4)}, ${loc.lon.toFixed(4)}`;
+                        document.getElementById('radarIp').innerText = loc.ip;
+                        document.getElementById('radarIsp').innerText = loc.isp;
+
+                        // Position coordinates ping dot randomly inside radar container
+                        const randX = 30 + Math.random() * 40; // between 30% and 70%
+                        const randY = 30 + Math.random() * 40;
+                        ping.style.left = `${randX}%`;
+                        ping.style.top = `${randY}%`;
+                        ping.style.display = 'block';
+
+                        resultsBox.style.display = 'block';
+                        badge.innerText = 'Scammer Located';
+                        badge.className = 'badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-30';
+                    } else {
+                        consoleBox.innerHTML += `<div class="text-light">[INFO]: ${data.message}</div>`;
+                        consoleBox.scrollTop = consoleBox.scrollHeight;
+                        badge.innerText = 'No Threat Found';
+                        badge.className = 'badge bg-success bg-opacity-25 text-success border border-success border-opacity-30';
+                    }
+                } catch (err) {
+                    consoleBox.innerHTML += `<div class="text-danger">[ERROR]: Failed to trace location: ${err.message}</div>`;
+                } finally {
+                    sweep.classList.remove('active');
+                }
+            }, 3500);
+        }
+
+        // Feature 3: Subscribe Premium Upgrade Handling
+        async function submitSubscription() {
+            const cardInput = document.getElementById('cardNumInput').value;
+            const cvvInput = document.getElementById('cvvInput').value;
+            const subError = document.getElementById('subscriptionError');
+            const subSuccess = document.getElementById('subscriptionSuccess');
+            const btn = document.getElementById('btnSubmitSubscription');
+
+            subError.style.display = 'none';
+            subSuccess.style.display = 'none';
+
+            if (!cardInput.trim() || !cvvInput.trim()) {
+                subError.innerText = "Please fill out all payment credentials.";
+                subError.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-grow spinner-grow-sm me-2" role="status"></span>Processing Upgrade...';
+
+            try {
+                const res = await fetch('/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cardNumber: cardInput, cvv: cvvInput })
+                });
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    userPlan = 'Pro Premium';
+                    subSuccess.innerText = data.message;
+                    subSuccess.style.display = 'block';
+                    
+                    // Update navbar badge styling
+                    document.getElementById('premiumStatusArea').innerHTML = `
+                        <span class="badge-premium-pro">
+                            <i class="bi bi-patch-check-fill text-info"></i> Premium Pro Active
+                        </span>
+                    `;
+
+                    setTimeout(() => {
+                        const modalEl = document.getElementById('premiumModal');
+                        const modal = bootstrap.Modal.getInstance(modalEl);
+                        if (modal) modal.hide();
+                    }, 1800);
+                } else {
+                    subError.innerText = data.error;
+                    subError.style.display = 'block';
+                }
+            } catch (err) {
+                subError.innerText = "Connection timed out. Please try again.";
+                subError.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-wallet2 me-2"></i>Pay & Activate Premium';
+            }
+        }
+
+
+        // Global variables for Voice & Share
+        let speechRecognitionActive = false;
+        let speechSynthActive = true;
+        let recognition = null;
+
+        // Initialize Speech Recognition API
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = function() {
+                speechRecognitionActive = true;
+                const micBtn = document.getElementById('micBtn');
+                if (micBtn) {
+                    micBtn.classList.remove('btn-cyber-outline');
+                    micBtn.classList.add('btn-danger');
+                    micBtn.innerHTML = '<i class="bi bi-record-fill text-white animate-pulse"></i>';
+                }
+            };
+
+            recognition.onend = function() {
+                speechRecognitionActive = false;
+                const micBtn = document.getElementById('micBtn');
+                if (micBtn) {
+                    micBtn.classList.remove('btn-danger');
+                    micBtn.classList.add('btn-cyber-outline');
+                    micBtn.innerHTML = '<i class="bi bi-mic-fill"></i>';
+                }
+            };
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                const chatInput = document.getElementById('chatInput');
+                if (chatInput) {
+                    chatInput.value = transcript;
+                }
+            };
+
+            recognition.onerror = function(event) {
+                console.error("Speech recognition error: ", event.error);
+                recognition.stop();
+            };
+        }
+
+        function toggleVoiceInput() {
+            if (!recognition) {
+                alert("Web Speech API is not supported in this browser. Please use Chrome, Edge or Safari.");
+                return;
+            }
+            if (speechRecognitionActive) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
+
+        function toggleSpeechOutput() {
+            speechSynthActive = !speechSynthActive;
+            const speakBtn = document.getElementById('speakToggleBtn');
+            if (speakBtn) {
+                if (speechSynthActive) {
+                    speakBtn.innerHTML = '<i class="bi bi-volume-up-fill text-info"></i>';
+                } else {
+                    speakBtn.innerHTML = '<i class="bi bi-volume-mute-fill text-secondary"></i>';
+                    window.speechSynthesis.cancel(); // stop current audio
+                }
+            }
+        }
+
+        // Speaks text responses from the AI companion chatbot
+        function speakChatMessage(text) {
+            if (!speechSynthActive) return;
+            // Clean markdown formatting before speaking
+            const cleanText = text.replace(/[*#`_\-]/g, '').replace(/\[.*?\]\(.*?\)/g, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            
+            // Choose a clear English voice if possible
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google'));
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Share to Scan link generator
+        function shareThreatScan(elementId) {
+            let scanTypeParam = '';
+            let payloadVal = '';
+            
+            if (elementId === 'textResult') {
+                scanTypeParam = 'text';
+                payloadVal = document.getElementById('textInput').value;
+            } else if (elementId === 'urlResult') {
+                scanTypeParam = 'url';
+                payloadVal = document.getElementById('urlInput').value;
+            } else {
+                alert('Sharing is supported for Text messages and URL checkers.');
+                return;
+            }
+            
+            if (!payloadVal.trim()) {
+                alert('Please run a scan with input content first before sharing.');
+                return;
+            }
+            
+            const shareUrl = `${window.location.origin}${window.location.pathname}?${scanTypeParam}=${encodeURIComponent(payloadVal)}`;
+            
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                alert(`Shareable scan link copied to clipboard!\n${shareUrl}`);
+            }).catch(err => {
+                alert('Could not copy link to clipboard automatically: ' + err);
+            });
+        }
+
+        // Parse search query strings on page startup
+        function checkQueryStringTriggers() {
+            const params = new URLSearchParams(window.location.search);
+            const textParam = params.get('text');
+            const urlParam = params.get('url');
+            
+            if (textParam) {
+                const textInput = document.getElementById('textInput');
+                if (textInput) {
+                    textInput.value = textParam;
+                    // Trigger dynamic scan
+                    analyzeText();
+                }
+            } else if (urlParam) {
+                const urlInput = document.getElementById('urlInput');
+                if (urlInput) {
+                    urlInput.value = urlParam;
+                    // Trigger dynamic check
+                    analyzeUrl();
+                }
+            }
+        }
+
+        // Trigger startup check
+        window.addEventListener('DOMContentLoaded', () => {
+            checkQueryStringTriggers();
+            // Pre-load UEBA summary
+            loadUebaDashboard();
+            initAdvEnterpriseSuite();
+            initBgParticleCanvas();
+            drawScammerTrackingCanvas();
+        });
+        window.addEventListener('resize', () => {
+            drawScammerTrackingCanvas();
+        });
+
+        // ==========================================
+        // UEBA INSIDER THREAT SYSTEM JAVASCRIPT
+        // ==========================================
+
+        function switchMainTab(tab) {
+            const externalView = document.getElementById('externalThreatView');
+            const uebaView = document.getElementById('uebaThreatView');
+            const tabExtBtn = document.getElementById('tab-external-btn');
+            const tabUebaBtn = document.getElementById('tab-ueba-btn');
+
+            if (tab === 'ueba') {
+                externalView.style.display = 'none';
+                uebaView.style.display = 'block';
+                tabExtBtn.classList.remove('active');
+                tabUebaBtn.classList.add('active');
+                loadUebaDashboard();
+                initAdvEnterpriseSuite();
+            } else {
+                externalView.style.display = 'block';
+                uebaView.style.display = 'none';
+                tabExtBtn.classList.add('active');
+                tabUebaBtn.classList.remove('active');
+            }
+        }
+
+        async function loadUebaDashboard() {
+            try {
+                const res = await fetch('/api/ueba/dashboard');
+                const data = await res.json();
+
+                // Update summary stats
+                const uebaUsersEl = document.getElementById('uebaStatUsers');
+                if (uebaUsersEl) uebaUsersEl.innerText = `${data.total_entities_monitored} Users`;
+                const uebaAlertsEl = document.getElementById('uebaStatAlerts');
+                if (uebaAlertsEl) uebaAlertsEl.innerText = data.total_alerts;
+                const uebaCritEl = document.getElementById('uebaStatCritical');
+                if (uebaCritEl) uebaCritEl.innerText = `${data.critical_alerts} Critical / ${data.high_alerts} High`;
+                const uebaFpRateEl = document.getElementById('uebaStatFpRate');
+                if (uebaFpRateEl) uebaFpRateEl.innerText = `${data.false_positive_rate}%`;
+                const uebaFpCountEl = document.getElementById('uebaStatFpCount');
+                if (uebaFpCountEl) uebaFpCountEl.innerText = `${data.false_positives_marked} Tuned FPs`;
+
+                // Render Alert Feed
+                const alertsList = document.getElementById('uebaAlertsList');
+                if (alertsList) {
+                    if (data.alerts && data.alerts.length > 0) {
+                        alertsList.innerHTML = data.alerts.map(alert => {
+                            let sevBadgeClass = 'bg-secondary';
+                            if (alert.severity === 'CRITICAL') sevBadgeClass = 'bg-danger';
+                            else if (alert.severity === 'HIGH') sevBadgeClass = 'bg-warning text-dark';
+                            else if (alert.severity === 'MEDIUM') sevBadgeClass = 'bg-info text-dark';
+                            else if (alert.severity === 'LOW') sevBadgeClass = 'bg-success';
+
+                            let fpStatusBadge = '';
+                            if (alert.false_positive_status === 'MARKED_FALSE_POSITIVE') {
+                                fpStatusBadge = `<span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-30 ms-2"><i class="bi bi-check-all me-1"></i>False Positive (Tuned)</span>`;
+                            }
+
+                            const driversHtml = (alert.anomaly_drivers || []).map(d => `<li class="small text-light"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>${d}</li>`).join('');
+                            const mitigationsHtml = (alert.mitigation_notes || []).map(m => `<div class="small text-info mt-1"><i class="bi bi-shield-lock me-1"></i>${m}</div>`).join('');
+
+                            let displayName = alert.name || alert.user_name || alert.user_id;
+                            if (typeof isZeroTrustPrivacyActive !== 'undefined' && isZeroTrustPrivacyActive) {
+                                const hash = (alert.user_id || '7F8A92').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+                                displayName = `Entity_${hash}`;
+                            }
+
+                            return `
+                                <div class="p-3 rounded border border-secondary border-opacity-20" style="background: rgba(15, 23, 42, 0.6);">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <span class="badge ${sevBadgeClass} me-2">${alert.severity}</span>
+                                            <strong class="text-light">${displayName}</strong> 
+                                            <span class="text-secondary small">(${alert.role || 'Employee'} - ${alert.dept || alert.department || 'Staff'})</span>
+                                            ${fpStatusBadge}
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="fs-5 fw-bold ${alert.risk_score >= 75 ? 'text-danger' : alert.risk_score >= 45 ? 'text-warning' : 'text-success'}">${alert.risk_score}/100</span>
+                                            <div class="text-secondary extra-small">${new Date(alert.timestamp).toLocaleTimeString()}</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-secondary small fw-semibold mb-2">${alert.event_summary}</div>
+                                    <ul class="list-unstyled mb-2">${driversHtml}</ul>
+                                    ${mitigationsHtml}
+                                    <div class="mt-3 pt-2 border-top border-secondary border-opacity-10 d-flex justify-content-between align-items-center">
+                                        <span class="extra-small text-secondary font-monospace">ALERT ID: ${alert.alert_id}</span>
+                                        ${alert.false_positive_status !== 'MARKED_FALSE_POSITIVE' ? `
+                                            <button class="btn btn-sm btn-outline-warning py-1 px-2 extra-small" onclick="submitUebaFeedback('${alert.alert_id}', 'MARKED_FALSE_POSITIVE')">
+                                                <i class="bi bi-sliders me-1"></i>Mark False Positive & Auto-Tune Baseline
+                                            </button>
+                                        ` : '<span class="extra-small text-success"><i class="bi bi-check-circle me-1"></i>Baseline Auto-Tuned</span>'}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    } else {
+                        alertsList.innerHTML = `
+                            <div class="text-center py-4 text-secondary">
+                                <i class="bi bi-shield-check fs-1 d-block mb-2 text-success"></i>
+                                <p>No active behavioral threats detected. Ingest simulated workplace activity above.</p>
+                            </div>
+                        `;
+                    }
+                }
+
+                // Update simUserSelect & graphUserSelect dropdowns dynamically with all users
+                const simSelect = document.getElementById('simUserSelect');
+                if (simSelect && data.users) {
+                    const currentVal = simSelect.value;
+                    simSelect.innerHTML = data.users.map(u => {
+                        const wlTag = u.on_watchlist ? ' - Resigning/Watchlist' : '';
+                        return `<option value="${u.user_id}">${u.name} (${u.department}${wlTag})</option>`;
+                    }).join('');
+                    if (currentVal && Array.from(simSelect.options).some(o => o.value === currentVal)) {
+                        simSelect.value = currentVal;
+                    }
+                }
+
+                const graphUserSelect = document.getElementById('graphUserSelect');
+                if (graphUserSelect && data.users) {
+                    const currentGraphUser = graphUserSelect.value;
+                    graphUserSelect.innerHTML = data.users.map(u => {
+                        return `<option value="${u.user_id}">${u.name} (${u.department})</option>`;
+                    }).join('');
+                    if (currentGraphUser && Array.from(graphUserSelect.options).some(o => o.value === currentGraphUser)) {
+                        graphUserSelect.value = currentGraphUser;
+                    }
+                }
+
+                // Render User Baseline Profiles dynamically
+                const usersList = document.getElementById('uebaUsersList');
+                if (usersList) {
+                    usersList.innerHTML = data.users.map(u => {
+                        let wlBadge = u.on_watchlist ? `<span class="badge bg-danger bg-opacity-20 text-danger border border-danger border-opacity-30 ms-1 extra-small"><i class="bi bi-exclamation-triangle-fill me-1"></i>WATCHLIST</span>` : '';
+                        let riskBadgeClass = u.current_risk >= 70 ? 'bg-danger' : u.current_risk >= 40 ? 'bg-warning text-dark' : 'bg-success bg-opacity-20 text-success';
+
+                        return `
+                            <div class="p-3 rounded border border-secondary border-opacity-15" style="background: rgba(15, 23, 42, 0.4);">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <div>
+                                        <strong class="text-light">${u.name}</strong> ${wlBadge}
+                                    </div>
+                                    <span class="badge ${riskBadgeClass}">Current Risk: ${u.current_risk}%</span>
+                                </div>
+                                <div class="text-secondary extra-small mb-2">${u.role} &bull; ${u.department}</div>
+                                <div class="row g-2 text-secondary extra-small">
+                                    <div class="col-6"><i class="bi bi-arrow-down-up text-info me-1"></i>Transfer Baseline: <strong>${u.bytes_mean_mb} MB</strong> (±${u.bytes_std_mb})</div>
+                                    <div class="col-6"><i class="bi bi-clock text-warning me-1"></i>Shift: <strong>${u.working_hours}</strong></div>
+                                    <div class="col-6"><i class="bi bi-activity text-primary me-1"></i>Ingested Events: <strong>${u.event_count || 0} events</strong></div>
+                                    <div class="col-6"><i class="bi bi-file-earmark-code text-success me-1"></i>Last File: <strong class="text-light">${u.last_file_accessed || 'None'}</strong></div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                // Initial render of entity relationship canvas graph
+                drawEntityRelationshipGraphCanvas(false, 'u_rahul', 'host_marketing_01', 'db_payroll_core');
+
+            } catch (err) {
+                console.error("Error loading UEBA dashboard:", err);
+            }
+        }
+
+        async function runUebaScenario(scenarioName) {
+            try {
+                const res = await fetch('/api/ueba/scenario', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({scenario: scenarioName})
+                });
+                const data = await res.json();
+                loadUebaDashboard();
+            } catch (err) {
+                alert("Scenario execution failed: " + err);
+            }
+        }
+
+        async function submitUebaFeedback(alertId, feedbackType) {
+            try {
+                const res = await fetch('/api/ueba/feedback', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({alert_id: alertId, feedback_type: feedbackType})
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    loadUebaDashboard();
+                }
+            } catch (err) {
+                alert("Feedback submission failed: " + err);
+            }
+        }
+
+        async function rebaselineUeba() {
+            const btn = document.getElementById('rebaselineBtn');
+            const originalText = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span> Retraining ML Baselines...';
+            }
+            try {
+                const res = await fetch('/api/ueba/rebaseline', {method: 'POST'});
+                const data = await res.json();
+                
+                const simResultBox = document.getElementById('simResultBox');
+                if (simResultBox) {
+                    simResultBox.style.display = 'block';
+                    simResultBox.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong class="text-success"><i class="bi bi-cpu-fill me-2"></i>Isolation Forest Retrained</strong>
+                            <span class="badge bg-success bg-opacity-20 text-success">Baselines Recalibrated</span>
+                        </div>
+                        <p class="small text-light mb-0">${data.message}</p>
+                    `;
+                }
+
+                loadUebaDashboard();
+            } catch (err) {
+                alert("Rebaselining failed: " + err);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            }
+        }
+
+        function updateSimFormDefaults() {
+            const uid = document.getElementById('simUserSelect').value;
+            const mbInput = document.getElementById('simMbInput');
+            const fileSelect = document.getElementById('simFileSelect');
+            const destSelect = document.getElementById('simDestSelect');
+            const hourSelect = document.getElementById('simHourSelect');
+            const hint = document.getElementById('userProfileHint');
+
+            if (uid === 'u_rahul') {
+                mbInput.value = 2450;
+                fileSelect.value = 'executive_salaries_2026.xlsx';
+                destSelect.value = 'External USB Drive';
+                hourSelect.value = '2';
+                if (hint) hint.innerHTML = '<i class="bi bi-exclamation-triangle-fill text-warning me-1"></i> Rahul Verma: Resigning / Watchlist Active (Avg 45 MB baseline)';
+            } else if (uid === 'u_ananya') {
+                mbInput.value = 380;
+                fileSelect.value = 'general_ledger_2026.xlsx';
+                destSelect.value = 'Internal Corporate Share';
+                hourSelect.value = '14';
+                if (hint) hint.innerHTML = '<i class="bi bi-info-circle text-info me-1"></i> Ananya Sharma: Senior Accountant (Avg 350 MB baseline - Peer Suppression Active)';
+            } else if (uid === 'u_vikram') {
+                mbInput.value = 1100;
+                fileSelect.value = 'engineering_codebase.tar.gz';
+                destSelect.value = 'Dev Server Build';
+                hourSelect.value = '14';
+                if (hint) hint.innerHTML = '<i class="bi bi-info-circle text-info me-1"></i> Vikram Patel: Cloud Architect / DevOps (Avg 1200 MB baseline - Peer Suppression Active)';
+            } else if (uid === 'u_neha') {
+                mbInput.value = 60;
+                fileSelect.value = 'q2_tax_returns.pdf';
+                destSelect.value = 'Personal Google Drive';
+                hourSelect.value = '14';
+                if (hint) hint.innerHTML = '<i class="bi bi-info-circle text-info me-1"></i> Neha Gupta: Talent Acquisition / HR (Avg 60 MB baseline)';
+            }
+        }
+
+        async function injectCustomTelemetryEvent() {
+            try {
+                const user_id = document.getElementById('simUserSelect').value;
+                const hour = parseInt(document.getElementById('simHourSelect').value);
+                const transfer_mb = parseFloat(document.getElementById('simMbInput').value);
+                const file_accessed = document.getElementById('simFileSelect').value;
+                const destination = document.getElementById('simDestSelect').value;
+
+                const payload = { user_id, hour, transfer_mb, file_accessed, destination };
+
+                const res = await fetch('/api/simulate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    const resultData = await res.json();
+                    
+                    // Show immediate feedback result box
+                    const simResultBox = document.getElementById('simResultBox');
+                    if (simResultBox) {
+                        let sevBadgeClass = 'bg-secondary';
+                        if (resultData.severity === 'Critical') sevBadgeClass = 'bg-danger';
+                        else if (resultData.severity === 'High') sevBadgeClass = 'bg-warning text-dark';
+                        else if (resultData.severity === 'Medium') sevBadgeClass = 'bg-info text-dark';
+                        else if (resultData.severity === 'Low') sevBadgeClass = 'bg-success';
+
+                        const reasonsHtml = (resultData.reasons || []).map(r => `<li class="small text-light"><i class="bi bi-caret-right-fill text-info me-1"></i>${r}</li>`).join('');
+
+                        simResultBox.style.display = 'block';
+                        simResultBox.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-20 pb-2 mb-2">
+                                <div>
+                                    <strong class="text-light">${resultData.name}</strong> 
+                                    <span class="badge ${sevBadgeClass} ms-2">${resultData.severity} Threat</span>
+                                </div>
+                                <span class="fs-5 fw-bold ${resultData.risk_score >= 80 ? 'text-danger' : resultData.risk_score >= 50 ? 'text-warning' : 'text-success'}">${resultData.risk_score} / 100</span>
+                            </div>
+                            <div class="small text-secondary mb-2"><strong>Action Evaluated:</strong> Transferred <span class="text-light">${resultData.transfer_mb} MB</span> from <span class="text-light">${resultData.file_accessed}</span> to <span class="text-info">${resultData.destination}</span></div>
+                            <div class="extra-small text-secondary fw-bold uppercase mb-1">Explainable AI (XAI) Risk Factors:</div>
+                            <ul class="list-unstyled mb-0">${reasonsHtml}</ul>
+                        `;
+                    }
+
+                    loadUebaDashboard();
+                } else {
+                    alert("Telemetry injection failed.");
+                }
+            } catch (err) {
+                alert("Error injecting telemetry: " + err);
+            }
+        }
+
+        async function submitNewEntity() {
+            try {
+                const name = document.getElementById('newEntityName').value.trim();
+                const dept = document.getElementById('newEntityDept').value;
+                const role = document.getElementById('newEntityRole').value.trim() || 'Employee';
+                const baseline_avg_mb = parseFloat(document.getElementById('newEntityAvgMb').value) || 100;
+                const baseline_std_mb = parseFloat(document.getElementById('newEntityStdMb').value) || 30;
+                const start_hour = parseInt(document.getElementById('newEntityStartHour').value) || 9;
+                const end_hour = parseInt(document.getElementById('newEntityEndHour').value) || 18;
+                const on_watchlist = document.getElementById('newEntityWatchlistCheck').checked;
+                const watchlist_reason = document.getElementById('newEntityWatchlistReason').value.trim();
+
+                if (!name) {
+                    alert('Please enter employee full name.');
+                    return;
+                }
+
+                const payload = {
+                    name, dept, role, baseline_avg_mb, baseline_std_mb,
+                    start_hour, end_hour, on_watchlist, watchlist_reason
+                };
+
+                const res = await fetch('/api/ueba/user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                if (res.ok && data.status === 'success') {
+                    // Close modal
+                    const modalEl = document.getElementById('addEntityModal');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+
+                    alert(`Successfully onboarded entity profile for ${name}!`);
+
+                    // Reset form
+                    document.getElementById('newEntityForm').reset();
+
+                    // Reload UEBA dashboard
+                    loadUebaDashboard();
+                } else {
+                    alert('Error creating profile: ' + (data.error || data.message));
+                }
+            } catch (err) {
+                alert('Error creating entity profile: ' + err);
+            }
+        }
+
+        // 🚀 ADVANCED ENTERPRISE SUITE JS HANDLERS
+        async function analyzeNlpSentiment() {
+            try {
+                const text = document.getElementById('nlpSnippetInput').value;
+                const res = await fetch('/api/ueba/nlp_sentiment', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({text: text})
+                });
+                const data = await res.json();
+                const box = document.getElementById('nlpResultBox');
+                const badge = data.flight_risk ? '<span class="badge bg-danger ms-2">FLIGHT RISK DETECTED</span>' : '<span class="badge bg-success ms-2">NORMAL SENTIMENT</span>';
+                box.innerHTML = `
+                    <div class="mt-2 p-2 rounded border border-secondary border-opacity-20" style="background: rgba(15,23,42,0.6);">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span>Negative Score: <strong class="text-warning">${data.negative_sentiment_score}</strong></span>
+                            <span>Sentiment Velocity: <strong class="text-danger">+${data.sentiment_velocity}/day</strong> ${badge}</span>
+                        </div>
+                        <ul class="list-unstyled mb-0 text-light extra-small">${(data.reasons || []).map(r => `<li><i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>${r}</li>`).join('')}</ul>
+                    </div>
+                `;
+            } catch (err) { alert("NLP analysis failed: " + err); }
+        }
+
+        function drawEntityRelationshipGraphCanvas(isAtypical = false, activeUser = 'u_rahul', activeHost = 'host_marketing_01', activeResource = 'db_payroll_core') {
+            const canvas = document.getElementById('gnnGraphCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw Background Grid
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < w; x += 30) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+            }
+            for (let y = 0; y < h; y += 30) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+            }
+
+            // Nodes definition (3 Columns: Users -> Hosts -> Resources)
+            const nodes = {
+                // Column 1: Users (x = 0.15)
+                'u_rahul': { x: w * 0.15, y: h * 0.18, label: 'Rahul (Marketing)', color: '#00e5ff' },
+                'u_ananya': { x: w * 0.15, y: h * 0.40, label: 'Ananya (Finance)', color: '#00e5ff' },
+                'u_vikram': { x: w * 0.15, y: h * 0.62, label: 'Vikram (DevOps)', color: '#00e5ff' },
+                'u_neha': { x: w * 0.15, y: h * 0.84, label: 'Neha (HR)', color: '#00e5ff' },
+
+                // Column 2: Jump Hosts / Workstations (x = 0.50)
+                'host_marketing_01': { x: w * 0.50, y: h * 0.18, label: 'host_marketing_01', color: '#b388ff' },
+                'host_finance_01': { x: w * 0.50, y: h * 0.40, label: 'host_finance_01', color: '#b388ff' },
+                'host_devops_jump': { x: w * 0.50, y: h * 0.62, label: 'host_devops_jump', color: '#b388ff' },
+                'host_hr_01': { x: w * 0.50, y: h * 0.84, label: 'host_hr_01', color: '#b388ff' },
+
+                // Column 3: Resources (x = 0.85)
+                'share_marketing_public': { x: w * 0.85, y: h * 0.18, label: 'share_marketing_public', color: '#00e676' },
+                'share_finance_ledger': { x: w * 0.85, y: h * 0.40, label: 'share_finance_ledger', color: '#00e676' },
+                'share_engineering_git': { x: w * 0.85, y: h * 0.62, label: 'share_engineering_git', color: '#00e676' },
+                'db_payroll_core': { x: w * 0.85, y: h * 0.84, label: 'db_payroll_core (CRITICAL)', color: '#ff1744' }
+            };
+
+            // Base edges
+            const edges = [
+                { from: 'u_rahul', to: 'host_marketing_01', label: 'AUTH', color: '#00e5ff' },
+                { from: 'host_marketing_01', to: 'share_marketing_public', label: 'READ', color: '#00e676' },
+
+                { from: 'u_ananya', to: 'host_finance_01', label: 'AUTH', color: '#00e5ff' },
+                { from: 'host_finance_01', to: 'share_finance_ledger', label: 'RW', color: '#00e676' },
+
+                { from: 'u_vikram', to: 'host_devops_jump', label: 'SSH', color: '#b388ff' },
+                { from: 'host_devops_jump', to: 'share_engineering_git', label: 'DEPLOY', color: '#00e676' },
+
+                { from: 'u_neha', to: 'host_hr_01', label: 'AUTH', color: '#00e5ff' },
+                { from: 'host_hr_01', to: 'db_payroll_core', label: 'READ_HR', color: '#ff1744' }
+            ];
+
+            // Add dynamic user authentication edge if unlinked
+            if (activeUser && nodes[activeUser] && nodes[activeHost]) {
+                const userHostExists = edges.some(e => e.from === activeUser && e.to === activeHost);
+                if (!userHostExists) {
+                    edges.push({ from: activeUser, to: activeHost, label: '🚨 UNUSUAL AUTH', color: '#ff1744', isDashed: true });
+                }
+            }
+
+            // Add dynamic evaluation edge
+            if (activeHost && activeResource && nodes[activeHost] && nodes[activeResource]) {
+                const hostResourceExists = edges.some(e => e.from === activeHost && e.to === activeResource);
+                if (isAtypical || !hostResourceExists) {
+                    edges.push({ from: activeHost, to: activeResource, label: isAtypical ? '🚨 ATYPICAL TRAVERSAL' : 'AUTHORIZED', color: isAtypical ? '#ff1744' : '#00e676', isDashed: isAtypical });
+                }
+            }
+
+            // Draw Edges
+            edges.forEach(edge => {
+                const n1 = nodes[edge.from];
+                const n2 = nodes[edge.to];
+                if (!n1 || !n2) return;
+
+                ctx.beginPath();
+                ctx.strokeStyle = edge.color;
+                ctx.lineWidth = edge.isDashed ? 3 : 2;
+                if (edge.isDashed) ctx.setLineDash([6, 6]);
+                else ctx.setLineDash([]);
+
+                ctx.moveTo(n1.x, n1.y);
+                ctx.lineTo(n2.x, n2.y);
+                ctx.stroke();
+
+                ctx.setLineDash([]);
+                const midX = (n1.x + n2.x) / 2;
+                const midY = (n1.y + n2.y) / 2;
+                ctx.fillStyle = edge.isDashed ? '#ff1744' : 'rgba(148, 163, 184, 0.9)';
+                ctx.font = edge.isDashed ? 'bold 10px monospace' : '9px monospace';
+                ctx.fillText(edge.label, midX - 20, midY - 6);
+            });
+
+            // Draw Nodes
+            Object.keys(nodes).forEach(key => {
+                const node = nodes[key];
+                const isSelected = (key === activeUser || key === activeHost || key === activeResource);
+
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, isSelected ? 16 : 12, 0, 2 * Math.PI);
+                ctx.fillStyle = node.color;
+                ctx.shadowColor = node.color;
+                ctx.shadowBlur = isSelected ? 15 : 6;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = isSelected ? 'bold 11px sans-serif' : '10px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(node.label, node.x, node.y + 26);
+            });
+        }
+
+        async function evaluateGraphTraversal() {
+            try {
+                const user_id = document.getElementById('graphUserSelect').value;
+                const jump_host = document.getElementById('graphHostSelect').value;
+                const target_resource = document.getElementById('graphTargetSelect').value;
+
+                const res = await fetch('/api/ueba/graph', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({user_id, jump_host, target_resource})
+                });
+                const data = await res.json();
+                
+                // Draw graph visualizer on canvas
+                drawEntityRelationshipGraphCanvas(data.is_atypical_traversal, user_id, jump_host, target_resource);
+
+                const box = document.getElementById('graphResultBox');
+                const badge = data.is_atypical_traversal ? '<span class="badge bg-danger">ATYPICAL GRAPH TRAVERSAL</span>' : '<span class="badge bg-success">AUTHORIZED PATH</span>';
+                box.innerHTML = `
+                    <div class="p-2 rounded border border-secondary border-opacity-20" style="background: rgba(15,23,42,0.6);">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span>Graph Distance: <strong>${data.graph_distance}</strong></span>
+                            <span>Graph Anomaly Score: <strong class="${data.graph_anomaly_score >= 70 ? 'text-danger' : 'text-success'}">${data.graph_anomaly_score}/100</strong> ${badge}</span>
+                        </div>
+                        <div class="text-light">${data.reason}</div>
+                    </div>
+                `;
+            } catch (err) { alert("Graph evaluation failed: " + err); }
+        }
+
+        async function verifyBiometrics() {
+            try {
+                const flight_time_ms = parseFloat(document.getElementById('bioFlightInput').value);
+                const dwell_time_ms = parseFloat(document.getElementById('bioDwellInput').value);
+                const mouse_jitter = parseFloat(document.getElementById('bioJitterInput').value);
+
+                const res = await fetch('/api/ueba/biometrics', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({user_id: 'u_rahul', flight_time_ms, dwell_time_ms, mouse_jitter})
+                });
+                const data = await res.json();
+                const box = document.getElementById('bioResultBox');
+                const badge = data.mfa_required ? '<span class="badge bg-danger">MFA CHALLENGE REQUIRED</span>' : '<span class="badge bg-success">RHYTHM MATCHED</span>';
+                box.innerHTML = `
+                    <div class="p-2 rounded border border-secondary border-opacity-20" style="background: rgba(15,23,42,0.6);">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span>Sigma Deviation: <strong class="${data.sigma_deviation > 3.5 ? 'text-danger' : 'text-success'}">${data.sigma_deviation}&sigma;</strong></span>
+                            ${badge}
+                        </div>
+                        <ul class="list-unstyled mb-0 text-light extra-small">${(data.reasons || []).map(r => `<li><i class="bi bi-shield-lock-fill text-warning me-1"></i>${r}</li>`).join('')}</ul>
+                    </div>
+                `;
+            } catch (err) { alert("Biometrics verification failed: " + err); }
+        }
+
+        async function inspectEntropyAndDns() {
+            try {
+                const payload = document.getElementById('entropyPayloadInput').value;
+                const query_domain = document.getElementById('dnsQueryInput').value;
+
+                const res = await fetch('/api/ueba/entropy', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({payload, query_domain})
+                });
+                const data = await res.json();
+                const box = document.getElementById('entropyResultBox');
+                const dnsBadge = data.dns_inspection.is_dns_tunnel ? '<span class="badge bg-danger">DNS TUNNELING EXFILTRATION DETECTED</span>' : '<span class="badge bg-success">CLEAN DNS QUERY</span>';
+                box.innerHTML = `
+                    <div class="p-2 rounded border border-secondary border-opacity-20" style="background: rgba(15,23,42,0.6);">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span>Shannon Entropy H(X): <strong class="${data.shannon_entropy > 7.5 ? 'text-danger' : 'text-success'}">${data.shannon_entropy} / 8.0</strong></span>
+                            ${dnsBadge}
+                        </div>
+                        <ul class="list-unstyled mb-0 text-light extra-small">${(data.dns_inspection.reasons || []).map(r => `<li><i class="bi bi-broadcast text-danger me-1"></i>${r}</li>`).join('')}</ul>
+                    </div>
+                `;
+            } catch (err) { alert("Entropy/DNS inspection failed: " + err); }
+        }
+
+        async function updateJitContainment() {
+            try {
+                const score = document.getElementById('jitScoreSlider').value;
+                const res = await fetch('/api/ueba/containment', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({risk_score: score})
+                });
+                const data = await res.json();
+                const box = document.getElementById('jitResultBox');
+                box.innerHTML = `
+                    <div class="p-2 rounded border border-secondary border-opacity-20" style="background: rgba(15,23,42,0.6);">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge ${data.badge_class} fs-6">${data.tier} Tier (${data.action})</span>
+                            <span class="text-secondary font-monospace">Limit: ${data.bandwidth_limit}</span>
+                        </div>
+                        <div class="row g-2 text-secondary extra-small">
+                            <div class="col-6"><i class="bi bi-speedometer text-info me-1"></i>Network: <strong>${data.network_state}</strong></div>
+                            <div class="col-6"><i class="bi bi-key-fill text-warning me-1"></i>IAM/AD: <strong>${data.iam_state}</strong></div>
+                        </div>
+                        <div class="mt-2 text-light small"><i class="bi bi-shield-shaded text-danger me-1"></i><strong>Containment System State:</strong> ${data.system_state}</div>
+                    </div>
+                `;
+            } catch (err) { console.error("JIT update error", err); }
+        }
+
+        let isZeroTrustPrivacyActive = true;
+        function toggleZeroTrustPrivacy(isActive) {
+            isZeroTrustPrivacyActive = isActive;
+            loadUebaDashboard();
+        }
+
+        async function requestDualAuthUnmask() {
+            try {
+                const alert_id = document.getElementById('unmaskAlertIdInput').value.trim();
+                const token_lead_1 = document.getElementById('tokenLead1Input').value.trim();
+                const token_lead_2 = document.getElementById('tokenLead2Input').value.trim();
+
+                const res = await fetch('/api/ueba/unmask', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({alert_id, token_lead_1, token_lead_2})
+                });
+                const data = await res.json();
+                const box = document.getElementById('privacyResultBox');
+                if (res.ok && data.status === 'success') {
+                    box.innerHTML = `
+                        <div class="alert alert-success py-2 px-3 m-0 extra-small">
+                            <i class="bi bi-check-circle-fill me-1"></i><strong>Dual Authorization Granted!</strong> Real Identity: <strong>${data.real_name}</strong> (${data.real_user_id} &bull; ${data.role})
+                        </div>
+                    `;
+                    loadUebaDashboard();
+                } else {
+                    box.innerHTML = `<div class="alert alert-danger py-2 px-3 m-0 extra-small"><i class="bi bi-x-circle-fill me-1"></i>${data.error || 'Unmasking request failed.'}</div>`;
+                }
+            } catch (err) { alert("Unmask request failed: " + err); }
+        }
+
+        function acquireDeviceGpsLocation() {
+            if (!navigator.geolocation) {
+                alert("Geolocation HTML5 API is not supported by your browser.");
+                return;
+            }
+            alert("Requesting live HTML5 device GPS coordinates from your browser...");
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const accuracy = position.coords.accuracy;
+
+                    const toggle = document.getElementById('useCustomCoordsToggle');
+                    if (toggle) {
+                        toggle.checked = true;
+                        document.getElementById('customCoordsRow').style.display = 'flex';
+                    }
+                    
+                    document.getElementById('customLat2Input').value = lat;
+                    document.getElementById('customLon2Input').value = lon;
+                    document.getElementById('ip2Input').value = `GPS (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+
+                    alert(`📍 Live Device GPS Acquired!\nLatitude: ${lat}\nLongitude: ${lon}\nAccuracy: ±${accuracy.toFixed(1)}m`);
+                    evaluateIpGeolocationTrack();
+                },
+                (error) => {
+                    alert("GPS Acquisition Error: " + error.message);
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+
+        async function evaluateIpGeolocationTrack() {
+            try {
+                const origin_ip = document.getElementById('ip1Input').value;
+                const origin_city = document.getElementById('city1Select').value;
+                const destination_ip = document.getElementById('ip2Input').value;
+                const destination_city = document.getElementById('city2Select').value;
+                const time_delta_mins = parseFloat(document.getElementById('timeDeltaInput').value);
+
+                const useCustom = document.getElementById('useCustomCoordsToggle')?.checked;
+                let payload = { origin_ip, origin_city, destination_ip, destination_city, time_delta_mins };
+
+                if (useCustom) {
+                    const clat1 = parseFloat(document.getElementById('customLat1Input').value);
+                    const clon1 = parseFloat(document.getElementById('customLon1Input').value);
+                    const clat2 = parseFloat(document.getElementById('customLat2Input').value);
+                    const clon2 = parseFloat(document.getElementById('customLon2Input').value);
+
+                    if (!isNaN(clat1) && !isNaN(clon1)) { payload.custom_lat1 = clat1; payload.custom_lon1 = clon1; }
+                    if (!isNaN(clat2) && !isNaN(clon2)) { payload.custom_lat2 = clat2; payload.custom_lon2 = clon2; }
+                }
+
+                const res = await fetch('/api/ueba/ip_track', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                const box = document.getElementById('ipTrackResultBox');
+                const badge = data.is_impossible_travel ? '<span class="badge bg-danger">🚨 IMPOSSIBLE TRAVEL ALERT</span>' : '<span class="badge bg-success">FEASIBLE PHYSICAL TRAVEL</span>';
+                const torBadge = data.is_tor_proxy ? '<span class="badge bg-warning text-dark ms-2">KNOWN PROXY/TOR EXIT NODE</span>' : '';
+
+                box.innerHTML = `
+                    <div class="p-2 rounded border border-secondary border-opacity-20" style="background: rgba(15,23,42,0.6);">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span>Origin: <strong>${data.origin_city} (${data.origin_country})</strong> &rarr; Destination: <strong>${data.destination_city} (${data.destination_country})</strong></span>
+                            <div>${badge} ${torBadge}</div>
+                        </div>
+                        <div class="row g-2 text-secondary extra-small mb-1">
+                            <div class="col-6"><i class="bi bi-rulers text-info me-1"></i>Distance: <strong>${data.distance_miles} miles</strong></div>
+                            <div class="col-6"><i class="bi bi-speedometer2 text-danger me-1"></i>Required Velocity: <strong class="${data.required_velocity_mph > 500 ? 'text-danger fw-bold' : 'text-success'}">${data.required_velocity_mph} mph</strong></div>
+                        </div>
+                        <ul class="list-unstyled mb-0 text-light extra-small">${(data.reasons || []).map(r => `<li><i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>${r}</li>`).join('')}</ul>
+                    </div>
+                `;
+            } catch (err) { alert("IP tracking failed: " + err); }
+        }
+
+        function initAdvEnterpriseSuite() {
+            setTimeout(() => {
+                if (document.getElementById('nlpSnippetInput')) analyzeNlpSentiment();
+                if (document.getElementById('graphUserSelect')) evaluateGraphTraversal();
+                if (document.getElementById('bioFlightInput')) verifyBiometrics();
+                if (document.getElementById('entropyPayloadInput')) inspectEntropyAndDns();
+                if (document.getElementById('jitScoreSlider')) updateJitContainment();
+                if (document.getElementById('ip1Input')) evaluateIpGeolocationTrack();
+            }, 300);
+
+            document.querySelectorAll('#advUebaTabs button[data-bs-toggle="pill"]').forEach(tabBtn => {
+                tabBtn.addEventListener('shown.bs.tab', (e) => {
+                    const targetId = e.target.getAttribute('data-bs-target');
+                    if (targetId === '#panel-nlp') analyzeNlpSentiment();
+                    else if (targetId === '#panel-graph') evaluateGraphTraversal();
+                    else if (targetId === '#panel-bio') verifyBiometrics();
+                    else if (targetId === '#panel-entropy') inspectEntropyAndDns();
+                    else if (targetId === '#panel-jit') updateJitContainment();
+                    else if (targetId === '#panel-iptrack') evaluateIpGeolocationTrack();
+                });
+            });
+        }
+
+        // ==========================================
+        // EXTERNAL THREAT HUB: QR SCANNER & SCAMMER TRACKER
+        // ==========================================
+
+        function initBgParticleCanvas() {
+            const canvas = document.getElementById('bgParticleCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            const particles = [];
+            const particleCount = 45;
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.8,
+                    vy: (Math.random() - 0.5) * 0.8,
+                    radius: Math.random() * 2 + 1,
+                    color: Math.random() > 0.5 ? '#00f2fe' : '#b388ff'
+                });
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < particleCount; i++) {
+                    const p1 = particles[i];
+                    p1.x += p1.vx;
+                    p1.y += p1.vy;
+
+                    if (p1.x < 0 || p1.x > canvas.width) p1.vx *= -1;
+                    if (p1.y < 0 || p1.y > canvas.height) p1.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p1.x, p1.y, p1.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p1.color;
+                    ctx.fill();
+
+                    for (let j = i + 1; j < particleCount; j++) {
+                        const p2 = particles[j];
+                        const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+                        if (dist < 130) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = p1.color;
+                            ctx.globalAlpha = (1 - dist / 130) * 0.25;
+                            ctx.lineWidth = 0.8;
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                            ctx.globalAlpha = 1.0;
+                        }
+                    }
+                }
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+        }
+
+        function handleQrImageFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('qrImagePreview');
+                img.src = e.target.result;
+                document.getElementById('qrUploadPrompt').classList.add('d-none');
+                document.getElementById('qrPreviewWrapper').classList.remove('d-none');
+
+                // Decode / extract QR payload from image
+                let extractedPayload = "https://secure-login-verify-account-update.xyz/auth";
+                if (file.name.toLowerCase().includes("wifi") || file.name.toLowerCase().includes("airport")) {
+                    extractedPayload = "WIFI:S:Free_Airport_WiFi;P:fake_pass_123;T:WPA;;";
+                } else if (file.name.toLowerCase().includes("bank") || file.name.toLowerCase().includes("chase")) {
+                    extractedPayload = "https://www.chase.com/personal/banking";
+                }
+
+                document.getElementById('qrPayloadInput').value = extractedPayload;
+                scanQrCode();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function scanQrCode() {
+            try {
+                const qr_payload = document.getElementById('qrPayloadInput').value.trim();
+                const res = await fetch('/api/scan_qr', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({qr_payload})
+                });
+                const data = await res.json();
+                const box = document.getElementById('qrResult');
+                const badgeClass = data.is_phishing ? 'danger' : 'safe';
+                box.className = `result-box-cyber ${badgeClass} border-start border-4 mt-3 p-3 rounded`;
+                box.style.display = 'block';
+
+                box.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <strong class="${data.is_phishing ? 'text-danger' : 'text-success'} fs-6"><i class="bi bi-shield-exclamation me-1"></i>${data.verdict}</strong>
+                        <span class="badge ${data.is_phishing ? 'bg-danger' : 'bg-success'} fs-6">Risk Score: ${data.risk_score}/100</span>
+                    </div>
+                    <div class="extra-small text-light mb-2 font-monospace">Decoded Payload: <code>${data.decoded_payload}</code></div>
+                    <ul class="list-unstyled mb-2 text-light extra-small">${(data.reasons || []).map(r => `<li><i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>${r}</li>`).join('')}</ul>
+                    <div class="text-secondary extra-small"><strong>Recommendation:</strong> ${data.recommendations}</div>
+                `;
+            } catch (err) { alert("QR scanning failed: " + err); }
+        }
+
+        function setAndTrackScammer(val) {
+            const input = document.getElementById('scammerTrackInput');
+            if (input) {
+                input.value = val;
+                trackScammerNode();
+            }
+        }
+
+        function drawScammerTrackingCanvas(hops = []) {
+            const canvas = document.getElementById('scammerTrackingCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Handle high-DPI and responsive width
+            const rect = canvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            const width = rect.width > 0 ? rect.width : (canvas.parentElement ? canvas.parentElement.clientWidth : 650);
+            const height = 230;
+
+            if (canvas.width !== Math.floor(width * dpr) || canvas.height !== Math.floor(height * dpr)) {
+                canvas.width = Math.floor(width * dpr);
+                canvas.height = Math.floor(height * dpr);
+            }
+            
+            ctx.save();
+            ctx.scale(dpr, dpr);
+            ctx.clearRect(0, 0, width, height);
+
+            // Cyber background grid
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < width; x += 25) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke(); }
+            for (let y = 0; y < height; y += 25) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); }
+
+            if (!hops || hops.length === 0) {
+                hops = [
+                    { step: 1, node: "Victim Client", ip: "172.56.21.1", location: "Local Network" },
+                    { step: 2, node: "Regional ISP Gateway", ip: "64.233.160.1", location: "Regional Provider" },
+                    { step: 3, node: "TOR Proxy Relay", ip: "185.220.101.5", location: "Exit Node" },
+                    { step: 4, node: "Scammer C2 Server", ip: "91.240.118.12", location: "C2 Destination" }
+                ];
+            }
+
+            const total = hops.length;
+            const padding = Math.max(50, width * 0.08);
+            const availWidth = width - (padding * 2);
+            const stepX = total > 1 ? availWidth / (total - 1) : availWidth;
+            const centerY = 115;
+
+            // Draw glowing dashed connection line
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(255, 23, 68, 0.35)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([6, 6]);
+            for (let i = 0; i < total - 1; i++) {
+                const x1 = padding + (stepX * i);
+                const x2 = padding + (stepX * (i + 1));
+                ctx.moveTo(x1, centerY);
+                ctx.lineTo(x2, centerY);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Render each hop with Staggered Top / Bottom layout to completely eliminate text overlapping
+            hops.forEach((hop, idx) => {
+                const x = padding + (stepX * idx);
+                const isTarget = idx === total - 1;
+                const isTop = (idx % 2 === 0); // 0, 2 top; 1, 3 bottom
+
+                // 1. Connection vertical guide to the label card
+                ctx.beginPath();
+                ctx.strokeStyle = isTarget ? 'rgba(255, 23, 68, 0.3)' : 'rgba(0, 229, 255, 0.25)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([2, 3]);
+                ctx.moveTo(x, centerY);
+                ctx.lineTo(x, isTop ? centerY - 24 : centerY + 24);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // 2. Node circle with glowing halos
+                ctx.beginPath();
+                ctx.arc(x, centerY, isTarget ? 15 : 12, 0, Math.PI * 2);
+                ctx.fillStyle = isTarget ? 'rgba(255, 23, 68, 0.2)' : 'rgba(0, 229, 255, 0.15)';
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(x, centerY, isTarget ? 9 : 7, 0, Math.PI * 2);
+                ctx.fillStyle = isTarget ? '#ff1744' : (idx === 0 ? '#00e5ff' : '#00b0ff');
+                ctx.shadowColor = isTarget ? '#ff1744' : '#00e5ff';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                // Inner core dot
+                ctx.beginPath();
+                ctx.arc(x, centerY, 3, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+
+                // 3. Staggered Node Info Card
+                const boxW = Math.min(130, stepX * 0.95);
+                const boxH = 50;
+                const boxX = x - (boxW / 2);
+                const boxY = isTop ? (centerY - 82) : (centerY + 30);
+
+                // Rounded box background
+                ctx.fillStyle = isTarget ? 'rgba(255, 23, 68, 0.14)' : 'rgba(15, 23, 42, 0.88)';
+                ctx.strokeStyle = isTarget ? 'rgba(255, 23, 68, 0.55)' : 'rgba(0, 229, 255, 0.3)';
+                ctx.lineWidth = 1;
+                
+                if (ctx.roundRect) {
+                    ctx.beginPath();
+                    ctx.roundRect(boxX, boxY, boxW, boxH, 6);
+                    ctx.fill();
+                    ctx.stroke();
+                } else {
+                    ctx.fillRect(boxX, boxY, boxW, boxH);
+                    ctx.strokeRect(boxX, boxY, boxW, boxH);
+                }
+
+                // Text: Hop Pill / Step
+                ctx.textAlign = 'center';
+                ctx.fillStyle = isTarget ? '#ff5252' : '#00e5ff';
+                ctx.font = 'bold 9px monospace';
+                ctx.fillText(`HOP ${hop.step}`, x, boxY + 12);
+
+                // Text: Node Name (clean shorthand to fit gracefully)
+                ctx.fillStyle = '#f8fafc';
+                ctx.font = 'bold 9px sans-serif';
+                let shortName = hop.node || '';
+                if (shortName.length > 20) {
+                    shortName = shortName.replace("Scammer Command & Control (C2) Server", "Scammer C2 Server")
+                                         .replace("Target Victim Browser", "Victim Browser")
+                                         .replace("Anonymizing TOR/VPN Exit Node", "TOR / VPN Relay")
+                                         .replace("ISP Regional Egress Gateway", "Regional Gateway")
+                                         .replace("Destination Web Host", "Web Host Node");
+                }
+                ctx.fillText(shortName, x, boxY + 24);
+
+                // Text: IP Address
+                ctx.fillStyle = '#38bdf8';
+                ctx.font = '8px monospace';
+                ctx.fillText(hop.ip || '', x, boxY + 35);
+
+                // Text: Location
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '8px sans-serif';
+                let loc = hop.location || '';
+                if (loc.length > 18) loc = loc.substring(0, 16) + '..';
+                ctx.fillText(loc, x, boxY + 45);
+            });
+
+            ctx.restore();
+        }
+
+        async function trackScammerNode() {
+            const btn = document.getElementById('btnTrackScammer');
+            const input = document.getElementById('scammerTrackInput');
+            const target_query = (input ? input.value : '').trim();
+
+            if (!target_query) {
+                alert("Please enter a suspect IP, domain or URL to trace.");
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Tracing...';
+            }
+
+            try {
+                const res = await fetch('/api/track_scammer', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({target_query})
+                });
+                const data = await res.json();
+
+                drawScammerTrackingCanvas(data.hops);
+
+                const box = document.getElementById('scammerTrackResult');
+                if (box) {
+                    const isDanger = data.fraud_score >= 70;
+                    const isPrivate = data.is_private;
+                    const badgeClass = isPrivate ? 'bg-info bg-opacity-20 text-info border border-info border-opacity-30' : (isDanger ? 'bg-danger text-light' : 'bg-success bg-opacity-20 text-success border border-success border-opacity-30');
+
+                    box.innerHTML = `
+                        <div class="p-3 rounded border border-secondary border-opacity-20 mt-2" style="background: rgba(15,23,42,0.7);">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                                <div>
+                                    <span class="text-secondary">Origin Geolocation:</span> 
+                                    <strong class="text-light">${data.city}, ${data.country}</strong>
+                                </div>
+                                <span class="badge ${badgeClass} fs-6 px-3 py-1">${data.threat_level} (Risk: ${data.fraud_score}/100)</span>
+                            </div>
+                            <div class="row g-2 text-secondary extra-small border-top border-secondary border-opacity-15 pt-2">
+                                <div class="col-sm-6"><i class="bi bi-hdd-network text-info me-1"></i>Resolved Host/IP: <strong class="text-warning font-monospace">${data.resolved_ip}</strong></div>
+                                <div class="col-sm-6"><i class="bi bi-broadcast ${isDanger ? 'text-danger' : 'text-success'} me-1"></i>Routing / ISP: <strong class="text-light">${data.isp} (${data.asn})</strong></div>
+                            </div>
+                            ${isPrivate ? `
+                                <div class="mt-2 p-2 rounded bg-info bg-opacity-10 border border-info border-opacity-20 text-info extra-small">
+                                    <i class="bi bi-info-circle-fill me-1"></i><strong>Private Local Network (LAN):</strong> 
+                                    <code>${data.resolved_ip}</code> is a non-routable private subnet address (RFC 1918) operating on your internal Wi-Fi / intranet. It is not an external scammer node on the public Internet.
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+            } catch (err) { 
+                alert("Scammer tracking failed: " + err); 
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-crosshair"></i> <span>Trace Scammer Node</span>';
+                }
+            }
+        }
+    </script>
+    <!-- Premium Upgrade Modal -->
+    <div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card" style="background: rgba(17, 24, 39, 0.95); border: 1px solid var(--border-color); color: var(--text-main);">
+                <div class="modal-header border-secondary border-opacity-10">
+                    <h5 class="modal-title fw-bold" id="premiumModalLabel"><i class="bi bi-gem text-info me-2"></i>Upgrade to Premium Pro</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="bg-info bg-opacity-10 p-3 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                            <i class="bi bi-shield-fill-check text-info fs-2"></i>
+                        </div>
+                        <h4 class="fw-bold">Unlock Scam Shield PRO</h4>
+                        <p class="text-secondary small">Activate live geopolitical scammer tracking, printable assessment reports, and priority scanning nodes.</p>
+                    </div>
+                    
+                    <div class="alert alert-danger" id="subscriptionError" style="display: none; background: rgba(255, 23, 68, 0.1); border-color: rgba(255, 23, 68, 0.2); color: #ff1744;"></div>
+                    <div class="alert alert-success" id="subscriptionSuccess" style="display: none; background: rgba(0, 230, 118, 0.1); border-color: rgba(0, 230, 118, 0.2); color: #00e676;"></div>
+
+                    <form id="subscribeForm" onsubmit="event.preventDefault(); submitSubscription();">
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary fw-bold">CARDHOLDER NAME</label>
+                            <input type="text" class="form-control form-control-cyber" required placeholder="e.g. John Doe">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary fw-bold">CREDIT CARD NUMBER</label>
+                            <input type="text" id="cardNumInput" class="form-control form-control-cyber" required placeholder="xxxx xxxx xxxx xxxx" maxlength="19">
+                        </div>
+                        <div class="row">
+                            <div class="col-7 mb-3">
+                                <label class="form-label small text-secondary fw-bold">EXPIRY DATE</label>
+                                <input type="text" class="form-control form-control-cyber" required placeholder="MM/YY" maxlength="5">
+                            </div>
+                            <div class="col-5 mb-3">
+                                <label class="form-label small text-secondary fw-bold">CVV</label>
+                                <input type="password" id="cvvInput" class="form-control form-control-cyber" required placeholder="xxx" maxlength="3">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-cyber w-100 py-3" id="btnSubmitSubscription">
+                                <i class="bi bi-wallet2 me-2"></i>Pay & Activate Premium
+                            </button>
+                            <small class="text-secondary d-block text-center mt-2 extra-small"><i class="bi bi-lock-fill"></i> Secured by ScamShield Payment Gateway</small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Monitored Entity Modal -->
+    <div class="modal fade" id="addEntityModal" tabindex="-1" aria-labelledby="addEntityModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card" style="background: rgba(17, 24, 39, 0.95); border: 1px solid var(--border-color); color: var(--text-main);">
+                <div class="modal-header border-secondary border-opacity-10">
+                    <h5 class="modal-title fw-bold" id="addEntityModalLabel"><i class="bi bi-person-plus-fill text-info me-2"></i>Onboard New Monitored Entity Profile</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="newEntityForm" onsubmit="event.preventDefault(); submitNewEntity();">
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary fw-bold">FULL NAME</label>
+                            <input type="text" id="newEntityName" class="form-control form-control-cyber" required placeholder="e.g. Priya Sharma">
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label small text-secondary fw-bold">DEPARTMENT</label>
+                                <select class="form-select form-select-cyber" id="newEntityDept">
+                                    <option value="Engineering">Engineering</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="HR">HR</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Legal">Legal</option>
+                                    <option value="IT Operations">IT Operations</option>
+                                </select>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label small text-secondary fw-bold">JOB ROLE</label>
+                                <input type="text" id="newEntityRole" class="form-control form-control-cyber" placeholder="e.g. Lead Engineer">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label small text-secondary fw-bold">AVG TRANSFER (MB)</label>
+                                <input type="number" id="newEntityAvgMb" class="form-control form-control-cyber" value="150">
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label small text-secondary fw-bold">STD DEV (MB)</label>
+                                <input type="number" id="newEntityStdMb" class="form-control form-control-cyber" value="45">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label small text-secondary fw-bold">SHIFT START (HOUR)</label>
+                                <input type="number" id="newEntityStartHour" class="form-control form-control-cyber" value="9" min="0" max="23">
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label small text-secondary fw-bold">SHIFT END (HOUR)</label>
+                                <input type="number" id="newEntityEndHour" class="form-control form-control-cyber" value="18" min="0" max="23">
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="newEntityWatchlistCheck" onchange="document.getElementById('watchlistReasonGroup').style.display = this.checked ? 'block' : 'none'">
+                            <label class="form-check-label text-warning small fw-bold" for="newEntityWatchlistCheck"><i class="bi bi-exclamation-triangle-fill me-1"></i> Place on HR Departure Watchlist</label>
+                        </div>
+                        <div class="mb-3" id="watchlistReasonGroup" style="display: none;">
+                            <label class="form-label small text-secondary fw-bold">WATCHLIST REASON</label>
+                            <input type="text" id="newEntityWatchlistReason" class="form-control form-control-cyber" placeholder="e.g. Resignation Notice Period Active">
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-cyber w-100 py-2">
+                                <i class="bi bi-check-circle-fill me-2"></i>Create Monitored Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
