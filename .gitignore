@@ -1,0 +1,8 @@
+.env
+__pycache__/
+.pytest_cache/
+*.pyc
+cloudflared.exe
+instance/
+scratch_next_data.json
+.venv/

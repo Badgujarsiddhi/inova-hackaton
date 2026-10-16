@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScamShield AI – Localhost Portal</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 + Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        /* ───── Design Tokens ───── */
+        :root {
+            --bg:         #08101e;
+            --card-bg:    rgba(15, 25, 50, 0.85);
+            --border:     rgba(0, 200, 255, 0.18);
+            --cyan:       #00c8ff;
+            --cyan-dark:  #0090cc;
+            --green:      #00e676;
+            --red:        #ff1744;
+            --yellow:     #ffb300;
+            --text:       #e8f0fe;
+            --muted:      #7a8da8;
+            --radius:     16px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: radial-gradient(ellipse at 50% 0%, rgba(0,200,255,.12) 0%, transparent 65%),
+                        linear-gradient(160deg, #08101e 0%, #0c1a30 100%);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        h1,h2,h3,h4,h5,h6 { font-family: 'Outfit', sans-serif; }
+
+        /* ───── Navbar ───── */
+        .site-nav {
+            background: rgba(8,16,30,.75);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .brand {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.35rem;
+            background: linear-gradient(90deg, var(--cyan), #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand i {
+            background: linear-gradient(135deg, var(--cyan), #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.6rem;
+        }
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(0,230,118,.1);
+            border: 1px solid rgba(0,230,118,.25);
+            color: var(--green);
+            border-radius: 50px;
+            padding: 5px 14px;
+            font-size: .82rem;
+            font-weight: 600;
+        }
+        .pulse-dot {
+            width: 9px; height: 9px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--green);
+            animation: pulse 2s infinite;
+            flex-shrink: 0;
+        }
+        @keyframes pulse {
+            0%,100% { transform: scale(.9); opacity: .7; }
+            50%      { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* ───── Hero ───── */
+        .hero { padding: 50px 0 30px; text-align: center; }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(0,200,255,.1);
+            border: 1px solid rgba(0,200,255,.25);
+            color: var(--cyan);
+            border-radius: 50px;
+            padding: 6px 18px;
+            font-size: .8rem;
+            font-weight: 700;
+            letter-spacing: .05em;
+            margin-bottom: 18px;
+        }
+        .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: #fff; line-height: 1.2; }
+        .hero h1 span { color: var(--cyan); }
+        .hero p { color: var(--muted); max-width: 580px; margin: 14px auto 0; font-size: 1rem; line-height: 1.65; }
+
+        /* ───── Cards ───── */
+        .card-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(18px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 12px 40px rgba(0,0,0,.4);
+            transition: border-color .3s, box-shadow .3s;
+        }
+        .card-panel:hover { border-color: rgba(0,200,255,.35); box-shadow: 0 16px 50px rgba(0,200,255,.12); }
+
+        /* ───── Scanner Box ───── */
+        .scan-wrap {
+            display: flex;
+            align-items: center;
+            background: rgba(8,16,30,.9);
+            border: 2px solid rgba(0,200,255,.25);
+            border-radius: 14px;
+            padding: 6px 6px 6px 18px;
+            gap: 10px;
+            transition: border-color .3s, box-shadow .3s;
+        }
+        .scan-wrap:focus-within {
+            border-color: var(--cyan);
+            box-shadow: 0 0 22px rgba(0,200,255,.25);
+        }
+        .scan-wrap i { color: var(--cyan); font-size: 1.2rem; flex-shrink: 0; }
+        .scan-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            padding: 10px 0;
+            outline: none;
+        }
+        .scan-input::placeholder { color: var(--muted); }
+
+        /* ───── Buttons ───── */
+        .btn-primary-cyber {
+            background: linear-gradient(135deg, var(--cyan) 0%, #60a5fa 100%);
+            color: #000 !important;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            padding: 11px 26px;
+            font-size: .92rem;
+            box-shadow: 0 4px 14px rgba(0,200,255,.3);
+            transition: all .25s;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .btn-primary-cyber:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,200,255,.45);
+        }
+        .btn-primary-cyber:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+        .btn-outline-cyber {
+            background: transparent;
+            color: var(--cyan);
+            border: 1.5px solid rgba(0,200,255,.4);
+            border-radius: 10px;
+            padding: 9px 20px;
+            font-weight: 600;
+            font-size: .88rem;
+            transition: all .25s;
+            cursor: pointer;
+        }
+        .btn-outline-cyber:hover {
+            background: rgba(0,200,255,.1);
+            border-color: var(--cyan);
+        }
+        .btn-outline-cyber:disabled { opacity: .5; cursor: not-allowed; }
+
+        /* ───── Preset Chips ───── */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            color: var(--muted);
+            border-radius: 50px;
+            padding: 5px 14px;
+            font-size: .82rem;
+            cursor: pointer;
+            transition: all .2s;
+            user-select: none;
+        }
+        .chip:hover {
+            background: rgba(0,200,255,.12);
+            border-color: rgba(0,200,255,.4);
+            color: var(--cyan);
+        }
+
+        /* ───── Result Area ───── */
+        .result-box {
+            background: rgba(8,16,30,.95);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 12px;
+            padding: 22px 24px;
+        }
+        .verdict-safe    { color: var(--green); border-color: rgba(0,230,118,.3); }
+        .verdict-warn    { color: var(--yellow); border-color: rgba(255,179,0,.3); }
+        .verdict-danger  { color: var(--red);   border-color: rgba(255,23,68,.3); }
+
+        /* ───── Diagnostic Items ───── */
+        .diag-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 10px;
+            padding: 12px 16px;
+            gap: 10px;
+        }
+        .diag-label { font-size: .88rem; font-weight: 600; }
+        .diag-detail { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+        .badge-status {
+            font-size: .7rem;
+            font-weight: 700;
+            border-radius: 6px;
+            padding: 3px 10px;
+            letter-spacing: .04em;
+        }
+
+        /* ───── QR / LAN Card ───── */
+        .lan-url-text {
+            font-family: 'Courier New', monospace;
+            color: var(--green);
+            font-size: .95rem;
+            word-break: break-all;
+            font-weight: 600;
+        }
+
+        /* ───── Section Heading ───── */
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 14px;
+        }
+        .section-heading i { color: var(--cyan); font-size: 1.15rem; }
+
+        /* ───── Open App Button ───── */
+        .open-app-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,200,255,.1);
+            border: 1.5px solid rgba(0,200,255,.3);
+            color: var(--cyan);
+            border-radius: 10px;
+            padding: 9px 20px;
+            font-size: .88rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all .25s;
+        }
+        /* ───── Shifted Localhost Bar & Hub Styles ───── */
+        .localhost-access-card {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(0, 200, 255, 0.3);
+            backdrop-filter: blur(18px);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s;
+        }
+        .localhost-access-card:hover {
+            border-color: rgba(0, 200, 255, 0.6);
+            box-shadow: 0 14px 35px rgba(0, 200, 255, 0.2);
+        }
+        .text-cyan { color: var(--cyan) !important; }
+        .text-cyan-glow {
+            color: var(--cyan) !important;
+            text-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 230, 118, 0.08);
+            border: 1px solid rgba(0, 230, 118, 0.25);
+            color: var(--green);
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--green);
+            display: inline-block;
+        }
+        .btn-cyber {
+            background: linear-gradient(135deg, var(--cyan) 0%, #60a5fa 100%);
+            color: #000 !important;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            transition: all 0.25s;
+        }
+        .btn-cyber:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 200, 255, 0.4);
+        }
+        .portal-nav-btn {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--muted);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.86rem;
+            padding: 9px 20px;
+            transition: all 0.25s;
+        }
+        .portal-nav-btn:hover {
+            color: #fff;
+            background: rgba(0, 200, 255, 0.1);
+            border-color: rgba(0, 200, 255, 0.35);
+        }
+        .portal-nav-btn.active {
+            background: linear-gradient(135deg, rgba(0, 200, 255, 0.25), rgba(96, 165, 250, 0.25)) !important;
+            border-color: var(--cyan) !important;
+            color: var(--cyan) !important;
+            box-shadow: 0 0 16px rgba(0, 200, 255, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Navbar ── -->
+    <nav class="site-nav">
+        <div class="container d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <a href="/" class="brand">
+                <i class="bi bi-shield-fill-check"></i>
+                ScamShield AI
+            </a>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="status-pill">
+                    <span class="pulse-dot"></span>
+                    Server Online
+                </span>
+                <a href="/" class="open-app-btn">
+                    <i class="bi bi-grid-1x2-fill"></i> Open Full App
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── Main ── -->
+    <div class="container" style="max-width: 920px;">
+
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-badge">⚡ LOCALHOST SMART PORTAL</div>
+            <h1>ScamShield <span>Smart Portal & Hub</span></h1>
+            <p>Unified Multi-Device Network Access, Real-Time System Health, and 1-Box Universal Scam Scanner.</p>
+
+            <!-- 📡 Shifted Localhost & Network Access Bar (Shifted from Main Landing Hero) -->
+            <div class="localhost-access-card mx-auto mt-4 p-3 rounded-4" style="max-width: 800px;">
+                <div class="row align-items-center g-3">
+                    <div class="col-md-5 text-start border-end border-secondary border-opacity-25 ps-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-broadcast text-cyan fs-4"></i>
+                            <div>
+                                <small class="text-uppercase text-secondary fw-semibold d-block" style="letter-spacing: 1px; font-size: 0.65rem;">Localhost & Wi-Fi Address</small>
+                                <div class="fw-bold text-white text-truncate font-monospace" id="hero-host-url" style="font-size: 0.88rem;">http://127.0.0.1:5000</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-start border-end border-secondary border-opacity-25 ps-3">
+                        <small class="text-uppercase text-secondary fw-semibold d-block" style="letter-spacing: 1px; font-size: 0.65rem;">Backend Latency & Health</small>
+                        <div class="d-flex align-items-center gap-2 mt-1">
+                            <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-25 font-monospace" id="hero-latency-badge"><i class="bi bi-lightning-fill me-1"></i>12 ms</span>
+                            <span class="text-secondary small" id="hero-status-sub" style="font-size: 0.78rem;">Core Engine Ready</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex gap-2 justify-content-end pe-3">
+                        <button class="btn btn-sm btn-cyber flex-grow-1" onclick="switchToNetworkTab()">
+                            <i class="bi bi-qr-code-scan me-1"></i> Mobile / Hub
+                        </button>
+                        <button class="btn btn-sm btn-outline-info" onclick="copyHeroHostUrl()" title="Copy Localhost URL">
+                            <i class="bi bi-clipboard" id="heroCopyIcon"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <span class="status-badge">
+                    <span class="status-dot"></span>
+                    <span id="hero-core-status-text">ScamShield Engine Core: Online & Local Broadcasting</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- ── Smart Portal Navigation Tabs ── -->
+        <ul class="nav nav-pills justify-content-center mb-4 gap-2 flex-wrap" id="portalNavTabs" role="tablist">
+            <li class="nav-item">
+                <button class="portal-nav-btn active" id="tab-scanner-btn" data-bs-toggle="pill" data-bs-target="#pane-scanner" type="button" role="tab">
+                    <i class="bi bi-search me-1"></i> Universal Scam Scanner
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="portal-nav-btn" id="tab-network-btn" data-bs-toggle="pill" data-bs-target="#pane-network" type="button" role="tab">
+                    <i class="bi bi-broadcast me-1"></i> Localhost & Mobile Wi-Fi Hub
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="portal-nav-btn" id="tab-health-btn" data-bs-toggle="pill" data-bs-target="#pane-health" type="button" role="tab">
+                    <i class="bi bi-cpu-fill me-1"></i> Server Health Diagnostics
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="portal-nav-btn" id="tab-innovations-btn" data-bs-toggle="pill" data-bs-target="#pane-innovations" type="button" role="tab">
+                    <i class="bi bi-stars me-1 text-warning"></i> AI Core Architecture
+                </button>
+            </li>
+        </ul>
+
+        <!-- ── Smart Portal Tab Panes ── -->
+        <div class="tab-content mb-4" id="portalTabPanes">
+
+            <!-- Tab 1: Universal Smart Scanner -->
+            <div class="tab-pane fade show active" id="pane-scanner" role="tabpanel">
+                <div class="card-panel p-4">
+                    <div class="section-heading">
+                        <i class="bi bi-search"></i>
+                        Smart Scam Scanner (1-Box Universal Detection)
+                    </div>
+                    <p style="font-size: 0.88rem; color: var(--muted); margin-bottom: 16px;">
+                        Paste any suspicious URL, SMS text, phishing message, or job offer. The neural classifier automatically determines the content type and evaluates the threat vector.
+                    </p>
+
+                    <form onsubmit="event.preventDefault(); runSmartScan();">
+                        <div class="scan-wrap mb-3">
+                            <i class="bi bi-shield-check"></i>
+                            <input
+                                type="text"
+                                id="smartInput"
+                                class="scan-input"
+                                placeholder="Paste a message, link (https://...), or job offer here…"
+                                required
+                                autocomplete="off"
+                            >
+                            <button type="submit" class="btn-primary-cyber" id="smartScanBtn">
+                                <i class="bi bi-lightning-charge-fill me-1"></i> Scan Now
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Quick Presets -->
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+                        <span style="font-size:.8rem; color:var(--muted); font-weight:600;">Try examples:</span>
+
+                        <span class="chip" onclick="setPreset('URGENT: Earn Rs 10,000 daily working 2 hours! Click telegram link: https://t.me/fake_job_bonus')">
+                            <i class="bi bi-briefcase-fill text-warning"></i> Fake Job Offer
+                        </span>
+                        <span class="chip" onclick="setPreset('Dear Customer, your bank account is frozen. Update KYC now at http://secure-bank-kyc-update.xyz')">
+                            <i class="bi bi-bank text-danger"></i> Bank KYC Scam
+                        </span>
+                        <span class="chip" onclick="setPreset('http://free-crypto-giveaway-claim.top/bonus')">
+                            <i class="bi bi-link-45deg text-info"></i> Phishing Link
+                        </span>
+                    </div>
+
+                    <!-- Result Output -->
+                    <div id="smartResultArea" class="mt-4" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Localhost & Mobile Wi-Fi Hub -->
+            <div class="tab-pane fade" id="pane-network" role="tabpanel">
+                <div class="row g-4">
+                    <!-- Column 1: Mobile QR / LAN Access -->
+                    <div class="col-lg-6">
+                        <div class="card-panel p-4 h-100 d-flex flex-column" id="mobileQrCard">
+                            <div class="section-heading">
+                                <i class="bi bi-wifi"></i>
+                                Mobile & LAN Wi-Fi Access
+                                <span id="portalPortBadge" class="badge badge-status ms-auto" style="background:rgba(0,230,118,.12); color:var(--green); border:1px solid rgba(0,230,118,.25);">Port 5000</span>
+                            </div>
+                            <p style="font-size:.85rem; color:var(--muted); margin-bottom:14px;">
+                                Scan the QR code with your phone or tablet on the same Wi-Fi network to run ScamShield seamlessly across all your devices.
+                            </p>
+
+                            <div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-3" style="background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);">
+                                <div style="background:#fff; padding:8px; border-radius:10px; flex-shrink:0;">
+                                    <img id="portalQrImg" src="" alt="QR Code for LAN Access" style="width:110px; height:110px; border-radius:6px; display:block;">
+                                </div>
+                                <div class="flex-grow-1 min-w-0">
+                                    <div style="font-size:.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:5px;">Local Wi-Fi Network Address</div>
+                                    <div class="lan-url-text mb-2 font-monospace text-cyan" id="portalLanUrl" style="word-break: break-all;">Loading…</div>
+                                    <button class="btn-outline-cyber" onclick="copyPortalUrl()" id="copyBtn" style="font-size:.82rem; padding:6px 14px;">
+                                        <i class="bi bi-clipboard me-1"></i> Copy LAN Link
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="p-3 rounded-3 mt-auto" style="background: rgba(0, 200, 255, 0.05); border: 1px solid rgba(0, 200, 255, 0.15);">
+                                <div class="d-flex align-items-center gap-2 text-cyan fw-bold small mb-1">
+                                    <i class="bi bi-shield-check"></i> Zero Setup Required
+                                </div>
+                                <div style="font-size: 0.8rem; color: var(--muted); line-height: 1.45;">
+                                    Connect any iOS, Android, or laptop on your home or office router. No external internet or complex DNS configuration needed.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Performance Diagnostics & Tunneling -->
+                    <div class="col-lg-6">
+                        <div class="card-panel p-4 h-100 d-flex flex-column">
+                            <div class="section-heading">
+                                <i class="bi bi-speedometer2"></i>
+                                Real-Time Network Diagnostics
+                                <span class="badge badge-status ms-auto" id="portalPingBadge" style="background:rgba(0,230,118,.12); color:var(--green); border:1px solid rgba(0,230,118,.25);">Active</span>
+                            </div>
+
+                            <div class="p-3 rounded-3 mb-3 d-flex align-items-center justify-content-between" style="background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08);">
+                                <div>
+                                    <small class="text-secondary d-block" style="font-size:0.75rem;">Localhost API Response Time</small>
+                                    <span class="fw-bold fs-4 text-cyan font-monospace" id="portalLatencyVal">-- ms</span>
+                                    <span class="text-secondary small ms-2" id="portalLatencyStatus">(Checking...)</span>
+                                </div>
+                                <button class="btn btn-sm btn-outline-info" onclick="runPortalPingTest()" id="btnPortalPing">
+                                    <i class="bi bi-arrow-repeat me-1" id="portalPingIcon"></i> Test Latency
+                                </button>
+                            </div>
+
+                            <div class="p-3 rounded-3 mb-3" style="background:rgba(255, 179, 0, 0.05); border:1px solid rgba(255, 179, 0, 0.2);">
+                                <div class="d-flex align-items-center gap-2 text-warning fw-semibold small mb-1">
+                                    <i class="bi bi-globe2"></i> Need Public Internet Access?
+                                </div>
+                                <p class="text-secondary small mb-0" style="font-size:0.8rem; line-height:1.5;">
+                                    Run <code>python run_localhost.py</code> in terminal to start your server with interactive port detection and 1-click desktop browser launch!
+                                </p>
+                            </div>
+
+                            <!-- Endpoints Directory -->
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-uppercase text-secondary fw-semibold" style="letter-spacing:1px; font-size:0.72rem;">Active Microservice Endpoints</small>
+                                    <span class="badge bg-secondary bg-opacity-25 text-light extra-small">FastAPI / Flask Core</span>
+                                </div>
+                                <div class="row g-2" id="portalEndpointsList">
+                                    <!-- Populated dynamically via JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Server Health Check -->
+            <div class="tab-pane fade" id="pane-health" role="tabpanel">
+                <div class="card-panel p-4">
+                    <div class="section-heading">
+                        <i class="bi bi-cpu-fill"></i>
+                        Server Self-Check & Module Health Diagnostics
+                        <span id="diagScoreBadge" class="badge badge-status ms-auto" style="background:rgba(255,255,255,.08); color:var(--muted);">Not tested</span>
+                    </div>
+                    <p style="font-size:.85rem; color:var(--muted); margin-bottom:14px;">
+                        Verify all AI security modules, headless sandbox detonator, and the network broadcast interface are functioning properly.
+                    </p>
+
+                    <div id="diagList" class="d-flex flex-column gap-2 mb-3">
+                        <div class="diag-item">
+                            <div>
+                                <div class="diag-label"><i class="bi bi-circle text-secondary me-2"></i>Gemini AI Engine</div>
+                                <div class="diag-detail">Not checked yet</div>
+                            </div>
+                        </div>
+                        <div class="diag-item">
+                            <div>
+                                <div class="diag-label"><i class="bi bi-circle text-secondary me-2"></i>Headless Sandbox Detonator</div>
+                                <div class="diag-detail">Not checked yet</div>
+                            </div>
+                        </div>
+                        <div class="diag-item">
+                            <div>
+                                <div class="diag-label"><i class="bi bi-circle text-secondary me-2"></i>Wi-Fi LAN Broadcast</div>
+                                <div class="diag-detail">Not checked yet</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary-cyber w-100" onclick="runSelfCheck()" id="btnSelfCheck" style="border-radius:12px; padding:12px 20px;">
+                        <i class="bi bi-check2-all me-2"></i> Run Health Diagnostics
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 4: ScamShield AI Architecture & Innovations -->
+            <div class="tab-pane fade" id="pane-innovations" role="tabpanel">
+                <div class="card-panel p-4">
+                    <div class="section-heading">
+                        <i class="bi bi-stars text-warning"></i>
+                        ScamShield AI – Breakthrough Core Architecture
+                        <span class="badge badge-status ms-auto" style="background:rgba(0,200,255,.12); color:var(--cyan); border:1px solid rgba(0,200,255,.25);">v2.4 Proprietary</span>
+                    </div>
+                    <p style="font-size:.88rem; color:var(--muted); margin-bottom:20px;">
+                        Our state-of-the-art multi-layered defense suite brings military-grade cyber protection directly to everyday users and enterprise teams.
+                    </p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 h-100" style="background:rgba(0,200,255,.04); border:1px solid rgba(0,200,255,.18);">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-qr-code-scan text-cyan fs-5"></i>
+                                    <strong class="text-cyan">1. Quishing & Vision OCR Detonator</strong>
+                                </div>
+                                <p style="font-size:0.83rem; color:var(--muted); line-height:1.5; margin:0;">
+                                    Combines neural vision and OCR to intercept weaponized QR codes hiding in bank receipts and fake notices before mobile scanners execute fraudulent redirects.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 h-100" style="background:rgba(255,23,68,.04); border:1px solid rgba(255,23,68,.18);">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-radar text-danger fs-5"></i>
+                                    <strong class="text-danger">2. Scammer Hop & Geo-Origin Radar</strong>
+                                </div>
+                                <p style="font-size:0.83rem; color:var(--muted); line-height:1.5; margin:0;">
+                                    Traces threat actors across multi-hop ISP relays, detects Tor exit nodes, and reverse-triangulates scam infrastructure back to physical Autonomous System hosters.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 h-100" style="background:rgba(255,179,0,.04); border:1px solid rgba(255,179,0,.18);">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-shield-shaded text-warning fs-5"></i>
+                                    <strong class="text-warning">3. Virtual Air-Gapped Sandbox</strong>
+                                </div>
+                                <p style="font-size:0.83rem; color:var(--muted); line-height:1.5; margin:0;">
+                                    Detonates untrusted links headlessly in an isolated virtual container, identifying evasive JavaScript redirects, credential phishing DOM trees, and zero-day payloads.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 h-100" style="background:rgba(0,230,118,.04); border:1px solid rgba(0,230,118,.18);">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-graph-up-arrow text-success fs-5"></i>
+                                    <strong class="text-success">4. UEBA Sentiment Velocity (&Delta;S / &Delta;t)</strong>
+                                </div>
+                                <p style="font-size:0.83rem; color:var(--muted); line-height:1.5; margin:0;">
+                                    Calculates the rate of coercive emotional pressure change in enterprise comms, detecting wire fraud and extortion with autonomous Just-In-Time quarantine.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── Quick Links ── -->
+        <div class="card-panel p-4">
+            <div class="section-heading">
+                <i class="bi bi-link-45deg"></i>
+                Quick Links
+            </div>
+            <div class="row g-2" id="quickLinksRow">
+                <div class="col-6 col-md-4">
+                    <a href="/" class="d-flex align-items-center gap-2 p-3 rounded-3 text-decoration-none" style="background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:var(--text); transition:all .2s;" onmouseover="this.style.borderColor='rgba(0,200,255,.35)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
+                        <i class="bi bi-speedometer2" style="color:var(--cyan); font-size:1.1rem;"></i>
+                        <span style="font-size:.88rem; font-weight:600;">Main Dashboard</span>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4">
+                    <a href="/api/health" target="_blank" class="d-flex align-items-center gap-2 p-3 rounded-3 text-decoration-none" style="background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:var(--text); transition:all .2s;" onmouseover="this.style.borderColor='rgba(0,200,255,.35)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
+                        <i class="bi bi-heart-pulse-fill" style="color:#f87171; font-size:1.1rem;"></i>
+                        <span style="font-size:.88rem; font-weight:600;">API Health</span>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4">
+                    <a href="/api/localhost/metrics" target="_blank" class="d-flex align-items-center gap-2 p-3 rounded-3 text-decoration-none" style="background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:var(--text); transition:all .2s;" onmouseover="this.style.borderColor='rgba(0,200,255,.35)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
+                        <i class="bi bi-bar-chart-fill" style="color:#a78bfa; font-size:1.1rem;"></i>
+                        <span style="font-size:.88rem; font-weight:600;">Server Metrics</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /container -->
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        /* ── Preset Scan ── */
+        function setPreset(text) {
+            document.getElementById('smartInput').value = text;
+            runSmartScan();
+        }
+
+        /* ── Smart Scan ── */
+        async function runSmartScan() {
+            const input  = document.getElementById('smartInput').value.trim();
+            const btn    = document.getElementById('smartScanBtn');
+            const area   = document.getElementById('smartResultArea');
+
+            if (!input) return;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Scanning…`;
+
+            try {
+                const res  = await fetch('/api/localhost/quick_scan', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ query: input })
+                });
+                const data = await res.json();
+
+                let score = data.risk_score || 0;
+                let colorClass = score >= 70 ? 'verdict-danger' : (score >= 35 ? 'verdict-warn' : 'verdict-safe');
+                let iconClass  = score >= 70 ? 'bi-exclamation-triangle-fill text-danger' : (score >= 35 ? 'bi-exclamation-circle-fill text-warning' : 'bi-check-circle-fill text-success');
+                let bgColor    = score >= 70 ? 'rgba(255,23,68,.08)'  : (score >= 35 ? 'rgba(255,179,0,.08)' : 'rgba(0,230,118,.08)');
+                let borderColor= score >= 70 ? 'rgba(255,23,68,.3)'   : (score >= 35 ? 'rgba(255,179,0,.3)'  : 'rgba(0,230,118,.3)');
+
+                area.style.display = 'block';
+                area.innerHTML = `
+                    <div class="result-box ${colorClass}" style="background:${bgColor}; border-color:${borderColor};">
+                        <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi ${iconClass} fs-5"></i>
+                                <div>
+                                    <div style="font-size:.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em;">${data.detected_type || 'Content Scan'}</div>
+                                    <div style="font-size:1.1rem; font-weight:700;">${data.verdict}</div>
+                                </div>
+                            </div>
+                            <div style="background:rgba(255,255,255,.08); border-radius:10px; padding:8px 16px; text-align:center; flex-shrink:0;">
+                                <div style="font-size:1.4rem; font-weight:800;">${score}</div>
+                                <div style="font-size:.7rem; color:var(--muted);">/ 100 Risk</div>
+                            </div>
+                        </div>
+                        <div style="font-size:.85rem; font-weight:600; color:#fff; margin-bottom:8px;">AI Analysis:</div>
+                        <ul style="padding-left:18px; margin:0;">
+                            ${(data.reasons || []).map(r => `<li style="font-size:.84rem; color:var(--muted); margin-bottom:5px;">${r}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            } catch (err) {
+                area.style.display = 'block';
+                area.innerHTML = `
+                    <div class="result-box" style="border-color:rgba(255,23,68,.4); background:rgba(255,23,68,.06);">
+                        <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                        <span style="color:#ff6b6b;">Scan failed: ${err.message}. Make sure the server is running.</span>
+                    </div>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="bi bi-lightning-charge-fill me-1"></i> Scan Now`;
+            }
+        }
+
+        /* ── Self Check ── */
+        async function runSelfCheck() {
+            const btn    = document.getElementById('btnSelfCheck');
+            const list   = document.getElementById('diagList');
+            const badge  = document.getElementById('diagScoreBadge');
+
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Checking…`;
+
+            try {
+                const res  = await fetch('/api/localhost/test_all');
+                const data = await res.json();
+
+                const score = data.health_score || 0;
+                badge.textContent = `Health: ${score}%`;
+                badge.style.background = score === 100 ? 'rgba(0,230,118,.12)' : 'rgba(255,179,0,.12)';
+                badge.style.color       = score === 100 ? 'var(--green)' : 'var(--yellow)';
+                badge.style.border      = score === 100 ? '1px solid rgba(0,230,118,.3)' : '1px solid rgba(255,179,0,.3)';
+
+                list.innerHTML = (data.diagnostics || []).map(d => `
+                    <div class="diag-item" style="border-color:${d.pass ? 'rgba(0,230,118,.2)' : 'rgba(255,23,68,.2)'};">
+                        <div>
+                            <div class="diag-label">
+                                <i class="bi ${d.pass ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'} me-2"></i>${d.name}
+                            </div>
+                            <div class="diag-detail ms-4">${d.details || ''}</div>
+                        </div>
+                        <span class="badge-status" style="background:${d.pass ? 'rgba(0,230,118,.15)' : 'rgba(255,23,68,.15)'}; color:${d.pass ? 'var(--green)' : 'var(--red)'}; border:1px solid ${d.pass ? 'rgba(0,230,118,.3)' : 'rgba(255,23,68,.3)'};">
+                            ${d.status}
+                        </span>
+                    </div>
+                `).join('');
+            } catch (err) {
+                list.innerHTML = `
+                    <div class="result-box" style="border-color:rgba(255,23,68,.3); background:rgba(255,23,68,.06);">
+                        <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                        <span style="font-size:.85rem; color:#ff6b6b;">Diagnostic failed: ${err.message}</span>
+                    </div>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="bi bi-check2-all me-2"></i> Run Health Check`;
+            }
+        }
+
+        /* ── Load LAN Info & Shifted Hero Bar Sync ── */
+        async function loadPortalInfo() {
+            try {
+                const startTime = performance.now();
+                const res  = await fetch('/api/localhost_info');
+                const endTime = performance.now();
+                const latency = Math.max(8, Math.round(endTime - startTime));
+                
+                const data = await res.json();
+
+                const heroHostUrl = document.getElementById('hero-host-url');
+                const heroLatencyBadge = document.getElementById('hero-latency-badge');
+                const portalLatencyVal = document.getElementById('portalLatencyVal');
+                const portalLatencyStatus = document.getElementById('portalLatencyStatus');
+                const lanEl  = document.getElementById('portalLanUrl');
+                const qrImg  = document.getElementById('portalQrImg');
+                const portBadge = document.getElementById('portalPortBadge');
+
+                const targetUrl = data.lan_url || 'http://127.0.0.1:5000';
+                if (heroHostUrl) heroHostUrl.textContent = targetUrl;
+                if (heroLatencyBadge) heroLatencyBadge.innerHTML = `<i class="bi bi-lightning-fill me-1"></i>${latency} ms`;
+                if (portalLatencyVal) portalLatencyVal.textContent = `${latency} ms`;
+                if (portalLatencyStatus) portalLatencyStatus.textContent = '(Operational)';
+                if (lanEl) lanEl.textContent = targetUrl;
+                if (portBadge) portBadge.textContent = `Port ${data.port || 5000}`;
+                if (qrImg && targetUrl) {
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(targetUrl)}&bgcolor=ffffff&color=000000&margin=2`;
+                }
+
+                // Render microservice endpoints list in Tab 2
+                const epList = document.getElementById('portalEndpointsList');
+                if (epList && data.endpoints) {
+                    epList.innerHTML = data.endpoints.map(ep => `
+                        <div class="col-md-6 col-12">
+                            <div class="p-2 rounded d-flex align-items-center justify-content-between" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                                <div class="min-w-0 me-2">
+                                    <span class="badge ${ep.type.includes('POST') ? 'bg-danger bg-opacity-25 text-danger' : 'bg-info bg-opacity-25 text-cyan'} extra-small me-1" style="font-size:0.68rem;">${ep.type}</span>
+                                    <code style="font-size:0.75rem; color:#fff;">${ep.path}</code>
+                                    <div style="font-size:0.7rem; color:var(--muted); margin-top:2px;" class="text-truncate">${ep.name}</div>
+                                </div>
+                                <span class="badge bg-success bg-opacity-20 text-success" style="font-size:0.65rem;">READY</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch(e) {
+                const heroHostUrl = document.getElementById('hero-host-url');
+                if (heroHostUrl) heroHostUrl.textContent = 'http://127.0.0.1:5000';
+                const lanEl = document.getElementById('portalLanUrl');
+                if (lanEl) lanEl.textContent = 'http://127.0.0.1:5000';
+            }
+        }
+
+        /* ── Copy Shifted Hero URL ── */
+        async function copyHeroHostUrl() {
+            const el = document.getElementById('hero-host-url');
+            const icon = document.getElementById('heroCopyIcon');
+            if (!el) return;
+            try {
+                await navigator.clipboard.writeText(el.textContent);
+                if (icon) {
+                    icon.className = 'bi bi-check2 text-success';
+                    setTimeout(() => { icon.className = 'bi bi-clipboard'; }, 2000);
+                }
+            } catch(e) {
+                alert('Localhost URL: ' + el.textContent);
+            }
+        }
+
+        /* ── Switch to Network Hub Tab ── */
+        function switchToNetworkTab() {
+            const tabBtn = document.getElementById('tab-network-btn');
+            if (tabBtn) {
+                const tab = new bootstrap.Tab(tabBtn);
+                tab.show();
+            }
+            const el = document.getElementById('mobileQrCard');
+            if (el) {
+                setTimeout(() => {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 150);
+            }
+        }
+
+        /* ── Real-time Latency Diagnostic ── */
+        async function runPortalPingTest() {
+            const icon = document.getElementById('portalPingIcon');
+            const valEl = document.getElementById('portalLatencyVal');
+            const heroLatency = document.getElementById('hero-latency-badge');
+            const statusEl = document.getElementById('portalLatencyStatus');
+            const btn = document.getElementById('btnPortalPing');
+
+            if (btn) btn.disabled = true;
+            if (icon) icon.classList.add('spin-anim');
+
+            const t0 = performance.now();
+            try {
+                await fetch('/api/health?t=' + Date.now());
+                const t1 = performance.now();
+                const latency = Math.max(6, Math.round(t1 - t0));
+                if (valEl) valEl.textContent = `${latency} ms`;
+                if (heroLatency) heroLatency.innerHTML = `<i class="bi bi-lightning-fill me-1"></i>${latency} ms`;
+                if (statusEl) statusEl.textContent = '(Optimal)';
+            } catch(err) {
+                if (valEl) valEl.textContent = 'Error';
+                if (statusEl) statusEl.textContent = '(Offline)';
+            } finally {
+                if (btn) btn.disabled = false;
+                if (icon) icon.classList.remove('spin-anim');
+            }
+        }
+
+        /* ── Copy LAN URL ── */
+        async function copyPortalUrl() {
+            const el  = document.getElementById('portalLanUrl');
+            const btn = document.getElementById('copyBtn');
+            if (!el) return;
+            try {
+                await navigator.clipboard.writeText(el.textContent);
+                btn.innerHTML = `<i class="bi bi-check2 me-1 text-success"></i> Copied!`;
+                setTimeout(() => { btn.innerHTML = `<i class="bi bi-clipboard me-1"></i> Copy LAN Link`; }, 2000);
+            } catch(e) {
+                alert('Link: ' + el.textContent);
+            }
+        }
+
+        /* ── Init ── */
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPortalInfo();
+            runSelfCheck();
+            runPortalPingTest();
+        });
+    </script>
+</body>
+</html>
