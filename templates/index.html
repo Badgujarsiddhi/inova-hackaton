@@ -590,7 +590,22 @@
             align-items: center;
             gap: 6px;
         }
+
+        /* Pulsing Recording State for Chatbot Microphone */
+        @keyframes pulse-recording-anim {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 23, 68, 0.7); }
+            70% { transform: scale(1.08); box-shadow: 0 0 0 10px rgba(255, 23, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 23, 68, 0); }
+        }
+        .pulse-recording {
+            animation: pulse-recording-anim 1.2s infinite !important;
+            background-color: #ff1744 !important;
+            border-color: #ff1744 !important;
+            color: #ffffff !important;
+        }
     </style>
+    <!-- jsQR Client-Side Barcode & QR Decoder CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 
 <body>
@@ -598,34 +613,32 @@
     <!-- Animated Cyber Node Particle Background Canvas Overlay -->
     <canvas id="bgParticleCanvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; opacity: 0.35;"></canvas>
 
-    <!-- Top Navigation Bar with Expressive Localhost & Network Controls -->
+    <!-- Top Navigation Bar with Language Switcher, Theme & Premium Controls -->
     <nav class="navbar navbar-expand-lg border-bottom border-secondary border-opacity-10 py-3" style="background: rgba(8, 12, 20, 0.65); backdrop-filter: blur(16px); position: relative; z-index: 1000;">
         <div class="container d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-3">
                 <span class="navbar-brand fw-bold fs-4 mb-0" style="background: var(--primary-glow); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Outfit', sans-serif;">
-                    <i class="bi bi-shield-shaded me-2"></i>SCAMSHIELD CORE
+                    <i class="bi bi-shield-shaded me-2"></i>SCAMSHIELD AI
                 </span>
-                <!-- Live Localhost Pill Badge -->
-                <button class="localhost-nav-pill text-start d-flex align-items-center gap-2 py-1 px-3 border-0" onclick="openLocalhostModal()" title="Click to manage Localhost & Mobile Wi-Fi Access">
-                    <span class="status-dot"></span>
-                    <div>
-                        <span class="d-block fw-bold text-white small" id="nav-host-label" style="font-size: 0.75rem;">🟢 Localhost: Active</span>
-                        <span class="d-block text-cyan-glow font-monospace" style="font-size: 0.68rem;" id="nav-host-ip">http://127.0.0.1:5000</span>
-                    </div>
-                    <i class="bi bi-sliders text-cyan ms-1"></i>
-                </button>
-
-                <!-- Smart Portal Direct Link -->
-                <a href="/localhost" class="btn btn-sm btn-outline-info rounded-pill px-3 py-1 text-cyan fw-bold d-flex align-items-center gap-1" style="border-color: rgba(0,242,254,0.4);">
-                    <i class="bi bi-magic me-1"></i> Smart Portal
-                </a>
             </div>
 
             <div class="d-flex align-items-center gap-2" id="premiumStatusArea">
+                <!-- Multilingual Language Switcher (Marathi, Hindi, English) -->
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-info text-cyan dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" id="langDropdownBtn" style="border-radius: 10px;">
+                        <i class="bi bi-translate text-cyan"></i> <span id="currentLangLabel">English</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg" style="background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(0, 242, 254, 0.2);">
+                        <li><a class="dropdown-item active d-flex align-items-center gap-2" href="javascript:void(0)" onclick="changeLanguage('en')"><i class="bi bi-globe2 text-info"></i> English</a></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="javascript:void(0)" onclick="changeLanguage('hi')"><span>🇮🇳</span> हिंदी (Hindi)</a></li>
+                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="javascript:void(0)" onclick="changeLanguage('mr')"><span>🚩</span> मराठी (Marathi)</a></li>
+                    </ul>
+                </div>
+
                 <!-- Expressive Theme Dropdown -->
                 <div class="dropdown">
                     <button class="btn btn-sm btn-outline-secondary text-light dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" id="themeDropdownBtn" style="border-radius: 10px;">
-                        <i class="bi bi-palette-fill text-cyan"></i> <span class="d-none d-md-inline">Theme</span>
+                        <i class="bi bi-palette-fill text-cyan"></i> <span class="d-none d-md-inline" data-i18n="theme">Theme</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg" style="background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(0, 242, 254, 0.2);">
                         <li><a class="dropdown-item active d-flex align-items-center gap-2" href="javascript:void(0)" onclick="setTheme('cyber-dark', this)"><i class="bi bi-moon-stars-fill text-info"></i> Cyber Dark (Default)</a></li>
@@ -642,7 +655,7 @@
 
                 <!-- Premium Button -->
                 <button class="btn btn-sm btn-cyber ms-1" data-bs-toggle="modal" data-bs-target="#premiumModal" id="btnGoPremiumNav">
-                    <i class="bi bi-gem me-1"></i>Go Premium
+                    <i class="bi bi-gem me-1"></i><span data-i18n="go_premium">Go Premium</span>
                 </button>
             </div>
         </div>
@@ -655,43 +668,14 @@
             <div class="shield-pulse"></div>
         </div>
         <h1 class="display-5 fw-bold mb-2">ScamShield <span style="background: var(--primary-glow); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI</span></h1>
-        <p class="text-secondary lead mx-auto" style="max-width: 600px;">Protecting your digital world in real-time. Scan URLs, detect screenshot threats, analyze phishing text, and chat with safety experts.</p>
+        <p class="text-secondary lead mx-auto" style="max-width: 600px;" data-i18n="hero_desc">Protecting your digital world in real-time. Scan URLs, detect screenshot threats, analyze phishing text, and chat with safety experts.</p>
 
-        <!-- Expressive Localhost & Network Access Bar -->
-        <div class="localhost-access-card mx-auto mt-4 p-3 rounded-4" style="max-width: 750px;">
-            <div class="row align-items-center g-3">
-                <div class="col-md-5 text-start border-end border-secondary border-opacity-25 ps-3">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-broadcast text-cyan fs-4"></i>
-                        <div>
-                            <small class="text-uppercase text-secondary fw-semibold d-block" style="letter-spacing: 1px; font-size: 0.65rem;">Localhost & Wi-Fi Address</small>
-                            <div class="fw-bold text-white text-truncate font-monospace" id="hero-host-url" style="font-size: 0.88rem;">http://127.0.0.1:5000</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 text-start border-end border-secondary border-opacity-25 ps-3">
-                    <small class="text-uppercase text-secondary fw-semibold d-block" style="letter-spacing: 1px; font-size: 0.65rem;">Backend Latency & Health</small>
-                    <div class="d-flex align-items-center gap-2 mt-1">
-                        <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-25 font-monospace" id="hero-latency-badge"><i class="bi bi-lightning-fill me-1"></i>12 ms</span>
-                        <span class="text-secondary small" id="hero-status-sub" style="font-size: 0.78rem;">Core Engine Ready</span>
-                    </div>
-                </div>
-                <div class="col-md-3 d-flex gap-2 justify-content-end pe-3">
-                    <button class="btn btn-sm btn-cyber flex-grow-1" onclick="openLocalhostModal()">
-                        <i class="bi bi-qr-code-scan me-1"></i> Mobile / Hub
-                    </button>
-                    <button class="btn btn-sm btn-outline-info" onclick="copyText('hero-host-url')" title="Copy Localhost URL">
-                        <i class="bi bi-clipboard"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-3">
-            <span class="status-badge">
-                <span class="status-dot"></span>
-                <span id="hero-core-status-text">ScamShield Engine Core: Online & Local Broadcasting</span>
-            </span>
+        <!-- Clean Mobile Hub / QR Access Section -->
+        <div class="mt-4">
+            <button class="btn btn-cyber px-4 py-2 rounded-pill shadow-lg d-inline-flex align-items-center gap-2" onclick="openLocalhostModal()" title="Connect Mobile Phone via QR Code">
+                <i class="bi bi-qr-code-scan fs-5 text-cyan"></i>
+                <span class="fw-bold" data-i18n="hero_mobile_hub">Mobile Hub / QR Access</span>
+            </button>
         </div>
     </div>
 
@@ -710,18 +694,17 @@
                 <!-- Text / Message Scanner -->
                 <div class="glass-card">
                     <div class="card-header-styled d-flex align-items-center justify-content-between">
-                        <h5 class="m-0 fw-bold"><i class="bi bi-chat-left-quote text-info me-2"></i> Message & Job Post
-                            Scanner</h5>
+                        <h5 class="m-0 fw-bold"><i class="bi bi-chat-left-quote text-info me-2"></i> <span data-i18n="txt_card_title">Message & Job Post Scanner</span></h5>
                         <span class="badge bg-secondary opacity-75">AI Analyzed</span>
                     </div>
                     <div class="card-body-styled">
                         <textarea id="textInput" class="form-control form-control-cyber mb-3" rows="4"
-                            placeholder="Paste suspicious SMS, WhatsApp message, email draft, or job advertisement text here..."></textarea>
+                            placeholder="Paste suspicious SMS, WhatsApp message, email draft, or job advertisement text here..." data-i18n-placeholder="txt_placeholder"></textarea>
 
                         <div class="d-flex justify-content-between align-items-center">
                             <button class="btn btn-cyber" id="textBtn" onclick="analyzeText()">
                                 <i class="bi bi-search"></i>
-                                <span>Scan Message</span>
+                                <span data-i18n="txt_btn">Scan Message</span>
                             </button>
                             <div class="cyber-loader" id="textLoader"></div>
                         </div>
@@ -736,16 +719,15 @@
                 <!-- Phishing Website Trust Checker -->
                 <div class="glass-card">
                     <div class="card-header-styled">
-                        <h5 class="m-0 fw-bold"><i class="bi bi-globe2 text-info me-2"></i> Phishing Website / Link
-                            Trust Checker</h5>
+                        <h5 class="m-0 fw-bold"><i class="bi bi-globe2 text-info me-2"></i> <span data-i18n="url_card_title">Phishing Website / Link Trust Checker</span></h5>
                     </div>
                     <div class="card-body-styled">
                         <div class="input-group gap-2">
                             <input type="text" id="urlInput" class="form-control form-control-cyber"
-                                placeholder="Enter link, e.g., https://secure-bank-login.xyz">
+                                placeholder="Enter link, e.g., https://secure-bank-login.xyz" data-i18n-placeholder="url_placeholder">
                             <button class="btn btn-cyber" id="urlBtn" onclick="analyzeUrl()">
                                 <i class="bi bi-shield-check"></i>
-                                <span>Check URL</span>
+                                <span data-i18n="url_btn">Check URL</span>
                             </button>
                         </div>
                         <div class="d-flex justify-content-end mt-2">
@@ -762,8 +744,7 @@
                 <!-- Screenshot Scam Scanner -->
                 <div class="glass-card">
                     <div class="card-header-styled">
-                        <h5 class="m-0 fw-bold"><i class="bi bi-camera text-info me-2"></i> Screenshot Scam & OCR
-                            Detector</h5>
+                        <h5 class="m-0 fw-bold"><i class="bi bi-camera text-info me-2"></i> <span data-i18n="img_card_title">Screenshot Scam & OCR Detector</span></h5>
                     </div>
                     <div class="card-body-styled">
 
@@ -774,22 +755,19 @@
                                 onchange="handleImageFileSelect(event)">
                             <div id="uploadPrompt">
                                 <i class="bi bi-cloud-arrow-up fs-2 text-info mb-2 d-block"></i>
-                                <span class="fw-semibold text-light">Drag & drop a screenshot</span> or <span
-                                    class="text-info">browse device</span>
-                                <p class="text-secondary small mt-1">Supports PNG, JPG, JPEG (WhatsApp chats, SMS,
-                                    emails)</p>
+                                <span class="fw-semibold text-light" data-i18n="img_drag_title">Drag & drop a screenshot or browse device</span>
+                                <p class="text-secondary small mt-1" data-i18n="img_drag_sub">Supports PNG, JPG, JPEG (WhatsApp chats, SMS, emails)</p>
                             </div>
                             <div id="previewWrapper" class="d-none">
                                 <img id="imagePreview" src="" alt="Scan Preview">
-                                <p class="text-info small mt-2 mb-0"><i class="bi bi-check-circle"></i> Screenshot
-                                    loaded successfully</p>
+                                <p class="text-info small mt-2 mb-0"><i class="bi bi-check-circle"></i> Screenshot loaded successfully</p>
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center">
                             <button class="btn btn-cyber" id="imageBtn" onclick="analyzeImage()">
                                 <i class="bi bi-eye"></i>
-                                <span>Read & Analyze Screenshot</span>
+                                <span data-i18n="img_btn">Read & Analyze Screenshot</span>
                             </button>
                             <div class="cyber-loader" id="imageLoader"></div>
                         </div>
@@ -801,11 +779,11 @@
                     </div>
                 </div>
 
-                <!-- 📱 NEW: QR Code Phishing (Quishing) Scanner Card -->
+                <!-- 📱 QR Code Phishing (Quishing) Scanner Card -->
                 <div class="glass-card mt-4">
                     <div class="card-header-styled d-flex align-items-center justify-content-between">
-                        <h5 class="m-0 fw-bold"><i class="bi bi-qr-code-scan text-info me-2"></i> QR Code Phishing (Quishing) Scanner</h5>
-                        <span class="badge bg-warning bg-opacity-20 text-warning extra-small">Upload Image or Paste QR URL</span>
+                        <h5 class="m-0 fw-bold"><i class="bi bi-qr-code-scan text-info me-2"></i> <span data-i18n="qr_card_title">QR Code Phishing (Quishing) Scanner</span></h5>
+                        <span class="badge bg-info bg-opacity-20 text-info extra-small" data-i18n="qr_badge">Direct QR Image Scanner</span>
                     </div>
                     <div class="card-body-styled">
                         <!-- Drag-and-drop Image File Upload Zone for QR Codes -->
@@ -813,38 +791,18 @@
                             <input type="file" id="qrFileInput" accept="image/*" style="display: none;" onchange="handleQrImageFileSelect(event)">
                             <div id="qrUploadPrompt">
                                 <i class="bi bi-qr-code-scan fs-1 text-info mb-2 d-block"></i>
-                                <span class="fw-semibold text-light">Click to Upload QR Code Image</span> or <span class="text-info">Drag & Drop QR Image</span>
-                                <p class="text-secondary small mt-1">Supports PNG, JPG, JPEG (Scan posters, restaurant QR menus, email attachments)</p>
+                                <span class="fw-semibold text-light" data-i18n="qr_upload_title">Click or Drag & Drop QR Image to Scan</span>
+                                <p class="text-secondary extra-small mt-1 mb-0" data-i18n="qr_upload_sub">Supports photos, screenshots, FamApp, Google Pay, and web QR codes</p>
                             </div>
                             <div id="qrPreviewWrapper" class="d-none text-center">
-                                <img id="qrImagePreview" src="" alt="QR Preview" style="max-height: 150px;" class="rounded border border-secondary mb-2">
-                                <p class="text-info extra-small mb-0"><i class="bi bi-check-circle-fill me-1"></i>QR Image Loaded & Payload Extracted</p>
+                                <img id="qrImagePreview" src="" alt="QR Preview" style="max-height: 180px;" class="rounded border border-secondary mb-2">
+                                <p class="text-info extra-small mb-0"><i class="bi bi-shield-check me-1"></i><span data-i18n="qr_scanning_status">Scanning QR Code matrix & extracting payload...</span></p>
                             </div>
                         </div>
 
-                        <!-- Sample QR Code Quick Testers -->
-                        <div class="mb-2">
-                            <label class="extra-small text-secondary mb-1">Quick Sample QR Testers</label>
-                            <div class="d-flex flex-wrap gap-1 mb-2">
-                                <button class="btn btn-sm btn-outline-danger extra-small py-1" onclick="document.getElementById('qrPayloadInput').value = 'https://secure-login-verify-account-update.xyz/auth'; scanQrCode();">
-                                    🚨 Phishing QR (.xyz)
-                                </button>
-                                <button class="btn btn-sm btn-outline-warning extra-small py-1 text-dark" onclick="document.getElementById('qrPayloadInput').value = 'WIFI:S:Free_Airport_WiFi;P:fake_pass_123;T:WPA;;'; scanQrCode();">
-                                    ⚠️ Fake Airport WiFi QR
-                                </button>
-                                <button class="btn btn-sm btn-outline-success extra-small py-1" onclick="document.getElementById('qrPayloadInput').value = 'https://www.chase.com/personal/banking'; scanQrCode();">
-                                    ✅ Verified Bank QR
-                                </button>
-                            </div>
-                        </div>
+                        <!-- Real-time scanning progress loader -->
+                        <div class="cyber-loader mx-auto my-3" id="qrLoader" style="display: none;"></div>
 
-                        <div class="input-group mb-2 gap-2">
-                            <input type="text" id="qrPayloadInput" class="form-control form-control-cyber" value="https://secure-login-verify-account-update.xyz/auth" placeholder="Extracted QR payload URL/Data or paste link...">
-                            <button class="btn btn-cyber" onclick="scanQrCode()">
-                                <i class="bi bi-shield-check me-1"></i>
-                                <span>Scan Payload</span>
-                            </button>
-                        </div>
                         <div id="qrResult" class="result-box-cyber">
                             <!-- Populated by JS -->
                         </div>
@@ -854,23 +812,23 @@
                 <!-- 🌐 NEW: Scammer IP & Node Hop Tracking System Card -->
                 <div class="glass-card mt-4">
                     <div class="card-header-styled d-flex align-items-center justify-content-between">
-                        <h5 class="m-0 fw-bold"><i class="bi bi-diagram-3-fill text-danger me-2"></i> Scammer IP Node & Network Hop Tracker</h5>
+                        <h5 class="m-0 fw-bold"><i class="bi bi-diagram-3-fill text-danger me-2"></i> <span data-i18n="scammer_card_title">Scammer IP Node & Network Hop Tracker</span></h5>
                         <span class="badge" style="background: rgba(255, 23, 68, 0.15); color: #ff5252; border: 1px solid rgba(255, 23, 68, 0.35); font-size: 0.75rem; padding: 4px 10px;">
-                            <i class="bi bi-activity me-1"></i>Live Node Routing Trace
+                            <i class="bi bi-activity me-1"></i><span data-i18n="scammer_badge">Live Node Routing Trace</span>
                         </span>
                     </div>
                     <div class="card-body-styled">
                         <div class="input-group mb-2 gap-2">
-                            <input type="text" id="scammerTrackInput" class="form-control form-control-cyber" value="185.220.101.5" placeholder="Enter suspect Scammer IP / Domain / URL..." onkeydown="if(event.key==='Enter') trackScammerNode()">
+                            <input type="text" id="scammerTrackInput" class="form-control form-control-cyber" value="185.220.101.5" placeholder="Enter suspect Scammer IP / Domain / URL..." data-i18n-placeholder="scammer_placeholder" onkeydown="if(event.key==='Enter') trackScammerNode()">
                             <button class="btn btn-cyber" id="btnTrackScammer" onclick="trackScammerNode()">
                                 <i class="bi bi-crosshair"></i>
-                                <span>Trace Scammer Node</span>
+                                <span data-i18n="scammer_btn">Trace Scammer Node</span>
                             </button>
                         </div>
 
                         <!-- 1-Click Quick Sample Testers -->
                         <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
-                            <span class="text-secondary extra-small fw-semibold">Quick Demos:</span>
+                            <span class="text-secondary extra-small fw-semibold" data-i18n="scammer_quick_demos">Quick Demos:</span>
                             <button class="btn btn-sm btn-outline-info extra-small py-0 px-2" type="button" onclick="setAndTrackScammer('10.123.174.20:5000')"><i class="bi bi-laptop me-1"></i>Local LAN (10.123.174.20:5000)</button>
                             <button class="btn btn-sm btn-outline-danger extra-small py-0 px-2" type="button" onclick="setAndTrackScammer('185.220.101.5')"><i class="bi bi-shield-slash me-1"></i>TOR Exit (185.220.101.5)</button>
                             <button class="btn btn-sm btn-outline-warning extra-small py-0 px-2 text-warning" type="button" onclick="setAndTrackScammer('https://secure-login-verify-account.xyz')"><i class="bi bi-exclamation-triangle me-1"></i>Phishing (.xyz)</button>
@@ -945,8 +903,8 @@
                                 <i class="bi bi-robot text-info fs-5"></i>
                             </div>
                             <div>
-                                <h5 class="m-0 fw-bold">Safety Companion</h5>
-                                <small class="text-secondary">ScamShield Cyber Agent</small>
+                                <h5 class="m-0 fw-bold" data-i18n="chat_title">Safety Companion</h5>
+                                <small class="text-secondary" data-i18n="chat_agent_sub">ScamShield Cyber Agent</small>
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-1">
@@ -959,9 +917,8 @@
                         <!-- Message History -->
                         <div id="chatHistory" class="chat-history">
                             <div class="chat-bubble bot">
-                                <strong>Hello! I am your Cyber Safety Agent.</strong>
-                                <p class="m-0 mt-1">Are you suspicious of a transaction, OTP request, phone call, or
-                                    delivery package message? Tell me what happened, and I will guide you safely.</p>
+                                <strong data-i18n="chat_welcome">Hello! I am your Cyber Safety Agent.</strong>
+                                <p class="m-0 mt-1" data-i18n="chat_welcome_sub">Are you suspicious of a transaction, OTP request, phone call, or delivery package message? Tell me what happened, and I will guide you safely.</p>
                             </div>
                         </div>
 
@@ -972,6 +929,7 @@
                             </button>
                             <input type="text" id="chatInput" class="form-control form-control-cyber"
                                 placeholder="Ask questions, e.g., 'A delivery driver is demanding OTP...'"
+                                data-i18n-placeholder="chat_placeholder"
                                 onkeypress="handleChatEnter(event)">
                             <button class="btn btn-cyber px-4" onclick="sendChatMessage()">
                                 <i class="bi bi-send"></i>
@@ -1530,9 +1488,36 @@
             reader.readAsDataURL(file);
         }
 
-        // Helper to format results beautifully
+        // Global scan report store and toast helper
+        window.activeScanReports = {};
+
+        function showToast(message) {
+            let toast = document.getElementById('scamshieldToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'scamshieldToast';
+                toast.style.cssText = 'position: fixed; bottom: 24px; right: 24px; z-index: 9999; background: rgba(15, 23, 42, 0.95); border: 1px solid #00f2fe; color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3); font-size: 0.88rem; transition: opacity 0.3s; pointer-events: none; backdrop-filter: blur(10px);';
+                document.body.appendChild(toast);
+            }
+            toast.innerText = message;
+            toast.style.opacity = '1';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+            }, 3000);
+        }
+
+        function escapeQuotes(str) {
+            return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+        }
+
+        function escapeHtml(str) {
+            return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // Helper to format results cleanly with non-repeating basic info
         function renderCustomResult(elementId, data) {
             const resultBox = document.getElementById(elementId);
+            if (!resultBox) return;
             resultBox.style.display = 'block';
 
             if (data.error) {
@@ -1543,15 +1528,23 @@
                         <div>
                             <h6 class="fw-bold text-danger mb-1">Scan Failure</h6>
                             <p class="mb-1 text-light">${data.error}</p>
-                            <small class="text-secondary d-block">Make sure your API keys in .env are active, properly saved, and you have restarted the backend server.</small>
+                            <small class="text-secondary d-block">Please verify server status and network connectivity.</small>
                         </div>
                     </div>
                 `;
                 return;
             }
 
-            const score = data.risk_score || 0;
-            const verdict = data.verdict || "Unkown Status";
+            const score = data.risk_score !== undefined ? data.risk_score : 0;
+            const verdict = data.verdict || "Evaluated Status";
+
+            // Cache data cleanly for download, share, and trace actions
+            window.activeScanReports[elementId] = {
+                ...data,
+                elementId: elementId,
+                verdict: verdict,
+                risk_score: score
+            };
 
             // Set styles based on risk score
             let themeClass = 'safe';
@@ -1570,29 +1563,53 @@
 
             resultBox.className = `result-box-cyber ${themeClass}`;
 
+            // Clean and deduplicate reasons to provide only essential non-repeating basic info
             let reasonsHtml = '';
             if (data.reasons && data.reasons.length > 0) {
-                reasonsHtml = `
-                    <div class="mt-3">
-                        <div class="text-secondary small fw-semibold mb-2">Key Indicators Detected:</div>
-                        <ul class="list-unstyled d-flex flex-column gap-2 m-0">
-                            ${data.reasons.map(r => `
-                                <li class="d-flex align-items-start gap-2 text-light small">
-                                    <i class="bi bi-dot text-info fs-5 lh-1"></i>
-                                    <span>${r}</span>
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                `;
+                const uniqueReasons = [];
+                const seen = new Set();
+                data.reasons.forEach(r => {
+                    if (typeof r !== 'string') return;
+                    if (r.includes('Evaluated via local heuristic') || r.includes('Configure GEMINI_API_KEY')) return;
+                    const clean = r.trim();
+                    const norm = clean.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    if (clean && !seen.has(norm)) {
+                        seen.add(norm);
+                        uniqueReasons.push(clean);
+                    }
+                });
+                const basicReasons = uniqueReasons.slice(0, 3);
+
+                if (basicReasons.length > 0) {
+                    reasonsHtml = `
+                        <div class="mt-3">
+                            <div class="text-secondary small fw-semibold mb-2" data-i18n="key_indicators">Key Indicators Detected:</div>
+                            <ul class="list-unstyled d-flex flex-column gap-2 m-0">
+                                ${basicReasons.map(r => `
+                                    <li class="d-flex align-items-start gap-2 text-light small">
+                                        <i class="bi bi-dot text-info fs-5 lh-1"></i>
+                                        <span>${r}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
             }
 
             let ocrTextHtml = '';
             if (data.extracted_text) {
                 ocrTextHtml = `
                     <div class="mt-2 p-2 rounded bg-dark bg-opacity-50 border border-secondary border-opacity-10">
-                        <div class="text-secondary extra-small fw-semibold">Transcribed Text:</div>
+                        <div class="text-secondary extra-small fw-semibold" data-i18n="extracted_text_label">Transcribed Text:</div>
                         <em class="text-secondary small">"${data.extracted_text}"</em>
+                    </div>
+                `;
+            } else if (data.decoded_payload) {
+                ocrTextHtml = `
+                    <div class="mt-2 p-2 rounded bg-dark bg-opacity-50 border border-secondary border-opacity-10">
+                        <div class="text-secondary extra-small fw-semibold" data-i18n="decoded_payload_label">Decoded Payload:</div>
+                        <code class="text-cyan small text-break">${data.decoded_payload}</code>
                     </div>
                 `;
             }
@@ -1603,7 +1620,7 @@
                         <i class="bi ${iconClass} fs-2"></i>
                         <div>
                             <h5 class="fw-bold m-0 text-light">${verdict}</h5>
-                            <small class="text-secondary">ScamShield Verdict</small>
+                            <small class="text-secondary" data-i18n="verdict_sub">ScamShield Verdict</small>
                         </div>
                     </div>
                     
@@ -1618,28 +1635,26 @@
                 ${ocrTextHtml}
                 ${reasonsHtml}
                 
-                <!-- Action Controls for Download and Tracking Radar -->
+                <!-- Action Controls for Download, Share and Trace -->
                 <div class="d-flex gap-2 mt-3 pt-3 border-top border-secondary border-opacity-10 flex-wrap">
-                    <button class="btn btn-sm btn-cyber" onclick="downloadReport('${elementId}', '${verdict}', ${score}, ${JSON.stringify(data.reasons || [])}, '${data.extracted_text || ''}')" title="Download Printable Verification Report">
-                        <i class="bi bi-download"></i> Download Report (PDF/Text)
+                    <button class="btn btn-sm btn-cyber" onclick="downloadReport('${elementId}')" title="Download Security Certificate Report">
+                        <i class="bi bi-download"></i> <span data-i18n="btn_download_report">Download Report (PDF/Text)</span>
                     </button>
-                    <button class="btn btn-sm btn-cyber-outline" onclick="shareThreatScan('${elementId}')" title="Share Threat Scan url link">
-                        <i class="bi bi-share-fill"></i> Share Scan
+                    <button class="btn btn-sm btn-cyber-outline" onclick="shareThreatScan('${elementId}')" title="Share Threat Scan">
+                        <i class="bi bi-share-fill"></i> <span data-i18n="btn_share_scan">Share Scan</span>
                     </button>
-                    ${score > 25 ? `
-                    <button class="btn btn-sm btn-cyber-outline" onclick="triggerScammerRadar('${verdict}')" title="Deploy Honeypot Tracker IP Map">
-                        <i class="bi bi-radar"></i> Trace Scam Origin
+                    <button class="btn btn-sm btn-cyber-outline" onclick="triggerScammerRadar('${elementId}')" title="Trace Threat IP / Host Origin">
+                        <i class="bi bi-radar"></i> <span data-i18n="btn_trace_origin">Trace Scam Origin</span>
                     </button>
-                    ` : ''}
                 </div>
             `;
 
-            // Draw circular progress after elements render
+            // Draw circular progress meter
             setTimeout(() => {
                 const meter = document.getElementById(`${elementId}_meter`);
                 if (meter) {
                     const radius = 40;
-                    const circumference = 2 * Math.PI * radius; // ~251.2
+                    const circumference = 2 * Math.PI * radius;
                     const offset = circumference - (score / 100) * circumference;
                     meter.style.strokeDasharray = circumference;
                     meter.style.strokeDashoffset = offset;
@@ -1653,20 +1668,18 @@
             const loader = document.getElementById(`${sectionId}Loader`);
             const btn = document.getElementById(`${sectionId}Btn`);
             if (isLoading) {
-                loader.style.display = 'block';
-                btn.disabled = true;
-                btn.style.opacity = '0.6';
+                if (loader) loader.style.display = 'block';
+                if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
             } else {
-                loader.style.display = 'none';
-                btn.disabled = false;
-                btn.style.opacity = '1';
+                if (loader) loader.style.display = 'none';
+                if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
             }
         }
 
-        // 1 & 5. Analyze text content
+        // 1 & 5. Analyze text content with language support
         async function analyzeText() {
             const textVal = document.getElementById('textInput').value;
-            if (!textVal.trim()) return alert("Please enter some text to scan.");
+            if (!textVal.trim()) return alert(currentLang === 'mr' ? "कृपया तपासण्यासाठी संदेश प्रविष्ट करा." : (currentLang === 'hi' ? "कृपया स्कैन करने के लिए संदेश दर्ज करें।" : "Please enter some text to scan."));
 
             toggleLoading('text', true);
             document.getElementById('textResult').style.display = 'none';
@@ -1675,7 +1688,7 @@
                 const res = await fetch('/analyze-text', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: textVal })
+                    body: JSON.stringify({ text: textVal, lang: currentLang })
                 });
                 const data = await res.json();
                 renderCustomResult('textResult', data);
@@ -1686,10 +1699,10 @@
             }
         }
 
-        // 2. URL Trust Checker
+        // 2. URL Trust Checker with language support
         async function analyzeUrl() {
             const urlVal = document.getElementById('urlInput').value;
-            if (!urlVal.trim()) return alert("Please enter a link to check.");
+            if (!urlVal.trim()) return alert(currentLang === 'mr' ? "कृपया तपासण्यासाठी लिंक प्रविष्ट करा." : (currentLang === 'hi' ? "कृपया जांचने के लिए लिंक दर्ज करें।" : "Please enter a link to check."));
 
             toggleLoading('url', true);
             document.getElementById('urlResult').style.display = 'none';
@@ -1698,7 +1711,7 @@
                 const res = await fetch('/analyze-url', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url: urlVal })
+                    body: JSON.stringify({ url: urlVal, lang: currentLang })
                 });
                 const data = await res.json();
                 renderCustomResult('urlResult', data);
@@ -1709,16 +1722,17 @@
             }
         }
 
-        // 4. Screenshot Scam Detector
+        // 4. Screenshot Scam Detector with language support
         async function analyzeImage() {
             const fileInput = document.getElementById('imageInput');
-            if (fileInput.files.length === 0) return alert('Please select or drag a screenshot image first.');
+            if (fileInput.files.length === 0) return alert(currentLang === 'mr' ? "कृपया प्रथम स्क्रीनशॉट निवडा." : (currentLang === 'hi' ? "कृपया पहले स्क्रीनशॉट चुनें।" : "Please select or drag a screenshot image first."));
 
             toggleLoading('image', true);
             document.getElementById('imageResult').style.display = 'none';
 
             const formData = new FormData();
             formData.append('image', fileInput.files[0]);
+            formData.append('lang', currentLang);
 
             try {
                 const res = await fetch('/analyze-image', {
@@ -1734,7 +1748,7 @@
             }
         }
 
-        // 7. AI Chatbot
+        // 7. AI Chatbot with speaker support on both user and bot bubbles, and note removal
         async function sendChatMessage() {
             const chatInput = document.getElementById('chatInput');
             const userText = chatInput.value.trim();
@@ -1742,10 +1756,16 @@
 
             const chatHistory = document.getElementById('chatHistory');
 
-            // Add user message bubble
+            // Add user message bubble with working speaker button
+            const userMsgId = 'user_msg_' + Date.now();
             chatHistory.innerHTML += `
-                <div class="chat-bubble user">
-                    ${userText}
+                <div class="chat-bubble user" id="${userMsgId}">
+                    <div class="d-flex justify-content-between align-items-center gap-2">
+                        <span class="user-text-content">${escapeHtml(userText)}</span>
+                        <button class="btn btn-sm p-0 text-white-50 ms-2" onclick="speakText('${escapeQuotes(userText)}', this)" title="Speak message">
+                            <i class="bi bi-volume-up"></i>
+                        </button>
+                    </div>
                 </div>
             `;
             chatInput.value = '';
@@ -1755,7 +1775,7 @@
             const loadingBubbleId = 'bot_loading_' + Date.now();
             chatHistory.innerHTML += `
                 <div class="chat-bubble bot" id="${loadingBubbleId}">
-                    <span class="spinner-grow spinner-grow-sm text-info" role="status"></span> Analyzing safety implications...
+                    <span class="spinner-grow spinner-grow-sm text-info" role="status"></span> <span data-i18n="chat_analyzing">Analyzing safety implications...</span>
                 </div>
             `;
             chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -1764,7 +1784,7 @@
                 const res = await fetch('/chatbot', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: userText })
+                    body: JSON.stringify({ message: userText, lang: currentLang })
                 });
                 const data = await res.json();
 
@@ -1774,18 +1794,33 @@
                 if (data.error) {
                     chatHistory.innerHTML += `
                         <div class="chat-bubble bot border border-danger text-danger">
-                            <strong>Agent Error:</strong> ${data.error}<br>
-                            <small class="opacity-75">Check your Gemini connection and configuration.</small>
+                            <strong>Agent Error:</strong> ${data.error}
                         </div>
                     `;
                 } else {
+                    // Strip any accidental note part from response
+                    let cleanReply = (data.reply || '')
+                        .replace(/\(?\s*Note\s*:[^)]*\)?/gi, '')
+                        .replace(/\bNote\s*:.*$/gim, '')
+                        .trim();
+
+                    const botMsgId = 'bot_msg_' + Date.now();
                     chatHistory.innerHTML += `
-                        <div class="chat-bubble bot">
-                            <strong>Cyber Security Agent:</strong>
-                            <p class="m-0 mt-1">${data.reply}</p>
+                        <div class="chat-bubble bot" id="${botMsgId}">
+                            <div class="d-flex justify-content-between align-items-start gap-2">
+                                <div>
+                                    <strong data-i18n="chat_agent_title">Cyber Security Agent:</strong>
+                                    <p class="m-0 mt-1">${cleanReply}</p>
+                                </div>
+                                <button class="btn btn-sm p-0 text-info ms-2 mt-1" onclick="speakText('${escapeQuotes(cleanReply)}', this)" title="Speak response">
+                                    <i class="bi bi-volume-up-fill"></i>
+                                </button>
+                            </div>
                         </div>
                     `;
-                    speakChatMessage(data.reply);
+                    if (speechSynthActive) {
+                        speakText(cleanReply);
+                    }
                 }
             } catch (err) {
                 const loadingBubble = document.getElementById(loadingBubbleId);
@@ -1808,10 +1843,23 @@
 
         function clearChat() {
             const chatHistory = document.getElementById('chatHistory');
+            const welcomeText = currentLang === 'mr' 
+                ? "नमस्कार! मी तुमचा सायबर सुरक्षा साथी आहे. तुम्हाला कोणत्याही संशयास्पद व्यवहार, ओटीपी किंवा लिंकबद्दल शंका आहे का? मला सांगा, मी तुम्हाला मार्गदर्शन करेन."
+                : (currentLang === 'hi' 
+                    ? "नमस्ते! मैं आपका साइबर सुरक्षा साथी हूँ। क्या आपको किसी संदिग्ध लेनदेन, ओटीपी या लिंक पर संदेह है? मुझे बताएं, मैं आपकी सहायता करूंगा।"
+                    : "Hello! I am your Cyber Safety Agent. Are you suspicious of a transaction, OTP request, phone call, or delivery package message? Tell me what happened, and I will guide you safely.");
+
             chatHistory.innerHTML = `
                 <div class="chat-bubble bot">
-                    <strong>Hello! I am your Cyber Safety Agent.</strong> 
-                    <p class="m-0 mt-1">Are you suspicious of a transaction, OTP request, phone call, or delivery package message? Tell me what happened, and I will guide you safely.</p>
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <div>
+                            <strong data-i18n="chat_agent_welcome">Hello! I am your Cyber Safety Agent.</strong> 
+                            <p class="m-0 mt-1" data-i18n="chat_welcome_sub">${welcomeText}</p>
+                        </div>
+                        <button class="btn btn-sm p-0 text-info ms-2 mt-1" onclick="speakText('${escapeQuotes(welcomeText)}', this)" title="Speak">
+                            <i class="bi bi-volume-up-fill"></i>
+                        </button>
+                    </div>
                 </div>
             `;
         }
@@ -1819,245 +1867,408 @@
         // Global user subscription state
         let userPlan = 'Free Tier';
 
-        function checkPremiumAccess(actionName) {
-            if (userPlan === 'Free Tier') {
-                const subModal = new bootstrap.Modal(document.getElementById('premiumModal'));
-                subModal.show();
-                return false;
-            }
-            return true;
-        }
+        // Feature 1: Download Security Certificate Report (PDF & Text)
+        function downloadReport(elementId) {
+            const reportData = window.activeScanReports[elementId] || {};
+            const verdict = reportData.verdict || "Evaluated Security Scan";
+            const score = reportData.risk_score !== undefined ? reportData.risk_score : 0;
+            const reasons = reportData.reasons || [];
+            const extracted = reportData.extracted_text || reportData.decoded_payload || "";
+            const scanTitle = elementId.replace('Result', '').toUpperCase();
+            const dateStr = new Date().toLocaleString();
 
-        // Feature 1: Download Security Certificate Report
-        function downloadReport(elementId, verdict, score, reasons, extractedText) {
-            let reportContent = `======================================================
-                  SCAMSHIELD AI CERTIFICATE
+            const reasonsText = reasons.length > 0 
+                ? reasons.map((r, i) => `  ${i + 1}. [FLAG] ${r}`).join('\n')
+                : '  • No critical threats identified in analysis.';
+
+            const reportContent = `======================================================
+                 SCAMSHIELD AI SECURITY REPORT
 ======================================================
-Generated on : ${new Date().toLocaleString()}
-Engine Core  : ScamShield AI Core (Active)
-Scan Target  : ${elementId.replace('Result', '').toUpperCase()} Input
+Generated On : ${dateStr}
+Engine Core  : ScamShield AI Neural Core (Active)
+Scan Target  : ${scanTitle}
 ------------------------------------------------------
 VERDICT      : ${verdict.toUpperCase()}
 RISK SCORE   : ${score}% / 100%
 ------------------------------------------------------
 DETAILED INDICATORS DETECTED:
-${reasons && reasons.length > 0 ? reasons.map((r, idx) => `  ${idx + 1}. [FLAG] ${r}`).join('\n') : '  - No immediate indicators flagged.'}
-${extractedText ? `\nTRANSCRIBED OCR CONTENT:\n  "${extractedText}"` : ''}
+${reasonsText}
+${extracted ? `\nTRANSCRIBED / PAYLOAD CONTENT:\n  "${extracted}"\n` : ''}
 ------------------------------------------------------
-This document constitutes a simulated threat scan certificate.
-Protect your sensitive data. Never share passwords or OTPs.
-======================================================`;
+SECURITY DIRECTIVE & ADVISORY:
+  1. Never share OTPs, passwords, or UPI PINs with anyone.
+  2. Legitimate organizations and banks never demand remote codes.
+  3. Verify all unknown domains and links prior to authentication.
+======================================================
+Report Hash: SS-${Math.random().toString(36).substring(2, 9).toUpperCase()}
+Confidential Security Assessment Document
+`;
 
-            // Download file blob
-            const blob = new Blob([reportContent], { type: 'text/plain' });
+            // 1. Download formatted text file blob
+            const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `ScamShield_Report_${elementId.replace('Result', '')}.txt`;
+            a.download = `ScamShield_Report_${scanTitle}_${Date.now()}.txt`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-        }
 
-        // Feature 2: Deploy Scammer Origin Honeypot Radar
-        function triggerScammerRadar(verdict) {
-            // Check for premium tier access first
-            if (!checkPremiumAccess('Scammer Honeypot Trace')) return;
+            showToast("📥 Security report downloaded successfully!");
 
-            const radarCard = document.getElementById('radarCard');
-            const sweep = document.getElementById('radarSweep');
-            const ping = document.getElementById('radarPing');
-            const consoleBox = document.getElementById('radarConsole');
-            const resultsBox = document.getElementById('radarResults');
-            const badge = document.getElementById('radarStatusBadge');
-
-            radarCard.style.display = 'block';
-            resultsBox.style.display = 'none';
-            ping.style.display = 'none';
-            sweep.classList.add('active');
-            badge.innerText = 'Scanning...';
-            badge.className = 'badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-30';
-
-            // Reset log
-            consoleBox.innerHTML = '<div class="text-secondary">[Radar Console]: Initializing digital honeypot trap...</div>';
-            radarCard.scrollIntoView({ behavior: 'smooth' });
-
-            const logs = [
-                { time: 600, text: '[Radar Console]: Deploying virtual proxy routing honey-tokens...' },
-                { time: 1400, text: '[Radar Console]: Analyzing network handshake headers...' },
-                { time: 2200, text: '[Radar Console]: Trace route request sent to server ISP hubs...' },
-                { time: 2800, text: '[Radar Console]: Scammer connection intercepted!' }
-            ];
-
-            logs.forEach(log => {
-                setTimeout(() => {
-                    consoleBox.innerHTML += `<div class="text-info">${log.text}</div>`;
-                    consoleBox.scrollTop = consoleBox.scrollHeight;
-                }, log.time);
-            });
-
-            setTimeout(async () => {
-                try {
-                    const res = await fetch('/track-scammer', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ verdict: verdict })
-                    });
-                    const data = await res.json();
-
-                    if (data.status === 'success') {
-                        const loc = data.location;
-                        consoleBox.innerHTML += `<div class="text-success">[SUCCESS]: Scammer located in ${loc.city}, ${loc.country}!</div>`;
-                        consoleBox.scrollTop = consoleBox.scrollHeight;
-
-                        // Display details
-                        document.getElementById('radarCountry').innerText = loc.country;
-                        document.getElementById('radarCity').innerText = loc.city;
-                        document.getElementById('radarGeo').innerText = `${loc.lat.toFixed(4)}, ${loc.lon.toFixed(4)}`;
-                        document.getElementById('radarIp').innerText = loc.ip;
-                        document.getElementById('radarIsp').innerText = loc.isp;
-
-                        // Position coordinates ping dot randomly inside radar container
-                        const randX = 30 + Math.random() * 40; // between 30% and 70%
-                        const randY = 30 + Math.random() * 40;
-                        ping.style.left = `${randX}%`;
-                        ping.style.top = `${randY}%`;
-                        ping.style.display = 'block';
-
-                        resultsBox.style.display = 'block';
-                        badge.innerText = 'Scammer Located';
-                        badge.className = 'badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-30';
-                    } else {
-                        consoleBox.innerHTML += `<div class="text-light">[INFO]: ${data.message}</div>`;
-                        consoleBox.scrollTop = consoleBox.scrollHeight;
-                        badge.innerText = 'No Threat Found';
-                        badge.className = 'badge bg-success bg-opacity-25 text-success border border-success border-opacity-30';
-                    }
-                } catch (err) {
-                    consoleBox.innerHTML += `<div class="text-danger">[ERROR]: Failed to trace location: ${err.message}</div>`;
-                } finally {
-                    sweep.classList.remove('active');
-                }
-            }, 3500);
-        }
-
-        // Feature 3: Subscribe Premium Upgrade Handling
-        async function submitSubscription() {
-            const cardInput = document.getElementById('cardNumInput').value;
-            const cvvInput = document.getElementById('cvvInput').value;
-            const subError = document.getElementById('subscriptionError');
-            const subSuccess = document.getElementById('subscriptionSuccess');
-            const btn = document.getElementById('btnSubmitSubscription');
-
-            subError.style.display = 'none';
-            subSuccess.style.display = 'none';
-
-            if (!cardInput.trim() || !cvvInput.trim()) {
-                subError.innerText = "Please fill out all payment credentials.";
-                subError.style.display = 'block';
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner-grow spinner-grow-sm me-2" role="status"></span>Processing Upgrade...';
-
+            // 2. Also open printable window for instant Save to PDF
             try {
-                const res = await fetch('/subscribe', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ cardNumber: cardInput, cvv: cvvInput })
-                });
-                const data = await res.json();
-
-                if (data.status === 'success') {
-                    userPlan = 'Pro Premium';
-                    subSuccess.innerText = data.message;
-                    subSuccess.style.display = 'block';
-                    
-                    // Update navbar badge styling
-                    document.getElementById('premiumStatusArea').innerHTML = `
-                        <span class="badge-premium-pro">
-                            <i class="bi bi-patch-check-fill text-info"></i> Premium Pro Active
-                        </span>
-                    `;
-
-                    setTimeout(() => {
-                        const modalEl = document.getElementById('premiumModal');
-                        const modal = bootstrap.Modal.getInstance(modalEl);
-                        if (modal) modal.hide();
-                    }, 1800);
-                } else {
-                    subError.innerText = data.error;
-                    subError.style.display = 'block';
+                const printWin = window.open('', '_blank', 'width=800,height=700');
+                if (printWin) {
+                    const badgeColor = score > 65 ? '#ff1744' : (score > 25 ? '#ffb300' : '#00e676');
+                    printWin.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>ScamShield AI Certificate - ${scanTitle}</title>
+                            <style>
+                                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b0f19; color: #f8fafc; padding: 40px; margin: 0; }
+                                .cert-card { max-width: 650px; margin: 0 auto; background: #111827; border: 2px solid ${badgeColor}; border-radius: 16px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+                                .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #374151; padding-bottom: 16px; margin-bottom: 20px; }
+                                .score-badge { font-size: 26px; font-weight: bold; color: ${badgeColor}; }
+                                h2 { margin: 0; color: #00f2fe; }
+                                .field { margin: 14px 0; }
+                                .label { font-size: 11px; text-transform: uppercase; color: #9ca3af; letter-spacing: 1px; }
+                                .val { font-size: 16px; font-weight: 600; color: #ffffff; }
+                                ul { padding-left: 20px; color: #e2e8f0; margin: 6px 0; }
+                                li { margin-bottom: 6px; }
+                                .footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid #374151; font-size: 12px; color: #6b7280; text-align: center; }
+                                @media print { body { background: white; color: black; padding: 20px; } .cert-card { border-color: #000; box-shadow: none; background: white; color: black; } .val { color: black; } ul { color: black; } }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="cert-card">
+                                <div class="header">
+                                    <div>
+                                        <h2>🛡️ ScamShield AI Certificate</h2>
+                                        <small style="color: #9ca3af;">Official Verification Assessment</small>
+                                    </div>
+                                    <div class="score-badge">${score}% RISK</div>
+                                </div>
+                                <div class="field">
+                                    <div class="label">SCAN TARGET</div>
+                                    <div class="val">${scanTitle}</div>
+                                </div>
+                                <div class="field">
+                                    <div class="label">SECURITY VERDICT</div>
+                                    <div class="val" style="color: ${badgeColor};">${verdict}</div>
+                                </div>
+                                <div class="field">
+                                    <div class="label">KEY DETECTED INDICATORS</div>
+                                    <ul>${reasons.map(r => `<li>${r}</li>`).join('')}</ul>
+                                </div>
+                                ${extracted ? `<div class="field"><div class="label">PAYLOAD EXTRACT</div><div class="val" style="font-family: monospace; font-size: 13px;">${extracted}</div></div>` : ''}
+                                <div class="footer">
+                                    Verified by ScamShield AI Neural Core &bull; ${dateStr} &bull; Print / Save as PDF
+                                </div>
+                            </div>
+                            <script>
+                                window.onload = function() { window.print(); }
+                            <\/script>
+                        </body>
+                        </html>
+                    `);
+                    printWin.document.close();
                 }
-            } catch (err) {
-                subError.innerText = "Connection timed out. Please try again.";
-                subError.style.display = 'block';
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="bi bi-wallet2 me-2"></i>Pay & Activate Premium';
+            } catch (e) {
+                console.log("Print window closed or blocked:", e);
             }
         }
-
 
         // Global variables for Voice & Share
         let speechRecognitionActive = false;
         let speechSynthActive = true;
         let recognition = null;
+        let currentShareData = null;
 
-        // Initialize Speech Recognition API
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        // Initialize Speech Recognition API with Multilingual Dialect Support
+        function initSpeechRecognition() {
+            if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+                return null;
+            }
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = 'en-US';
+            const rec = new SpeechRecognition();
+            rec.continuous = false;
+            rec.interimResults = false;
 
-            recognition.onstart = function() {
+            rec.onstart = function() {
                 speechRecognitionActive = true;
                 const micBtn = document.getElementById('micBtn');
                 if (micBtn) {
                     micBtn.classList.remove('btn-cyber-outline');
-                    micBtn.classList.add('btn-danger');
-                    micBtn.innerHTML = '<i class="bi bi-record-fill text-white animate-pulse"></i>';
+                    micBtn.classList.add('btn-danger', 'pulse-recording');
+                    micBtn.innerHTML = '<i class="bi bi-record-fill text-white"></i>';
                 }
+                const promptMsg = currentLang === 'mr' ? '🎤 ऐकत आहे... बोला...' : (currentLang === 'hi' ? '🎤 सुन रहा हूँ... बोलिए...' : '🎤 Listening... Speak now...');
+                showToast(promptMsg);
             };
 
-            recognition.onend = function() {
+            rec.onend = function() {
                 speechRecognitionActive = false;
                 const micBtn = document.getElementById('micBtn');
                 if (micBtn) {
-                    micBtn.classList.remove('btn-danger');
+                    micBtn.classList.remove('btn-danger', 'pulse-recording');
                     micBtn.classList.add('btn-cyber-outline');
                     micBtn.innerHTML = '<i class="bi bi-mic-fill"></i>';
                 }
             };
 
-            recognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript;
+            rec.onresult = function(event) {
+                const transcript = event.results && event.results[0] && event.results[0][0] ? event.results[0][0].transcript : '';
                 const chatInput = document.getElementById('chatInput');
-                if (chatInput) {
+                if (chatInput && transcript) {
                     chatInput.value = transcript;
+                    playCyberSound('click');
+                    sendChatMessage();
                 }
             };
 
-            recognition.onerror = function(event) {
-                console.error("Speech recognition error: ", event.error);
-                recognition.stop();
+            rec.onerror = function(event) {
+                console.log("Speech recognition error:", event.error);
+                speechRecognitionActive = false;
+                const micBtn = document.getElementById('micBtn');
+                if (micBtn) {
+                    micBtn.classList.remove('btn-danger', 'pulse-recording');
+                    micBtn.classList.add('btn-cyber-outline');
+                    micBtn.innerHTML = '<i class="bi bi-mic-fill"></i>';
+                }
             };
+
+            return rec;
         }
 
         function toggleVoiceInput() {
             if (!recognition) {
-                alert("Web Speech API is not supported in this browser. Please use Chrome, Edge or Safari.");
+                recognition = initSpeechRecognition();
+            }
+            if (!recognition) {
+                alert(currentLang === 'mr' 
+                    ? "या ब्राउझरमध्ये व्हॉइस स्पीच सपोर्ट उपलब्ध नाही. कृपया Chrome किंवा Edge वापरा." 
+                    : (currentLang === 'hi' 
+                        ? "इस ब्राउज़र में वॉयस स्पीच सपोर्ट उपलब्ध नहीं है। कृपया Chrome या Edge का उपयोग करें।" 
+                        : "Voice speech recognition is not supported in this browser. Please use Chrome, Edge, or a modern mobile browser."));
                 return;
             }
+
             if (speechRecognitionActive) {
                 recognition.stop();
             } else {
-                recognition.start();
+                recognition.lang = currentLang === 'mr' ? 'mr-IN' : (currentLang === 'hi' ? 'hi-IN' : 'en-US');
+                try {
+                    recognition.start();
+                } catch (e) {
+                    recognition.stop();
+                }
             }
+        }
+
+        // Feature 2: Deploy Scammer Origin Honeypot Radar & Hop Tracker
+        function triggerScammerRadar(elementId) {
+            const reportData = window.activeScanReports[elementId] || {};
+            let target = '';
+
+            if (elementId === 'urlResult') {
+                target = document.getElementById('urlInput')?.value?.trim() || '';
+            } else if (elementId === 'qrResult') {
+                target = reportData.decoded_payload || '185.220.101.5';
+            } else if (elementId === 'textResult') {
+                const txt = document.getElementById('textInput')?.value || '';
+                const match = txt.match(/https?:\/\/[^\s]+/i) || txt.match(/[a-zA-Z0-9-]+\.(xyz|top|club|site|com|in|org)/i);
+                target = match ? match[0] : '185.220.101.5';
+            } else if (elementId === 'imageResult') {
+                const txt = reportData.extracted_text || '';
+                const match = txt.match(/https?:\/\/[^\s]+/i) || txt.match(/[a-zA-Z0-9-]+\.(xyz|top|club|site|com|in|org)/i);
+                target = match ? match[0] : '185.220.101.5';
+            } else {
+                target = '185.220.101.5';
+            }
+
+            if (!target) target = '185.220.101.5';
+
+            // 1. Populate the Scammer Hop Tracker input
+            const trackInput = document.getElementById('scammerTrackInput');
+            if (trackInput) {
+                trackInput.value = target;
+            }
+
+            // 2. Scroll to the Scammer Node Hop Tracker
+            const scammerCard = document.getElementById('scammerTrackInput')?.closest('.glass-card');
+            if (scammerCard) {
+                scammerCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            // 3. Run the trace node function
+            trackScammerNode();
+
+            // 4. Activate Geolocation Radar
+            const radarCard = document.getElementById('radarCard');
+            if (radarCard) {
+                radarCard.style.display = 'block';
+                const sweep = document.getElementById('radarSweep');
+                if (sweep) sweep.classList.add('active');
+                const badge = document.getElementById('radarStatusBadge');
+                if (badge) {
+                    badge.innerText = 'Tracing: ' + target.substring(0, 20);
+                    badge.className = 'badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-30';
+                }
+            }
+
+            showToast("🎯 Scammer trace initiated across network nodes!");
+        }
+
+        // Feature 3: Universal Backend-Powered Share to Scan
+        async function shareThreatScan(elementId) {
+            const reportData = window.activeScanReports[elementId] || {};
+            const verdict = reportData.verdict || "Security Scan";
+            const score = reportData.risk_score !== undefined ? reportData.risk_score : 0;
+            const scanTitle = elementId.replace('Result', '').toUpperCase() + " SCAN";
+            const reasons = reportData.reasons || [];
+            
+            let targetVal = '';
+            if (elementId === 'textResult') targetVal = document.getElementById('textInput')?.value?.trim() || '';
+            else if (elementId === 'urlResult') targetVal = document.getElementById('urlInput')?.value?.trim() || '';
+            else if (elementId === 'qrResult') targetVal = reportData.decoded_payload || '';
+            else if (elementId === 'imageResult') targetVal = reportData.extracted_text || '';
+
+            try {
+                // Call dedicated backend API
+                const res = await fetch('/api/share_scan', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        elementId: elementId,
+                        scan_title: scanTitle,
+                        verdict: verdict,
+                        risk_score: score,
+                        reasons: reasons,
+                        target: targetVal,
+                        lang: currentLang
+                    })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    currentShareData = data;
+                    openShareScanModal(data, verdict, score, targetVal);
+                    return;
+                }
+            } catch (e) {
+                console.log("Backend share failed, falling back to client link:", e);
+            }
+
+            // Fallback if backend share fails
+            const clientUrl = `${window.location.origin}${window.location.pathname}`;
+            const summary = `⚠️ ScamShield AI Threat Alert: [${scanTitle}]\nVerdict: ${verdict} (${score}% Risk)\nCheck scan at: ${clientUrl}`;
+            copyShareText(summary);
+        }
+
+        function openShareScanModal(shareData, verdict, score, target) {
+            const modalEl = document.getElementById('shareScanModal');
+            if (!modalEl) {
+                copyShareText(shareData.summary_text);
+                return;
+            }
+
+            const verdictBadge = document.getElementById('shareModalVerdictBadge');
+            const targetEl = document.getElementById('shareModalTarget');
+            const scanIdEl = document.getElementById('shareModalScanId');
+            const inputUrl = document.getElementById('shareModalInputUrl');
+            const whatsappBtn = document.getElementById('shareModalWhatsappBtn');
+            const telegramBtn = document.getElementById('shareModalTelegramBtn');
+
+            if (verdictBadge) {
+                verdictBadge.innerText = `${verdict} (${score}% Risk)`;
+                verdictBadge.className = score >= 70 ? 'badge bg-danger bg-opacity-20 text-danger border border-danger border-opacity-30' : 'badge bg-success bg-opacity-20 text-success border border-success border-opacity-30';
+            }
+            if (targetEl) targetEl.innerText = target ? `Target: ${target}` : 'ScamShield Security Scan';
+            if (scanIdEl) scanIdEl.innerText = shareData.share_id || 'SCAN-REPORT';
+            if (inputUrl) inputUrl.value = shareData.share_url;
+            if (whatsappBtn) whatsappBtn.href = shareData.whatsapp_url;
+            if (telegramBtn) telegramBtn.href = shareData.telegram_url;
+
+            const bsModal = new bootstrap.Modal(modalEl);
+            bsModal.show();
+        }
+
+        function copyShareInputLink() {
+            const input = document.getElementById('shareModalInputUrl');
+            if (input) {
+                navigator.clipboard.writeText(input.value).then(() => {
+                    playCyberSound('success');
+                    showToast("📋 Share link copied to clipboard!");
+                }).catch(() => {
+                    prompt("Copy link:", input.value);
+                });
+            }
+        }
+
+        function triggerNativeShare() {
+            if (currentShareData && navigator.share) {
+                navigator.share({
+                    title: `ScamShield Threat Alert`,
+                    text: currentShareData.summary_text,
+                    url: currentShareData.share_url
+                }).catch(() => {});
+            } else if (currentShareData) {
+                copyShareText(currentShareData.summary_text);
+            }
+        }
+
+        function copyShareText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("📋 Shareable scan report copied to clipboard!");
+            }).catch(() => {
+                prompt("Copy this shareable report:", text);
+            });
+        }
+
+        // Feature 4: Speak text responses (supports English, Hindi, Marathi)
+        function speakText(text, btnElement = null) {
+            if (!('speechSynthesis' in window)) {
+                alert("Speech Synthesis is not supported in this browser.");
+                return;
+            }
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                if (btnElement && btnElement.querySelector('i')) {
+                    btnElement.querySelector('i').className = 'bi bi-volume-up';
+                }
+                return;
+            }
+
+            const cleanText = (text || '').replace(/[*#`_\-]/g, '').replace(/\[.*?\]\(.*?\)/g, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+
+            if (currentLang === 'mr') {
+                utterance.lang = 'mr-IN';
+            } else if (currentLang === 'hi') {
+                utterance.lang = 'hi-IN';
+            } else {
+                utterance.lang = 'en-US';
+            }
+
+            // Find best matching voice if available
+            const voices = window.speechSynthesis.getVoices();
+            if (voices && voices.length > 0) {
+                const matched = voices.find(v => v.lang.toLowerCase().startsWith(utterance.lang.substring(0, 2)));
+                if (matched) utterance.voice = matched;
+            }
+
+            if (btnElement && btnElement.querySelector('i')) {
+                const icon = btnElement.querySelector('i');
+                const origClass = icon.className;
+                icon.className = 'bi bi-soundwave text-warning animate-pulse';
+                utterance.onend = () => { icon.className = origClass; };
+                utterance.onerror = () => { icon.className = origClass; };
+            }
+
+            window.speechSynthesis.speak(utterance);
         }
 
         function toggleSpeechOutput() {
@@ -2066,57 +2277,13 @@ Protect your sensitive data. Never share passwords or OTPs.
             if (speakBtn) {
                 if (speechSynthActive) {
                     speakBtn.innerHTML = '<i class="bi bi-volume-up-fill text-info"></i>';
+                    showToast("🔊 Voice responses enabled");
                 } else {
                     speakBtn.innerHTML = '<i class="bi bi-volume-mute-fill text-secondary"></i>';
-                    window.speechSynthesis.cancel(); // stop current audio
+                    window.speechSynthesis.cancel();
+                    showToast("🔇 Voice responses muted");
                 }
             }
-        }
-
-        // Speaks text responses from the AI companion chatbot
-        function speakChatMessage(text) {
-            if (!speechSynthActive) return;
-            // Clean markdown formatting before speaking
-            const cleanText = text.replace(/[*#`_\-]/g, '').replace(/\[.*?\]\(.*?\)/g, '');
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            
-            // Choose a clear English voice if possible
-            const voices = window.speechSynthesis.getVoices();
-            const preferredVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google'));
-            if (preferredVoice) {
-                utterance.voice = preferredVoice;
-            }
-            window.speechSynthesis.speak(utterance);
-        }
-
-        // Share to Scan link generator
-        function shareThreatScan(elementId) {
-            let scanTypeParam = '';
-            let payloadVal = '';
-            
-            if (elementId === 'textResult') {
-                scanTypeParam = 'text';
-                payloadVal = document.getElementById('textInput').value;
-            } else if (elementId === 'urlResult') {
-                scanTypeParam = 'url';
-                payloadVal = document.getElementById('urlInput').value;
-            } else {
-                alert('Sharing is supported for Text messages and URL checkers.');
-                return;
-            }
-            
-            if (!payloadVal.trim()) {
-                alert('Please run a scan with input content first before sharing.');
-                return;
-            }
-            
-            const shareUrl = `${window.location.origin}${window.location.pathname}?${scanTypeParam}=${encodeURIComponent(payloadVal)}`;
-            
-            navigator.clipboard.writeText(shareUrl).then(() => {
-                alert(`Shareable scan link copied to clipboard!\n${shareUrl}`);
-            }).catch(err => {
-                alert('Could not copy link to clipboard automatically: ' + err);
-            });
         }
 
         // Parse search query strings on page startup
@@ -2961,55 +3128,74 @@ Protect your sensitive data. Never share passwords or OTPs.
             animateParticles();
         }
 
-        function handleQrImageFileSelect(event) {
-            const file = event.target.files[0];
+        async function processQrImageFile(file) {
             if (!file) return;
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 const img = document.getElementById('qrImagePreview');
-                img.src = e.target.result;
-                document.getElementById('qrUploadPrompt').classList.add('d-none');
-                document.getElementById('qrPreviewWrapper').classList.remove('d-none');
+                if (img) img.src = e.target.result;
+                const promptEl = document.getElementById('qrUploadPrompt');
+                const prevEl = document.getElementById('qrPreviewWrapper');
+                if (promptEl) promptEl.classList.add('d-none');
+                if (prevEl) prevEl.classList.remove('d-none');
 
-                // Decode / extract QR payload from image
-                let extractedPayload = "https://secure-login-verify-account-update.xyz/auth";
-                if (file.name.toLowerCase().includes("wifi") || file.name.toLowerCase().includes("airport")) {
-                    extractedPayload = "WIFI:S:Free_Airport_WiFi;P:fake_pass_123;T:WPA;;";
-                } else if (file.name.toLowerCase().includes("bank") || file.name.toLowerCase().includes("chase")) {
-                    extractedPayload = "https://www.chase.com/personal/banking";
+                const loader = document.getElementById('qrLoader');
+                const resultBox = document.getElementById('qrResult');
+                if (loader) loader.style.display = 'block';
+                if (resultBox) resultBox.style.display = 'none';
+
+                // Optional client-side decode with jsQR if available in head
+                let clientDecoded = "";
+                try {
+                    if (typeof jsQR !== 'undefined') {
+                        const tempImg = new Image();
+                        tempImg.src = e.target.result;
+                        await new Promise(r => { tempImg.onload = r; tempImg.onerror = r; });
+                        const canvas = document.createElement('canvas');
+                        canvas.width = tempImg.naturalWidth || tempImg.width;
+                        canvas.height = tempImg.naturalHeight || tempImg.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(tempImg, 0, 0);
+                        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const code = jsQR(imgData.data, imgData.width, imgData.height);
+                        if (code && code.data) {
+                            clientDecoded = code.data;
+                        }
+                    }
+                } catch (qrErr) {
+                    console.log("Client jsQR fallback trace:", qrErr);
                 }
 
-                document.getElementById('qrPayloadInput').value = extractedPayload;
-                scanQrCode();
+                // Send image file to backend /api/scan_qr for zxingcpp / opencv scan
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('lang', currentLang);
+                if (clientDecoded) {
+                    formData.append('client_decoded', clientDecoded);
+                }
+
+                try {
+                    const res = await fetch('/api/scan_qr', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await res.json();
+                    renderCustomResult('qrResult', data);
+                } catch (err) {
+                    renderCustomResult('qrResult', { error: err.message });
+                } finally {
+                    if (loader) loader.style.display = 'none';
+                }
             };
             reader.readAsDataURL(file);
         }
 
-        async function scanQrCode() {
-            try {
-                const qr_payload = document.getElementById('qrPayloadInput').value.trim();
-                const res = await fetch('/api/scan_qr', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({qr_payload})
-                });
-                const data = await res.json();
-                const box = document.getElementById('qrResult');
-                const badgeClass = data.is_phishing ? 'danger' : 'safe';
-                box.className = `result-box-cyber ${badgeClass} border-start border-4 mt-3 p-3 rounded`;
-                box.style.display = 'block';
-
-                box.innerHTML = `
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <strong class="${data.is_phishing ? 'text-danger' : 'text-success'} fs-6"><i class="bi bi-shield-exclamation me-1"></i>${data.verdict}</strong>
-                        <span class="badge ${data.is_phishing ? 'bg-danger' : 'bg-success'} fs-6">Risk Score: ${data.risk_score}/100</span>
-                    </div>
-                    <div class="extra-small text-light mb-2 font-monospace">Decoded Payload: <code>${data.decoded_payload}</code></div>
-                    <ul class="list-unstyled mb-2 text-light extra-small">${(data.reasons || []).map(r => `<li><i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>${r}</li>`).join('')}</ul>
-                    <div class="text-secondary extra-small"><strong>Recommendation:</strong> ${data.recommendations}</div>
-                `;
-            } catch (err) { alert("QR scanning failed: " + err); }
+        function handleQrImageFileSelect(event) {
+            const file = event.target.files && event.target.files[0];
+            if (file) {
+                processQrImageFile(file);
+            }
         }
 
         function setAndTrackScammer(val) {
@@ -3230,7 +3416,7 @@ Protect your sensitive data. Never share passwords or OTPs.
             }
         }
     </script>
-    <!-- Premium Upgrade Modal -->
+    <!-- Premium Upgrade Modal with Working UPI QR Code Payment -->
     <div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content glass-card" style="background: rgba(17, 24, 39, 0.95); border: 1px solid var(--border-color); color: var(--text-main);">
@@ -3239,144 +3425,190 @@ Protect your sensitive data. Never share passwords or OTPs.
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <div class="text-center mb-4">
-                        <div class="bg-info bg-opacity-10 p-3 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
-                            <i class="bi bi-shield-fill-check text-info fs-2"></i>
+                    <div class="text-center mb-3">
+                        <div class="bg-info bg-opacity-10 p-3 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px;">
+                            <i class="bi bi-shield-fill-check text-info fs-3"></i>
                         </div>
-                        <h4 class="fw-bold">Unlock Scam Shield PRO</h4>
-                        <p class="text-secondary small">Activate live geopolitical scammer tracking, printable assessment reports, and priority scanning nodes.</p>
+                        <h5 class="fw-bold mb-1">Unlock Scam Shield PRO</h5>
+                        <p class="text-secondary small mb-0">Active scammer tracing, printable reports, and priority AI neural scanning.</p>
                     </div>
-                    
-                    <div class="alert alert-danger" id="subscriptionError" style="display: none; background: rgba(255, 23, 68, 0.1); border-color: rgba(255, 23, 68, 0.2); color: #ff1744;"></div>
-                    <div class="alert alert-success" id="subscriptionSuccess" style="display: none; background: rgba(0, 230, 118, 0.1); border-color: rgba(0, 230, 118, 0.2); color: #00e676;"></div>
 
-                    <form id="subscribeForm" onsubmit="event.preventDefault(); submitSubscription();">
-                        <div class="mb-3">
-                            <label class="form-label small text-secondary fw-bold">CARDHOLDER NAME</label>
-                            <input type="text" class="form-control form-control-cyber" required placeholder="e.g. John Doe">
+                    <!-- Instant QR Code Payment Section -->
+                    <div class="p-3 rounded-3 text-center mb-3 border border-info border-opacity-25" style="background: rgba(0, 242, 254, 0.04);">
+                        <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+                            <span class="badge bg-info bg-opacity-20 text-cyan border border-info border-opacity-30 px-3 py-1">
+                                <i class="bi bi-qr-code-scan me-1"></i> Scan & Pay via Any UPI App
+                            </span>
+                            <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-30 px-3 py-1">
+                                ₹499 Lifetime Access
+                            </span>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label small text-secondary fw-bold">CREDIT CARD NUMBER</label>
-                            <input type="text" id="cardNumInput" class="form-control form-control-cyber" required placeholder="xxxx xxxx xxxx xxxx" maxlength="19">
+                        <p class="text-secondary extra-small mb-2">Scan with Google Pay, PhonePe, Paytm, BHIM, or any banking app:</p>
+                        
+                        <div class="bg-white p-2 rounded-3 d-inline-block shadow-lg my-1">
+                            <img id="premiumQrImg" src="/static/images/premium_qr_user.jpg" alt="UPI QR Code - Sachi Nitin Surana" style="width: 210px; height: auto; max-height: 270px; display: block;" class="rounded mx-auto">
                         </div>
-                        <div class="row">
-                            <div class="col-7 mb-3">
-                                <label class="form-label small text-secondary fw-bold">EXPIRY DATE</label>
-                                <input type="text" class="form-control form-control-cyber" required placeholder="MM/YY" maxlength="5">
-                            </div>
-                            <div class="col-5 mb-3">
-                                <label class="form-label small text-secondary fw-bold">CVV</label>
-                                <input type="password" id="cvvInput" class="form-control form-control-cyber" required placeholder="xxx" maxlength="3">
-                            </div>
+
+                        <div class="mt-2">
+                            <div class="fw-bold text-light small mb-1"><i class="bi bi-person-badge text-info me-1"></i>Sachi Nitin Surana</div>
+                            <span class="badge bg-dark border border-secondary text-cyan font-monospace small px-3 py-1">
+                                8263934906@fam
+                            </span>
+                            <button class="btn btn-sm btn-outline-info ms-1 py-0 px-2" onclick="navigator.clipboard.writeText('8263934906@fam'); showToast('UPI ID copied: 8263934906@fam');" title="Copy UPI ID">
+                                <i class="bi bi-copy"></i>
+                            </button>
                         </div>
                         
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-cyber w-100 py-3" id="btnSubmitSubscription">
-                                <i class="bi bi-wallet2 me-2"></i>Pay & Activate Premium
-                            </button>
-                            <small class="text-secondary d-block text-center mt-2 extra-small"><i class="bi bi-lock-fill"></i> Secured by ScamShield Payment Gateway</small>
+                        <button type="button" class="btn btn-cyber w-100 py-2 mt-3" onclick="activatePremiumViaQr()">
+                            <i class="bi bi-check-circle-fill me-2"></i>Verify & Activate Premium (Instant QR)
+                        </button>
+                    </div>
+
+                    <!-- Secondary Option: Card Payment (Collapsible Accordion) -->
+                    <div class="accordion accordion-flush" id="cardAccordion">
+                        <div class="accordion-item" style="background: transparent; border: none;">
+                            <h2 class="accordion-header" id="headingCard">
+                                <button class="accordion-button collapsed px-0 py-2 text-secondary bg-transparent small border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCard" aria-expanded="false" aria-controls="collapseCard">
+                                    <i class="bi bi-credit-card me-2"></i>Or Pay with Debit / Credit Card
+                                </button>
+                            </h2>
+                            <div id="collapseCard" class="accordion-collapse collapse" aria-labelledby="headingCard" data-bs-parent="#cardAccordion">
+                                <form id="subscribeForm" onsubmit="event.preventDefault(); submitSubscription();" class="pt-2">
+                                    <div class="mb-2">
+                                        <label class="form-label extra-small text-secondary fw-bold mb-1">CARDHOLDER NAME</label>
+                                        <input type="text" class="form-control form-control-cyber form-control-sm" required placeholder="e.g. John Doe">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label extra-small text-secondary fw-bold mb-1">CREDIT CARD NUMBER</label>
+                                        <input type="text" id="cardNumInput" class="form-control form-control-cyber form-control-sm" required placeholder="xxxx xxxx xxxx xxxx" maxlength="19">
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-7 mb-2">
+                                            <label class="form-label extra-small text-secondary fw-bold mb-1">EXPIRY DATE</label>
+                                            <input type="text" class="form-control form-control-cyber form-control-sm" required placeholder="MM/YY" maxlength="5">
+                                        </div>
+                                        <div class="col-5 mb-2">
+                                            <label class="form-label extra-small text-secondary fw-bold mb-1">CVV</label>
+                                            <input type="password" id="cvvInput" class="form-control form-control-cyber form-control-sm" required placeholder="xxx" maxlength="3">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-outline-info w-100 py-2 mt-2" id="btnSubmitSubscription">
+                                        <i class="bi bi-wallet2 me-2"></i>Pay via Card
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Localhost & Network Control Hub Modal -->
+    <!-- Mobile Hub Modal (Cleaned up: Removed smart portal latency, diagnostics, and endpoints) -->
     <div class="modal fade" id="localhostModal" tabindex="-1" aria-labelledby="localhostModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="background: rgba(15, 23, 42, 0.96); border: 1px solid rgba(0, 242, 254, 0.3); backdrop-filter: blur(24px); color: var(--text-main); border-radius: 24px; box-shadow: 0 20px 60px rgba(0, 242, 254, 0.25);">
                 <div class="modal-header border-bottom border-secondary border-opacity-25 py-3 px-4">
                     <h5 class="modal-title fw-bold d-flex align-items-center gap-2" id="localhostModalLabel">
-                        <i class="bi bi-hdd-network-fill text-cyan fs-4"></i>
-                        Localhost & Network Management Center
+                        <i class="bi bi-phone-vibrate text-cyan fs-4"></i>
+                        <span data-i18n="modal_mobile_hub_title">Mobile Hub - Instant QR Access</span>
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-4">
-                    <div class="row g-4">
-                        <!-- Column 1: Mobile Wi-Fi QR Access -->
-                        <div class="col-md-5 text-center border-end border-secondary border-opacity-25 pe-md-4">
-                            <div class="p-3 rounded-4" style="background: rgba(0, 0, 0, 0.35); border: 1px dashed rgba(0, 242, 254, 0.3);">
-                                <h6 class="fw-bold mb-2 text-cyan"><i class="bi bi-phone me-1"></i>Scan for Mobile Access</h6>
-                                <p class="text-secondary extra-small mb-3">Connect your phone or tablet on local Wi-Fi instantly:</p>
-                                
-                                <div class="qr-container bg-white p-2 rounded-3 d-inline-block shadow-lg position-relative" style="min-width: 170px; min-height: 170px;">
-                                    <img id="modal-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http%3A%2F%2F127.0.0.1%3A5000" alt="LAN Access QR Code" style="width: 160px; height: 160px;" class="img-fluid rounded">
-                                </div>
-
-                                <div class="mt-3">
-                                    <span class="badge bg-info bg-opacity-20 text-cyan border border-info border-opacity-25 font-monospace px-3 py-2" id="modal-lan-url-display">http://127.0.0.1:5000</span>
-                                </div>
-                            </div>
+                <div class="modal-body p-4 text-center">
+                    <div class="p-4 rounded-4" style="background: rgba(0, 0, 0, 0.35); border: 1px dashed rgba(0, 242, 254, 0.35);">
+                        <div class="d-inline-flex p-3 rounded-circle bg-info bg-opacity-10 mb-2 text-cyan">
+                            <i class="bi bi-qr-code fs-1"></i>
+                        </div>
+                        <h5 class="fw-bold text-white mb-1" data-i18n="modal_qr_scan_title">Scan for Instant Mobile Access</h5>
+                        <p class="text-secondary small mb-3" data-i18n="modal_qr_scan_sub">Connect your phone or tablet on local Wi-Fi to use ScamShield AI immediately:</p>
+                        
+                        <div class="bg-white p-3 rounded-3 d-inline-block shadow-lg my-2" style="min-width: 180px; min-height: 180px;">
+                            <img id="modal-qr-img" src="/api/generate_qr" alt="LAN Access QR Code" style="width: 170px; height: 170px; display: block;" class="img-fluid rounded">
                         </div>
 
-                        <!-- Column 2: Quick Copy & Diagnostics -->
-                        <div class="col-md-7 ps-md-4">
-                            <h6 class="fw-bold text-white mb-3"><i class="bi bi-display me-2 text-warning"></i>Access Options</h6>
-                            
-                            <div class="d-flex flex-column gap-3 mb-4">
-                                <!-- Localhost Option -->
-                                <div class="p-3 rounded-3 d-flex align-items-center justify-content-between" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color);">
-                                    <div>
-                                        <div class="fw-bold text-light small"><i class="bi bi-laptop me-1 text-cyan"></i> Localhost (This PC)</div>
-                                        <div class="font-monospace text-cyan-glow small" id="modal-localhost-url">http://127.0.0.1:5000</div>
-                                    </div>
-                                    <button class="btn btn-sm btn-outline-info" onclick="copyText('modal-localhost-url')">
-                                        <i class="bi bi-copy me-1"></i>Copy
-                                    </button>
-                                </div>
-
-                                <!-- LAN Network IP Option -->
-                                <div class="p-3 rounded-3 d-flex align-items-center justify-content-between" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color);">
-                                    <div>
-                                        <div class="fw-bold text-light small"><i class="bi bi-wifi me-1 text-success"></i> Local Wi-Fi Network</div>
-                                        <div class="font-monospace text-success small" id="modal-lan-url">http://127.0.0.1:5000</div>
-                                    </div>
-                                    <button class="btn btn-sm btn-outline-success" onclick="copyText('modal-lan-url')">
-                                        <i class="bi bi-copy me-1"></i>Copy
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Backend Latency Diagnostic -->
-                            <h6 class="fw-bold text-white mb-2"><i class="bi bi-speedometer2 me-2 text-info"></i>Server Performance Diagnostics</h6>
-                            <div class="p-3 rounded-3 mb-3 d-flex align-items-center justify-content-between" style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 242, 254, 0.15);">
+                        <div class="mt-3 d-flex flex-column gap-2 text-start">
+                            <div class="p-3 rounded-3 d-flex align-items-center justify-content-between" style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color);">
                                 <div>
-                                    <small class="text-secondary d-block" style="font-size: 0.75rem;">Current API Response Time</small>
-                                    <span class="fw-bold fs-5 text-success" id="modal-ping-val">12 ms</span>
-                                    <span class="text-secondary small ms-2" id="modal-ping-status">(Operational)</span>
+                                    <div class="fw-bold text-light small"><i class="bi bi-wifi text-success me-1"></i> Local Wi-Fi Network URL</div>
+                                    <div class="font-monospace text-success small" id="modal-lan-url">http://127.0.0.1:5000</div>
                                 </div>
-                                <button class="btn btn-sm btn-cyber" onclick="runPingTest()">
-                                    <i class="bi bi-arrow-repeat me-1" id="ping-spinner"></i> Test Ping
+                                <button class="btn btn-sm btn-outline-success" onclick="copyText('modal-lan-url')">
+                                    <i class="bi bi-copy me-1"></i>Copy
                                 </button>
                             </div>
-
-                            <!-- Cloudflare Tunnel Info -->
-                            <div class="p-3 rounded-3" style="background: rgba(255, 179, 0, 0.05); border: 1px solid rgba(255, 179, 0, 0.2);">
-                                <div class="d-flex align-items-center gap-2 text-warning fw-semibold small mb-1">
-                                    <i class="bi bi-globe2"></i> Need Public Internet Access?
+                            <div class="p-3 rounded-3 d-flex align-items-center justify-content-between" style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color);">
+                                <div>
+                                    <div class="fw-bold text-light small"><i class="bi bi-laptop text-cyan me-1"></i> Localhost URL (This PC)</div>
+                                    <div class="font-monospace text-cyan small" id="modal-localhost-url">http://127.0.0.1:5000</div>
                                 </div>
-                                <p class="text-secondary small mb-0" style="font-size: 0.78rem;">
-                                    Run <code>python run_localhost.py</code> in terminal to start your server with interactive port detection and 1-click desktop browser launch!
-                                </p>
+                                <button class="btn btn-sm btn-outline-info" onclick="copyText('modal-localhost-url')">
+                                    <i class="bi bi-copy me-1"></i>Copy
+                                </button>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- API Routes Directory -->
-                    <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
-                        <h6 class="fw-bold text-white mb-3 d-flex align-items-center justify-content-between">
-                            <span><i class="bi bi-diagram-3-fill me-2 text-cyan"></i>Active Microservice Endpoints</span>
-                            <span class="badge bg-secondary font-monospace" id="modal-endpoint-count">9 Registered Endpoints</span>
-                        </h6>
-                        <div class="row g-2" id="modal-endpoints-grid">
-                            <!-- Populated dynamically by JavaScript -->
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer border-top border-secondary border-opacity-25 py-3 px-4">
-                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Close Control Hub</button>
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Universal Share Scan Modal -->
+    <div class="modal fade" id="shareScanModal" tabindex="-1" aria-labelledby="shareScanModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card" style="background: rgba(15, 23, 42, 0.96); border: 1px solid rgba(0, 242, 254, 0.3); backdrop-filter: blur(24px); color: var(--text-main); border-radius: 20px;">
+                <div class="modal-header border-bottom border-secondary border-opacity-25 py-3 px-4">
+                    <h5 class="modal-title fw-bold d-flex align-items-center gap-2" id="shareScanModalLabel">
+                        <i class="bi bi-share-fill text-cyan"></i>
+                        <span data-i18n="modal_share_title">Share Threat Scan Report</span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <div class="p-3 rounded-3 mb-3 text-start" style="background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.2);">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="badge bg-danger bg-opacity-20 text-danger border border-danger border-opacity-30" id="shareModalVerdictBadge">CRITICAL THREAT</span>
+                            <span class="text-secondary extra-small font-monospace" id="shareModalScanId">SCAN-ID</span>
+                        </div>
+                        <h6 class="fw-bold text-light mb-1" id="shareModalTitle">Verified Threat Assessment</h6>
+                        <p class="text-secondary small mb-0 font-monospace text-truncate" id="shareModalTarget">-</p>
+                    </div>
+
+                    <!-- Direct Shareable URL Link with 1-Click Copy -->
+                    <label class="form-label text-secondary extra-small fw-bold text-start w-100 mb-1">DIRECT VERIFIED SCAN LINK</label>
+                    <div class="input-group mb-3">
+                        <input type="text" id="shareModalInputUrl" class="form-control form-control-cyber form-control-sm font-monospace text-info" readonly value="">
+                        <button class="btn btn-cyber btn-sm" onclick="copyShareInputLink()">
+                            <i class="bi bi-clipboard-check me-1"></i>Copy Link
+                        </button>
+                    </div>
+
+                    <!-- Instant 1-Click Messaging Share Buttons -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-6">
+                            <a id="shareModalWhatsappBtn" href="#" target="_blank" class="btn btn-outline-success w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-whatsapp fs-5"></i>
+                                <span class="small fw-semibold">WhatsApp</span>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a id="shareModalTelegramBtn" href="#" target="_blank" class="btn btn-outline-info w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-telegram fs-5"></i>
+                                <span class="small fw-semibold">Telegram</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- System Native Share if Supported -->
+                    <button id="shareModalNativeBtn" class="btn btn-sm btn-outline-secondary w-100 py-2 mt-1" onclick="triggerNativeShare()">
+                        <i class="bi bi-send me-1"></i>Share via Other Apps
+                    </button>
+                </div>
+                <div class="modal-footer border-top border-secondary border-opacity-25 py-2 px-4">
+                    <button type="button" class="btn btn-sm btn-secondary px-4" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -3489,7 +3721,265 @@ Protect your sensitive data. Never share passwords or OTPs.
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // Localhost Info & Network QR Sync
+        // ==========================================
+        // PREMIUM QR CODE & UPI ACTIVATION ENGINE
+        // ==========================================
+        async function loadPremiumQr() {
+            try {
+                const res = await fetch('/api/premium_qr');
+                if (!res.ok) return;
+                const data = await res.json();
+                const img = document.getElementById('premiumQrImg');
+                if (img && data.qr_image) {
+                    img.src = data.qr_image;
+                }
+            } catch (err) {
+                console.error("Premium QR load error:", err);
+            }
+        }
+
+        async function activatePremiumViaQr() {
+            try {
+                const res = await fetch('/subscribe', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ is_qr: true, paymentMethod: 'qr' })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    userPlan = 'Premium Pro';
+                    playCyberSound('success');
+                    showToast("✨ Premium Pro Activated via UPI QR Code!");
+                    
+                    const btnGoPremium = document.getElementById('btnGoPremiumNav');
+                    if (btnGoPremium) {
+                        btnGoPremium.outerHTML = '<span class="badge badge-premium-pro"><i class="bi bi-patch-check-fill"></i> Premium Pro Active</span>';
+                    }
+                    
+                    const modalEl = document.getElementById('premiumModal');
+                    if (modalEl) {
+                        const bsModal = bootstrap.Modal.getInstance(modalEl);
+                        if (bsModal) bsModal.hide();
+                    }
+                }
+            } catch (e) {
+                alert("Activation failed: " + e.message);
+            }
+        }
+
+        async function submitSubscription() {
+            try {
+                const res = await fetch('/subscribe', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ paymentMethod: 'card' })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    userPlan = 'Premium Pro';
+                    playCyberSound('success');
+                    showToast("✨ Premium Pro Activated via Card Payment!");
+                    
+                    const btnGoPremium = document.getElementById('btnGoPremiumNav');
+                    if (btnGoPremium) {
+                        btnGoPremium.outerHTML = '<span class="badge badge-premium-pro"><i class="bi bi-patch-check-fill"></i> Premium Pro Active</span>';
+                    }
+                    
+                    const modalEl = document.getElementById('premiumModal');
+                    if (modalEl) {
+                        const bsModal = bootstrap.Modal.getInstance(modalEl);
+                        if (bsModal) bsModal.hide();
+                    }
+                }
+            } catch (e) {
+                alert("Subscription failed: " + e.message);
+            }
+        }
+
+        // ==========================================
+        // MULTILINGUAL LOCALIZATION (EN, HI, MR)
+        // ==========================================
+        const translations = {
+            en: {
+                theme: "Theme",
+                go_premium: "Go Premium",
+                hero_desc: "Protecting your digital world in real-time. Scan URLs, detect screenshot threats, analyze phishing text, and chat with safety experts.",
+                hero_mobile_hub: "Mobile Hub / QR Access",
+                txt_card_title: "Message & Job Post Scanner",
+                txt_placeholder: "Paste suspicious SMS, WhatsApp message, email draft, or job advertisement text here...",
+                txt_btn: "Scan Message",
+                url_card_title: "Phishing Website / Link Trust Checker",
+                url_placeholder: "Enter link, e.g., https://secure-bank-login.xyz",
+                url_btn: "Check URL",
+                img_card_title: "Screenshot Scam & OCR Detector",
+                img_drag_title: "Drag & drop a screenshot or browse device",
+                img_drag_sub: "Supports PNG, JPG, JPEG (WhatsApp chats, SMS, emails)",
+                img_btn: "Read & Analyze Screenshot",
+                qr_card_title: "QR Code Phishing (Quishing) Scanner",
+                qr_badge: "Upload Image or Paste QR URL",
+                qr_upload_title: "Click or Drag & Drop QR Image to Scan",
+                qr_loaded: "QR Image Loaded & Payload Extracted",
+                qr_input_placeholder: "Extracted QR payload URL/Data or paste link...",
+                btn_scan_payload: "Scan Payload",
+                scammer_card_title: "Scammer IP Node & Network Hop Tracker",
+                scammer_badge: "Live Node Routing Trace",
+                scammer_placeholder: "Enter suspect Scammer IP / Domain / URL...",
+                scammer_btn: "Trace Scammer Node",
+                scammer_quick_demos: "Quick Demos:",
+                chat_title: "Safety Companion",
+                chat_agent_sub: "ScamShield Cyber Agent",
+                chat_welcome: "Hello! I am your Cyber Safety Agent.",
+                chat_welcome_sub: "Are you suspicious of a transaction, OTP request, phone call, or delivery package message? Tell me what happened, and I will guide you safely.",
+                chat_placeholder: "Ask questions, e.g., 'A delivery driver is demanding OTP...'",
+                chat_analyzing: "Analyzing safety implications...",
+                download_report: "Download Report (PDF/Text)",
+                share_scan: "Share Threat Scan",
+                trace_node: "Trace Scammer Node",
+                btn_download_report: "Download Report (PDF/Text)",
+                btn_share_scan: "Share Scan",
+                btn_trace_origin: "Trace Scam Origin",
+                verdict_sub: "ScamShield Verdict",
+                key_indicators: "Key Indicators Detected:",
+                modal_mobile_hub_title: "Mobile Hub - Instant QR Access",
+                modal_qr_scan_title: "Scan for Instant Mobile Access",
+                modal_qr_scan_sub: "Connect your phone or tablet on local Wi-Fi to use ScamShield AI immediately:"
+            },
+            hi: {
+                theme: "थीम",
+                go_premium: "प्रीमियम प्रो प्राप्त करें",
+                hero_desc: "रीयल-टाइम में अपनी डिजिटल दुनिया को सुरक्षित रखें। URL स्कैन करें, स्क्रीनशॉट खतरों का पता लगाएं, फ़िशिंग संदेशों का विश्लेषण करें, और सुरक्षा विशेषज्ञों से चैट करें।",
+                hero_mobile_hub: "मोबाइल हब / क्यूआर एक्सेस",
+                txt_card_title: "संदेश और जॉब ऑफर स्कैनर",
+                txt_placeholder: "संदिग्ध एसएमएस, व्हाट्सएप संदेश, ईमेल या जॉब विज्ञापन टेक्स्ट यहां पेस्ट करें...",
+                txt_btn: "संदेश स्कैन करें",
+                url_card_title: "फ़िशिंग वेबसाइट / लिंक सुरक्षा जांचकर्ता",
+                url_placeholder: "लिंक दर्ज करें, जैसे https://secure-bank-login.xyz",
+                url_btn: "URL जांचें",
+                img_card_title: "स्क्रीनशॉट धोखाधड़ी और ओसीआर डिटेक्टर",
+                img_drag_title: "स्क्रीनशॉट खींचें और छोड़ें या डिवाइस से चुनें",
+                img_drag_sub: "PNG, JPG, JPEG समर्थित (व्हाट्सएप चैट, एसएमएस, ईमेल)",
+                img_btn: "स्क्रीनशॉट पढ़ें और जांचें",
+                qr_card_title: "क्यूआर कोड फ़िशिंग (क्विशिंग) स्कैनर",
+                qr_badge: "इमेज अपलोड करें या क्यूआर URL पेस्ट करें",
+                qr_upload_title: "स्कैन करने के लिए क्यूआर इमेज खींचें या चुनें",
+                qr_loaded: "क्यूआर इमेज लोड हुई और डेटा निकाला गया",
+                qr_input_placeholder: "निकाला गया क्यूआर पेलोड URL या लिंक पेस्ट करें...",
+                btn_scan_payload: "पेलोड स्कैन करें",
+                scammer_card_title: "स्कैमर आईपी नोड और नेटवर्क हॉप ट्रैकर",
+                scammer_badge: "लाइव नोड रूटिंग ट्रेस",
+                scammer_placeholder: "संदिग्ध स्कैमर आईपी / डोमेन / URL दर्ज करें...",
+                scammer_btn: "स्कैमर नोड ट्रेस करें",
+                scammer_quick_demos: "त्वरित डेमो:",
+                chat_title: "सुरक्षा साथी",
+                chat_agent_sub: "स्कैमशील्ड साइबर एजेंट",
+                chat_welcome: "नमस्ते! मैं आपका साइबर सुरक्षा एजेंट हूँ।",
+                chat_welcome_sub: "क्या आपको किसी लेनदेन, ओटीपी अनुरोध, कॉल या डिलीवरी संदेश पर संदेह है? मुझे बताएं, मैं सुरक्षित मार्गदर्शन करूंगा।",
+                chat_placeholder: "प्रश्न पूछें, जैसे 'डिलीवरी ड्राइवर ओटीपी मांग रहा है...'",
+                chat_analyzing: "सुरक्षा विश्लेषण जारी है...",
+                download_report: "रिपोर्ट डाउनलोड करें (PDF/Text)",
+                share_scan: "खतरे का स्कैन साझा करें",
+                trace_node: "स्कैमर नोड ट्रेस करें",
+                btn_download_report: "रिपोर्ट डाउनलोड करें (PDF/Text)",
+                btn_share_scan: "स्कैन साझा करें",
+                btn_trace_origin: "स्कैम उत्पत्ति ट्रेस करें",
+                verdict_sub: "स्कैमशील्ड निर्णय",
+                key_indicators: "पहचाने गए मुख्य संकेतक:",
+                modal_mobile_hub_title: "मोबाइल हब - त्वरित क्यूआर एक्सेस",
+                modal_qr_scan_title: "त्वरित मोबाइल एक्सेस के लिए स्कैन करें",
+                modal_qr_scan_sub: "तुरंत स्कैमशील्ड एआई का उपयोग करने के लिए अपने फोन को स्थानीय वाई-फाई पर कनेक्ट करें:"
+            },
+            mr: {
+                theme: "थीम",
+                go_premium: "प्रीमियम प्रो मिळवा",
+                hero_desc: "तुमच्या डिजिटल जगाचे रिअल-टाइम रक्षण करा. URL स्कॅन करा, स्क्रीनशॉट धोके शोधा, फिशिंग संदेशांचे विश्लेषण करा आणि सायबर सुरक्षा तज्ञांशी चर्चा करा.",
+                hero_mobile_hub: "मोबाईल हब / क्यूआर प्रवेश",
+                txt_card_title: "संदेश आणि जॉब ऑफर स्कॅनर",
+                txt_placeholder: "संशयास्पद एसएमएस, व्हॉट्सअॅप मेसेज, ईमेल किंवा नोकरीच्या जाहिरातीचा मजकूर येथे पेस्ट करा...",
+                txt_btn: "संदेश स्कॅन करा",
+                url_card_title: "फिशिंग वेबसाईट / लिंक सुरक्षा तपासक",
+                url_placeholder: "लिंक प्रविष्ट करा, उदा. https://secure-bank-login.xyz",
+                url_btn: "URL तपासा",
+                img_card_title: "स्क्रीनशॉट फसवणूक आणि ओसीआर डिटेक्टर",
+                img_drag_title: "स्क्रीनशॉट ड्रॅग करा किंवा डिव्हाइसमधून निवडा",
+                img_drag_sub: "PNG, JPG, JPEG समर्थित (व्हॉट्सअॅप चॅट्स, एसएमएस, ईमेल)",
+                img_btn: "स्क्रीनशॉट वाचा आणि तपासा",
+                qr_card_title: "क्यूआर कोड फिशिंग (क्विशिंग) स्कॅनर",
+                qr_badge: "फोटो अपलोड करा किंवा क्यूआर लिंक पेस्ट करा",
+                qr_upload_title: "स्कॅन करण्यासाठी क्यूआर फोटो ड्रॅग करा किंवा निवडा",
+                qr_loaded: "क्यूआर फोटो लोड झाला आणि डेटा काढला गेला",
+                qr_input_placeholder: "काढलेला क्यूआर पेलोड URL किंवा लिंक पेस्ट करा...",
+                btn_scan_payload: "पेलोड स्कॅन करा",
+                scammer_card_title: "स्कॅमर आयपी नोड आणि नेटवर्क हॉप ट्रॅकर",
+                scammer_badge: "थेट नोड राऊटिंग ट्रेस",
+                scammer_placeholder: "संशयास्पद स्कॅमर आयपी / डोमेन / URL प्रविष्ट करा...",
+                scammer_btn: "स्कॅमर नोड ट्रेस करा",
+                scammer_quick_demos: "झटपट डेमो:",
+                chat_title: "सुरक्षा साथी",
+                chat_agent_sub: "स्कॅमशील्ड सायबर एजंट",
+                chat_welcome: "नमस्कार! मी तुमचा सायबर सुरक्षा एजंट आहे.",
+                chat_welcome_sub: "तुम्हाला कोणत्याही व्यवहार, ओटीपी, कॉल किंवा डिलिव्हरी संदेशाबद्दल शंका आहे का? मला सांगा, मी योग्य मार्गदर्शन करेन.",
+                chat_placeholder: "प्रश्न विचारा, उदा. 'डिलिव्हरी बॉय ओटीपी मागत आहे...'",
+                chat_analyzing: "सुरक्षा विश्लेषण सुरू आहे...",
+                download_report: "रिपोर्ट डाउनलोड करा (PDF/Text)",
+                share_scan: "धोका स्कॅन शेअर करा",
+                trace_node: "स्कॅमर नोड ट्रेस करा",
+                btn_download_report: "रिपोर्ट डाउनलोड करा (PDF/Text)",
+                btn_share_scan: "स्कॅन शेअर करा",
+                btn_trace_origin: "स्कॅम स्रोत ट्रेस करा",
+                verdict_sub: "स्कॅमशील्ड निष्कर्ष",
+                key_indicators: "आढळलेले मुख्य धोके:",
+                modal_mobile_hub_title: "मोबाईल हब - झटपट क्यूआर प्रवेश",
+                modal_qr_scan_title: "झटपट मोबाईल प्रवेशासाठी स्कॅन करा",
+                modal_qr_scan_sub: "स्थानिक वाय-फाय वरून स्कॅमशील्ड एआय वापरण्यासाठी तुमचा फोन कनेक्ट करा:"
+            }
+        };
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('scamshield_lang', lang);
+
+            // Update Dropdown Label
+            const currentLangLabel = document.getElementById('currentLangLabel');
+            if (currentLangLabel) {
+                if (lang === 'mr') currentLangLabel.innerText = 'मराठी';
+                else if (lang === 'hi') currentLangLabel.innerText = 'हिंदी';
+                else currentLangLabel.innerText = 'English';
+            }
+
+            // Update active dropdown item
+            document.querySelectorAll('#langDropdownBtn + .dropdown-menu .dropdown-item').forEach(item => {
+                item.classList.remove('active');
+                if ((lang === 'en' && item.innerText.includes('English')) ||
+                    (lang === 'hi' && item.innerText.includes('हिंदी')) ||
+                    (lang === 'mr' && item.innerText.includes('मराठी'))) {
+                    item.classList.add('active');
+                }
+            });
+
+            const dict = translations[lang] || translations['en'];
+
+            // Update text elements with data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    el.innerText = dict[key];
+                }
+            });
+
+            // Update placeholder elements with data-i18n-placeholder
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key]) {
+                    el.setAttribute('placeholder', dict[key]);
+                }
+            });
+
+            playCyberSound('click');
+        }
+
+        // ==========================================
+        // MOBILE HUB & LAN ACCESS MANAGEMENT
+        // ==========================================
         let cachedLocalhostInfo = null;
 
         async function fetchLocalhostInfo() {
@@ -3499,41 +3989,15 @@ Protect your sensitive data. Never share passwords or OTPs.
                 const data = await res.json();
                 cachedLocalhostInfo = data;
 
-                // Update UI elements
-                const navHostLabel = document.getElementById('nav-host-label');
-                const navHostIp = document.getElementById('nav-host-ip');
-                const heroHostUrl = document.getElementById('hero-host-url');
                 const modalLocalhostUrl = document.getElementById('modal-localhost-url');
                 const modalLanUrl = document.getElementById('modal-lan-url');
-                const modalLanUrlDisplay = document.getElementById('modal-lan-url-display');
                 const modalQrImg = document.getElementById('modal-qr-img');
 
-                if (navHostLabel) navHostLabel.innerText = `🟢 Localhost: Port ${data.port}`;
-                if (navHostIp) navHostIp.innerText = data.lan_url;
-                if (heroHostUrl) heroHostUrl.innerText = data.lan_url;
                 if (modalLocalhostUrl) modalLocalhostUrl.innerText = data.localhost_url;
                 if (modalLanUrl) modalLanUrl.innerText = data.lan_url;
-                if (modalLanUrlDisplay) modalLanUrlDisplay.innerText = data.lan_url;
 
                 if (modalQrImg) {
-                    const qrApi = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(data.lan_url)}`;
-                    modalQrImg.src = qrApi;
-                }
-
-                // Render Endpoints Grid
-                const grid = document.getElementById('modal-endpoints-grid');
-                const countBadge = document.getElementById('modal-endpoint-count');
-                if (grid && data.endpoints) {
-                    if (countBadge) countBadge.innerText = `${data.endpoints.length} Active Endpoints`;
-                    grid.innerHTML = data.endpoints.map(ep => `
-                        <div class="col-md-4 col-6">
-                            <div class="p-2 rounded border border-secondary border-opacity-20" style="background: rgba(255,255,255,0.02);">
-                                <span class="badge ${ep.type.includes('POST') ? 'bg-danger bg-opacity-20 text-danger border border-danger border-opacity-25' : 'bg-info bg-opacity-20 text-cyan border border-info border-opacity-25'} extra-small me-1">${ep.type}</span>
-                                <code class="text-light extra-small">${ep.path}</code>
-                                <div class="text-secondary extra-small text-truncate mt-1">${ep.name}</div>
-                            </div>
-                        </div>
-                    `).join('');
+                    modalQrImg.src = `/api/generate_qr?data=${encodeURIComponent(data.lan_url)}`;
                 }
             } catch (err) {
                 console.log("Localhost info fetch failed:", err);
@@ -3543,42 +4007,10 @@ Protect your sensitive data. Never share passwords or OTPs.
         function openLocalhostModal() {
             playCyberSound('click');
             fetchLocalhostInfo();
-            runPingTest();
             const modalEl = document.getElementById('localhostModal');
             if (modalEl) {
                 const bsModal = new bootstrap.Modal(modalEl);
                 bsModal.show();
-            }
-        }
-
-        // Server Ping & Latency Diagnostics
-        async function runPingTest() {
-            const spinner = document.getElementById('ping-spinner');
-            const pingVal = document.getElementById('modal-ping-val');
-            const heroLatency = document.getElementById('hero-latency-badge');
-            
-            if (spinner) spinner.classList.add('spin-anim');
-            const startTime = performance.now();
-            
-            try {
-                const res = await fetch('/api/health?t=' + Date.now());
-                const endTime = performance.now();
-                const latency = Math.round(endTime - startTime);
-                
-                if (pingVal) pingVal.innerText = `${latency} ms`;
-                if (heroLatency) heroLatency.innerHTML = `<i class="bi bi-lightning-fill me-1"></i>${latency} ms`;
-                
-                const pingStatus = document.getElementById('modal-ping-status');
-                if (pingStatus) {
-                    if (latency < 50) pingStatus.innerText = '(Ultra Low Latency)';
-                    else if (latency < 200) pingStatus.innerText = '(Good)';
-                    else pingStatus.innerText = '(Moderate)';
-                }
-            } catch (e) {
-                if (pingVal) pingVal.innerText = 'Err';
-                if (heroLatency) heroLatency.innerText = 'Offline';
-            } finally {
-                if (spinner) spinner.classList.remove('spin-anim');
             }
         }
 
@@ -3646,9 +4078,54 @@ Protect your sensitive data. Never share passwords or OTPs.
 
         // Initial Load Triggers
         document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('scamshield_lang') || 'en';
+            changeLanguage(savedLang);
             fetchLocalhostInfo();
-            runPingTest();
             drawScammerTrackingCanvas();
+
+            // Drag-and-drop handler for QR upload zone
+            const qrZone = document.getElementById('qrUploadZone');
+            if (qrZone) {
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    qrZone.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        qrZone.classList.add('border-info');
+                    }, false);
+                });
+                ['dragleave', 'drop'].forEach(eventName => {
+                    qrZone.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        qrZone.classList.remove('border-info');
+                    }, false);
+                });
+                qrZone.addEventListener('drop', (e) => {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    if (files && files.length > 0) {
+                        processQrImageFile(files[0]);
+                    }
+                });
+            }
+
+            // Check if user opened a shared scan link (?share_id=...)
+            const shareId = new URLSearchParams(window.location.search).get('share_id');
+            if (shareId) {
+                fetch(`/api/share/${shareId}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.status === 'success' && data.data) {
+                            openShareScanModal(data.data, data.data.verdict, data.data.risk_score, data.data.target);
+                        }
+                    })
+                    .catch(() => {});
+            }
+
+            const premModalEl = document.getElementById('premiumModal');
+            if (premModalEl) {
+                premModalEl.addEventListener('show.bs.modal', loadPremiumQr);
+            }
         });
         window.addEventListener('resize', () => {
             drawScammerTrackingCanvas();

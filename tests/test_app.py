@@ -227,5 +227,61 @@ def test_api_generate_report(client):
     assert data["status"] == "success"
     assert "report_id" in data["report"]
 
+def test_chatbot_prank_reply(client):
+    """Test chatbot appropriately handles harmless pranks and jokes."""
+    # When client is None or offline
+    app.client = None
+    res = client.post('/chatbot', data=json.dumps({
+        "message": "tomorrow's classes will be replaced by a compulsory 3-hour dance competition! And guess what? YOU have been selected as the chief dancer! RELAXXX, IT'S A PRANK! GOT YOU!",
+        "lang": "en"
+    }), content_type='application/json')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert "Haha" in data["reply"] or "prank" in data["reply"]
+    assert "Note:" not in data["reply"]
+
+def test_chatbot_upi_fraud_reply(client):
+    """Test chatbot gives accurate safety advice on UPI QR code requests."""
+    app.client = None
+    res = client.post('/chatbot', data=json.dumps({
+        "message": "Buyer says scan this QR code on PhonePe to receive ₹2,000 for my old sofa. Should I scan it?",
+        "lang": "en"
+    }), content_type='application/json')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert "Never scan a QR code" in data["reply"] or "debit" in data["reply"]
+
+def test_api_share_scan(client):
+    """Test share scan backend endpoint produces persistent share URL and messaging links."""
+    res = client.post('/api/share_scan', data=json.dumps({
+        "elementId": "urlResult",
+        "scan_title": "URL Threat Scan",
+        "verdict": "Critical Phishing Risk",
+        "risk_score": 95,
+        "reasons": ["Credential harvesting pattern detected"],
+        "target": "https://secure-login-verify-account.xyz"
+    }), content_type='application/json')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data["status"] == "success"
+    assert "share_id" in data
+    assert "whatsapp_url" in data
+    assert "telegram_url" in data
+
+    # Retrieve shared scan
+    get_res = client.get(f'/api/share/{data["share_id"]}')
+    assert get_res.status_code == 200
+    assert get_res.get_json()["data"]["verdict"] == "Critical Phishing Risk"
+
+def test_api_premium_qr_credentials(client):
+    """Test premium QR endpoint serves Sachi Nitin Surana's UPI credentials and image."""
+    res = client.get('/api/premium_qr')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data["account_name"] == "Sachi Nitin Surana"
+    assert data["upi_id"] == "8263934906@fam"
+    assert data["qr_image"] == "/static/images/premium_qr_user.jpg"
+
+
 
 

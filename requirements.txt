@@ -4,3 +4,6 @@ google-genai>=0.1.1
 pillow>=10.0.0
 gunicorn>=21.2.0
 pytest>=8.0.0
+qrcode>=7.4.2
+zxing-cpp>=3.1.0
+opencv-python-headless>=4.10.0
